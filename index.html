@@ -1,0 +1,3095 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>Baluyan ES School-based Reading Assessment</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Andika:wght@400;700&family=Atkinson+Hyperlegible:wght@400;700&family=Didact+Gothic&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#FBFCF8; --surface:#FFFFFF; --ink:#1F3A93; --ink-soft:#E8EEFA; --margin:#C8323B;
+    --graphite:#2B2D33; --muted:#5E6376; --rule:#CFDCEF; --check:#1E7F4F; --check-soft:#E3F3EA;
+    --read:'Andika','Atkinson Hyperlegible',system-ui,sans-serif;
+    --card:'Century Gothic','CenturyGothic','Didact Gothic','URW Gothic','Avenir Next','Futura',sans-serif;
+    --ui:'Atkinson Hyperlegible',system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{background:var(--paper);color:var(--graphite);font:16px/1.5 var(--ui)}
+  .hidden{display:none!important}
+  :focus-visible{outline:3px solid #F2B705;outline-offset:2px}
+
+  .top{position:sticky;top:0;z-index:5;display:flex;justify-content:space-between;align-items:center;gap:12px;padding:10px 16px;background:var(--ink);color:#fff}
+  .school{font-weight:700;font-size:1.05rem;line-height:1.2}
+  .app{font-size:.85rem;opacity:.85}
+  .top-right{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+  .pill{font:inherit;font-size:.8rem;padding:4px 10px;border-radius:999px;border:0;background:rgba(255,255,255,.18);color:#fff;white-space:nowrap;cursor:pointer}
+  .pill.ok{background:#D8F0E2;color:#0F4F31}
+  .pill.warn{background:#FDE7C7;color:#6B3A00}
+  .pill.err{background:#FCE8EA;color:#8E1C24}
+
+  main{max-width:1040px;margin:0 auto;padding:16px}
+  h1{font-size:1.6rem;line-height:1.25;margin:.5rem 0 .25rem;color:var(--ink)}
+  h2{font-size:1.15rem;margin:0 0 .5rem;color:var(--ink)}
+  h3{font-size:1rem;margin:1rem 0 .4rem}
+  .panel{background:var(--surface);border:1px solid var(--rule);border-radius:10px;padding:16px;margin-bottom:16px}
+  .inset{background:var(--ink-soft);border-color:#B9C6DD}
+  label{display:block;font-size:.9rem;font-weight:700;margin-bottom:10px}
+  input,select,textarea{display:block;width:100%;margin-top:4px;padding:10px;border:1px solid #B9C6DD;border-radius:8px;font:inherit;font-weight:400;background:#fff;color:var(--graphite)}
+  textarea{resize:vertical;line-height:1.45}
+  .fields{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:0 14px}
+  .btn{font:inherit;font-weight:700;padding:10px 16px;border-radius:8px;border:1.5px solid var(--ink);background:#fff;color:var(--ink);cursor:pointer}
+  .btn.primary{background:var(--ink);color:#fff}
+  .btn.big{padding:14px 22px;font-size:1.05rem}
+  .btn.small{padding:6px 10px;font-size:.85rem}
+  .btn.ghost{background:transparent;color:#fff;border-color:rgba(255,255,255,.7)}
+  .btn:disabled{opacity:.45;cursor:not-allowed}
+  .msg{min-height:1.2em;margin:.5rem 0 0;font-size:.92rem}
+  .msg.err{color:var(--margin)}
+  .msg.good{color:var(--check)}
+  .hint{color:var(--muted);font-size:.9rem;margin:.25rem 0 .75rem}
+  .sub{color:var(--muted);font-size:.88rem}
+  .pre{white-space:pre-wrap;margin:.25rem 0}
+  .notice{background:#FFF6E0;border:1px solid #E0A526;border-radius:8px;padding:10px 12px;margin:4px 0 10px;font-size:.92rem}
+
+  .login-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+  .login-grid p{margin:.25rem 0 1rem;color:var(--muted)}
+
+  .tabs{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:14px;border-bottom:2px solid var(--rule)}
+  .tab{font:inherit;font-weight:700;background:none;border:0;padding:10px 12px;color:var(--muted);border-bottom:3px solid transparent;margin-bottom:-2px;cursor:pointer}
+  .tab[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--margin)}
+  .tab:disabled{cursor:not-allowed;opacity:.6}
+  .tab small{font-weight:400}
+
+  /* Floating timer dock */
+  .dock{position:fixed;z-index:8;background:#fff;border:1.5px solid var(--ink);border-radius:12px;box-shadow:0 6px 20px rgba(31,58,147,.2);padding:8px;display:grid;gap:8px}
+  .timer{border:1.5px solid var(--rule);border-radius:8px;padding:6px 8px;background:#fff}
+  .timer.running{border-color:var(--check);background:var(--check-soft)}
+  .timer.paused{border-color:#E0A526;background:#FFF6E0}
+  .timer.off{display:none}
+  .t-top{display:flex;justify-content:space-between;gap:4px;font-size:.78rem}
+  .t-title{font-weight:700}
+  .t-state{color:var(--muted)}
+  .t-time{font-weight:700;font-size:1.5rem;line-height:1.15;color:var(--ink);font-variant-numeric:tabular-nums}
+  .t-btns{display:flex;gap:6px;margin-top:4px}
+  .tbtn{flex:1;min-width:36px;height:36px;border-radius:8px;border:1.5px solid var(--ink);background:#fff;color:var(--ink);font-size:.95rem;cursor:pointer;padding:0}
+  .tbtn.primary{background:var(--ink);color:#fff}
+  @media (min-width:1100px){
+    .dock{right:16px;top:50%;transform:translateY(-50%);width:196px}
+    body.dock-on main{padding-right:228px;max-width:1270px}
+  }
+  @media (max-width:1099px){
+    .dock{left:8px;right:8px;bottom:8px;grid-template-columns:repeat(auto-fit,minmax(0,1fr))}
+    body.dock-on{padding-bottom:130px}
+  }
+
+  /* Letter sheet: ruled pad paper with a red margin */
+  .tools{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-bottom:10px;font-size:.9rem}
+  .tools .lbl{font-weight:700;margin-left:4px}
+  .letters{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:0 28px}
+  .lhead,.lrow{display:grid;grid-template-columns:40px 84px 1fr;align-items:center}
+  .seq{font-size:.8rem;color:var(--muted);font-variant-numeric:tabular-nums;text-align:right;padding-right:8px}
+  .word .seq{display:inline-block;min-width:1.4em;padding:0 6px 0 0;font:700 .75rem var(--ui);color:inherit;opacity:.7}
+  .codebox{display:flex;align-items:center;gap:14px;flex-wrap:wrap;background:var(--ink-soft);border:1.5px solid var(--ink);border-radius:10px;padding:10px 14px;margin:4px 0 10px}
+  .codebox .code{font:700 1.8rem/1 var(--ui);letter-spacing:.18em;color:var(--ink);font-variant-numeric:tabular-nums}
+  .order-line{font-family:var(--card);font-size:1.05rem;letter-spacing:.08em;word-break:break-word}
+
+  /* Century Gothic on everything the learner sees */
+  #viewTeacher,#viewReader,#viewGame,#viewTeacher input,#viewTeacher button,#viewTeacher select,#viewReader button,#viewGame button{font-family:var(--card)}
+
+  /* Frog Letters game */
+  body.reading #viewGame{display:flex}
+  .game{position:fixed;inset:0;z-index:20;flex-direction:column;background:#fff;user-select:none;-webkit-user-select:none}
+  .g-top{display:flex;align-items:center;gap:10px;padding:8px 12px;background:var(--ink);color:#fff}
+  .g-btn{width:44px;height:44px;border-radius:50%;border:2px solid rgba(255,255,255,.7);background:transparent;color:#fff;font-size:1.2rem;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;flex:none}
+  .g-btn svg{width:22px;height:22px}
+  .g-ask{flex:1;text-align:center;font-size:clamp(1rem,3.4vw,1.35rem);line-height:1.2}
+  .g-ask b{font-size:1.5em;letter-spacing:.06em;margin:0 4px}
+  .g-dots{display:inline-flex;gap:5px;margin-left:8px;vertical-align:middle}
+  .g-dots i{width:12px;height:12px;border-radius:50%;background:rgba(255,255,255,.35)}
+  .g-dots i.on{background:#FFD447}
+  .g-stage{position:relative;flex:1;overflow:hidden;background:linear-gradient(#DDF1FF 0%,#EAF7F0 62%,#BFE3CC 100%);touch-action:manipulation}
+  .g-stage::after{content:"";position:absolute;left:50%;bottom:-6px;width:min(60vw,300px);height:42px;transform:translateX(-50%);background:#6BBF7F;border-radius:50%;opacity:.55}
+  .g-tongue{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:3}
+  .bub{position:absolute;left:0;top:0;border-radius:50%;background:#fff;border:3px solid #9FB2D6;color:var(--ink);display:flex;align-items:center;justify-content:center;font-family:var(--card);font-weight:700;cursor:pointer;box-shadow:0 4px 10px rgba(31,58,147,.15);will-change:transform;z-index:2;padding:0}
+  .bub.no{animation:shake .4s}
+  @keyframes shake{0%,100%{margin-left:0}25%{margin-left:-8px}75%{margin-left:8px}}
+  .g-frog{position:absolute;left:50%;bottom:4px;width:clamp(120px,28vmin,200px);transform:translateX(-50%);z-index:4;pointer-events:none}
+  .g-frog svg{display:block;width:100%;height:auto;animation:bob 2.4s ease-in-out infinite}
+  .m-open{display:none}
+  .g-frog.open .m-open{display:block}
+  .g-frog.open .m-closed{display:none}
+  .g-frog.chomp svg{animation:chomp .3s}
+  @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+  @keyframes chomp{0%{transform:scale(1)}50%{transform:scale(1.08,.94)}100%{transform:scale(1)}}
+  @media (prefers-reduced-motion:reduce){.g-frog svg,.g-frog.chomp svg,.bub.no{animation:none}}
+  .g-overlay{position:absolute;inset:0;z-index:10;display:flex;align-items:center;justify-content:center;background:rgba(251,252,248,.94);padding:20px;text-align:center}
+  .g-overlay.hidden{display:none}
+  .g-card{max-width:440px;width:100%}
+  .g-card .frog-mini{width:130px;margin:0 auto 6px}
+  .g-card h2{font-size:1.6rem;margin:0 0 6px}
+  .g-card .big{font-family:var(--card);font-size:clamp(4rem,20vw,7rem);line-height:1;color:var(--ink);margin:6px 0 10px;letter-spacing:.06em}
+  .g-card p{font-size:1.15rem;margin:6px 0 16px}
+  .g-card .btn{font-size:1.2rem;padding:14px 26px;margin:4px}
+  .confetti{position:absolute;inset:0;pointer-events:none;z-index:12;overflow:hidden}
+  .confetti i{position:absolute;top:-24px;width:10px;height:14px;border-radius:2px;animation:fall linear forwards}
+  @keyframes fall{to{transform:translate(var(--dx),115vh) rotate(var(--r))}}
+  .yehey{font-family:var(--card);font-size:clamp(3.4rem,16vw,6rem);font-weight:700;color:#E8547A;line-height:1;margin:4px 0 6px;animation:pop .6s ease-out}
+  @keyframes pop{0%{transform:scale(.3);opacity:0}70%{transform:scale(1.15);opacity:1}100%{transform:scale(1)}}
+  @media (prefers-reduced-motion:reduce){.yehey{animation:none}}
+  .game-card .gc-head{display:flex;gap:14px;align-items:center}
+  .game-card .bar{margin-top:6px}
+  .emo{display:block;font-size:4.2rem;line-height:1.2;text-align:center}
+  .emo.mir{font-family:var(--card);font-size:2.6rem;color:var(--ink);font-weight:700}
+  .g-card .emo{font-size:5rem}
+  .g-ask .lvl{display:inline-block;font-size:.8em;opacity:.8;margin-right:6px}
+  .g-stage[data-game="listen"]{background:linear-gradient(#CFEFFF 0%,#8FD3F5 60%,#5DB6E6 100%)}
+  .g-stage[data-game="mama"]{background:linear-gradient(#E5F5FF 0%,#EAF7F0 55%,#9ED9E8 100%)}
+  .g-stage[data-game="safari"]{background:linear-gradient(#FFF6DA 0%,#EAF7E0 60%,#CDE8B5 100%)}
+  .g-stage[data-game="memory"],.g-stage[data-game="mirror"],.g-stage[data-game="trace"]{background:#F6F9FF}
+  .g-stage:not([data-game="frog"])::after{display:none}
+  #gBubbles{position:absolute;inset:0}
+  .bub.fish{border:0;border-radius:0;background:transparent;box-shadow:none;color:#5A2E00}
+  .bub.fish svg{position:absolute;inset:0;width:100%;height:100%}
+  .bub.fish span{position:relative;margin-left:12%}
+  .mama{position:absolute;left:50%;top:6%;width:min(46vw,260px);transform:translateX(-50%)}
+  .mama svg,.baby svg{display:block;width:100%;height:auto}
+  .tag{position:absolute;left:34%;top:48%;transform:translate(-50%,-50%);font-family:var(--card);font-weight:700;color:var(--ink);background:#fff;border-radius:12px;padding:0 .3em;line-height:1.2;box-shadow:0 2px 6px rgba(0,0,0,.12)}
+  .mama .tag{font-size:clamp(2.6rem,11vw,4.6rem)}
+  .babies{position:absolute;left:0;right:0;bottom:6%;display:flex;justify-content:center;gap:4vw;padding:0 10px}
+  .baby{position:relative;width:min(26vw,150px);border:0;background:transparent;cursor:pointer;padding:0}
+  .baby .tag{font-size:clamp(1.8rem,7vw,3rem)}
+  .safari{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5vh;padding:16px}
+  .pic{width:min(52vw,260px);height:min(52vw,260px);border-radius:50%;background:#fff;border:4px solid #F2D27A;font-size:min(30vw,150px);line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 18px rgba(0,0,0,.08)}
+  .pic.happy{animation:chomp .5s}
+  .choices{display:flex;gap:4vw;justify-content:center}
+  .choice,.tile{font-family:var(--card);font-weight:700;color:var(--ink);background:#fff;border:3px solid #9FB2D6;border-radius:18px;cursor:pointer}
+  .choice{font-size:clamp(2.6rem,11vw,4.4rem);width:min(24vw,130px);height:min(24vw,130px)}
+  .choice.right,.tile.right{background:var(--check);border-color:var(--check);color:#fff}
+  .choice.no,.tile.no,.baby.no,.mcard.no{animation:shake .4s}
+  .mgrid{position:absolute;inset:0;margin:auto;display:grid;gap:12px;padding:16px;max-width:620px;align-content:center}
+  .mcard{aspect-ratio:3/4;border-radius:14px;border:0;cursor:pointer;background:repeating-linear-gradient(45deg,#5CC27A 0 12px,#4CAF6A 12px 24px);box-shadow:0 4px 10px rgba(0,0,0,.12);font-family:var(--card);font-weight:700;font-size:clamp(2rem,8vw,3.4rem);color:var(--ink);transition:background .25s}
+  .mcard span{visibility:hidden}
+  .mcard.up{background:#fff;border:3px solid #9FB2D6}
+  .mcard.up span{visibility:visible}
+  .mcard.done{background:#D8F0E2;border-color:#8FD0A5}
+  .tiles .tile{aspect-ratio:1;font-size:clamp(2.4rem,10vw,4rem)}
+  .tcanvas{position:absolute;inset:0;width:100%;height:100%}
+  .tcanvas.ink{touch-action:none;cursor:crosshair}
+  .tfrog{position:absolute;left:0;top:0;width:60px;pointer-events:none;transition:transform .08s linear;z-index:3}
+  .tbar{position:absolute;right:12px;bottom:12px;z-index:4}
+  .game-card .gc-frog{width:110px;flex:none}
+  .lv-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(58px,1fr));gap:8px;margin-top:6px}
+  .lv-group{font-weight:700;color:var(--ink);margin-top:14px;font-size:.95rem}
+  .lv{font-family:var(--card);font-size:1.2rem;padding:8px 4px;border-radius:10px;border:2px solid var(--rule);background:#fff;color:var(--muted);cursor:pointer;line-height:1.1}
+  .lv small{display:block;font-size:.7rem}
+  .lv.done{background:#D8F0E2;border-color:#8FD0A5;color:#0F4F31}
+  .lv.now{border-color:var(--ink);color:var(--ink);font-weight:700}
+  .lv:disabled{cursor:not-allowed;opacity:.55}
+
+  /* Learner reading screen */
+  body.reading .top{display:none}
+  body.reading main{max-width:none;padding:0}
+  .reader{min-height:100vh;display:flex;flex-direction:column;background:#fff}
+  .r-top{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid var(--rule);font-weight:700;color:var(--ink)}
+  .r-top .sub{font-weight:400}
+  .r-card{flex:1;display:flex;align-items:center;justify-content:center;padding:16px;text-align:center}
+  .r-glyph{font-family:var(--card);color:#111;line-height:1.05;word-break:break-word}
+  .r-glyph.letter{font-size:clamp(7rem,30vw,17rem);letter-spacing:.06em}
+  .r-glyph.word{font-size:clamp(3.2rem,13vw,9rem)}
+  .r-glyph.done{font-family:var(--ui);font-size:clamp(1.6rem,5vw,2.6rem);color:var(--ink)}
+  .r-nav{display:flex;gap:12px;padding:14px 16px 22px}
+  .r-nav .btn{flex:1;font-size:1.3rem;padding:18px}
+  .task-btns{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-top:10px}
+  .task-btn{font:700 1.1rem var(--ui);text-align:left;padding:16px;border-radius:10px;border:2px solid var(--ink);background:#fff;color:var(--ink);cursor:pointer}
+  .task-btn small{display:block;font-weight:400;color:var(--muted);font-size:.85rem;margin-top:4px}
+  .task-btn:disabled{opacity:.45;cursor:not-allowed}
+  .lhead{font-size:.8rem;font-weight:700;color:var(--muted);padding:4px 0;border-bottom:2px solid var(--ink);text-align:center;line-height:1.2}
+  .lhead span:first-child{text-align:left;padding-left:6px}
+  .lrow{border-bottom:1px solid var(--rule);min-height:54px}
+  .glyph{font-family:var(--read);font-size:1.9rem;line-height:1;padding:6px 10px 6px 6px;border-right:2px solid var(--margin);align-self:stretch;display:flex;align-items:center;letter-spacing:.04em}
+  .tick{justify-self:center;width:44px;height:44px;border:2px solid #9FB2D6;border-radius:8px;background:#fff;cursor:pointer;font-size:1.4rem;line-height:1;color:#fff;padding:0}
+  .tick[aria-pressed="true"]{background:var(--check);border-color:var(--check)}
+  .tick[aria-pressed="true"]::after{content:"\2713"}
+  .scoreline{margin-top:14px;display:grid;gap:8px;font-size:.95rem}
+  .scoreline b{color:var(--ink);font-size:1.25rem}
+  .chips{display:inline-flex;flex-wrap:wrap;gap:6px;vertical-align:middle}
+  .chip{font-family:var(--read);font-size:1.1rem;padding:1px 10px;border-radius:6px;background:#FCE8EA;color:#8E1C24}
+  .none{color:var(--check);font-weight:700}
+
+  /* Task 3 words */
+  .ks-note{font-weight:700;color:var(--ink);margin:.25rem 0 .5rem}
+  .pgroup h3{margin:18px 0 4px;padding-bottom:4px;border-bottom:2px solid var(--ink);color:var(--graphite)}
+  .pattern{padding:10px 0;border-bottom:1px solid var(--rule)}
+  .phead{display:flex;justify-content:space-between;gap:10px;font-weight:700;font-size:.92rem;margin-bottom:6px}
+  .pnum{color:var(--muted);font-weight:400;margin-right:4px}
+  .pscore{color:var(--check);white-space:nowrap}
+  .pscore.low{color:var(--margin)}
+  .words{display:flex;flex-wrap:wrap;gap:8px}
+  .word{font-family:var(--read);font-size:1.4rem;padding:6px 14px;border-radius:8px;border:2px solid #9FB2D6;background:#fff;cursor:pointer;color:var(--graphite);min-height:46px}
+  .word[aria-pressed="true"]{background:var(--check);border-color:var(--check);color:#fff}
+
+  /* Results on screen */
+  .index-big{display:flex;align-items:center;gap:14px;margin:6px 0 14px}
+  .index-big .num{font-size:2.8rem;font-weight:700;color:var(--ink);line-height:1}
+  .level{display:inline-block;font-weight:700;font-size:.85rem;padding:2px 10px;border-radius:6px}
+  .lv-proficient{background:#D8F0E2;color:#0F4F31}
+  .lv-developing{background:var(--ink-soft);color:var(--ink)}
+  .lv-emerging{background:#FFF1D6;color:#6B3A00}
+  .lv-intensive{background:#FCE8EA;color:#8E1C24}
+  .tablewrap{overflow-x:auto}
+  .stable{width:100%;border-collapse:collapse;font-size:.92rem;min-width:460px}
+  .stable th,.stable td{text-align:left;padding:7px 8px;border-bottom:1px solid var(--rule)}
+  .stable th{font-size:.8rem;color:var(--muted)}
+  .actions{display:flex;gap:10px;justify-content:space-between;flex-wrap:wrap;margin-top:14px}
+  .res-head{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:flex-start}
+  .pbar{padding:6px 0}
+  .pb-top{display:flex;justify-content:space-between;gap:10px;font-size:.92rem}
+  .bar{height:8px;background:var(--ink-soft);border-radius:4px;overflow:hidden;margin-top:4px}
+  .bar i{display:block;height:100%;background:var(--ink)}
+  .bar i.low{background:var(--margin)}
+  .missed{font-family:var(--read);font-size:.95rem;color:#8E1C24;margin-top:2px}
+  .gname{font-weight:700;font-size:.85rem;color:var(--muted);margin-top:10px}
+
+  /* Lists */
+  .row{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:10px 0;border-bottom:1px solid var(--rule);flex-wrap:wrap}
+  .nm{font-weight:700}
+  .row .lrn-in{margin:0;min-width:170px;font-size:.8rem}
+  .row .lrn-in input{padding:8px;font-variant-numeric:tabular-nums}
+  .tag{display:inline-block;font-size:.75rem;padding:1px 8px;border-radius:999px;background:#FFF1D6;color:#6B3A00;vertical-align:middle}
+  .tag.ok{background:#D8F0E2;color:#0F4F31}
+  .rec-btns{display:flex;gap:6px;flex-wrap:wrap}
+  .toolbar{display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap}
+  .toolbar label{flex:1;min-width:180px}
+  .print-btns{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0 4px}
+  .adv-row{display:grid;grid-template-columns:120px 1fr 1fr;gap:10px;align-items:center;padding:6px 0;border-bottom:1px solid var(--rule)}
+  .adv-row input{margin:0}
+  .adv-row.adv4{grid-template-columns:130px 1fr 1fr 100px auto}
+
+  /* Sign in page dashboard */
+  .dash-grid{display:grid;grid-template-columns:minmax(220px,300px) 1fr;gap:20px;align-items:start;margin-bottom:6px}
+  @media (max-width:700px){ .dash-grid{grid-template-columns:1fr} }
+  .pie-wrap{text-align:center}
+  .pie-wrap svg{width:100%;max-width:240px;height:auto}
+  .legend{display:grid;gap:6px;margin-top:10px;text-align:left;font-size:.92rem}
+  .legend span{display:inline-block;width:14px;height:14px;border-radius:3px;vertical-align:-2px;margin-right:8px}
+  .gbar{display:grid;grid-template-columns:110px 1fr 70px;gap:10px;align-items:center;padding:5px 0;font-size:.9rem}
+  .gbar .bar{margin:0;height:12px}
+  .gbar .num{text-align:right;color:var(--muted);font-variant-numeric:tabular-nums}
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:12px}
+  .stat{background:var(--ink-soft);border-radius:10px;padding:12px 14px}
+  .stat b{display:block;font-size:2rem;line-height:1.1;color:var(--ink)}
+  .stat span{font-size:.88rem;color:var(--muted)}
+  .board{list-style:none;margin:0;padding:0;columns:2 280px;column-gap:24px}
+  .board li{display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid var(--rule);break-inside:avoid}
+  .board .rank{width:2em;text-align:right;font-weight:700;color:var(--muted);font-variant-numeric:tabular-nums}
+  .board .who{flex:1}
+  .board .who small{display:block;color:var(--muted)}
+  .star{color:#C98A00;font-weight:700;white-space:nowrap}
+  .board li:nth-child(-n+3) .rank{color:#C98A00}
+
+  /* Learner dashboard tabs and practice card */
+  .ltabs{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0 14px}
+  .ltab{font:700 .95rem var(--ui);padding:10px 14px;border-radius:999px;border:1.5px solid var(--ink);background:#fff;color:var(--ink);cursor:pointer}
+  .ltab[aria-selected="true"]{background:var(--ink);color:#fff}
+  .pcard{text-align:center;padding:10px 0}
+  .pword{font-family:var(--card);font-size:clamp(3.2rem,13vw,7.5rem);line-height:1.1;color:#111;margin:14px 0 18px;word-break:break-word}
+  .mic{width:96px;height:96px;border-radius:50%;border:0;background:var(--ink);color:#fff;cursor:pointer;display:inline-flex;align-items:center;justify-content:center}
+  .mic svg{width:44px;height:44px}
+  .mic.rec{background:var(--margin);animation:pulse 1s infinite}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(200,50,59,.5)}100%{box-shadow:0 0 0 18px rgba(200,50,59,0)}}
+  @media (prefers-reduced-motion:reduce){.mic.rec{animation:none}}
+  .pnote{margin:10px auto;max-width:520px}
+  .redo-note{background:#FFF6E0;border:1px solid #E0A526;border-radius:8px;padding:8px 12px;margin:0 auto 8px;max-width:520px;text-align:left}
+  .pcard audio{width:100%;max-width:420px;margin:10px auto;display:block}
+  .pnav{display:flex;justify-content:space-between;gap:10px;margin-top:14px}
+  .nb-week{border-top:1px solid var(--rule);padding:10px 0}
+  .nb-words{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+  .nb-w{font-family:var(--card);font-size:1.1rem;padding:3px 10px;border-radius:6px;background:var(--ink-soft)}
+  .nb-w.correct{background:#D8F0E2;color:#0F4F31}
+  .nb-w.redo{background:#FFF1D6;color:#6B3A00}
+  .rv-item{display:grid;grid-template-columns:1fr auto;gap:8px 14px;padding:12px 0;border-bottom:1px solid var(--rule);align-items:center}
+  .rv-word{font-family:var(--card);font-size:1.6rem;line-height:1.1}
+  .rv-actions{display:flex;flex-wrap:wrap;gap:6px;align-items:center;grid-column:1 / -1}
+  .rv-actions input{flex:1;min-width:180px;margin:0;padding:8px}
+  .rv-actions audio{height:36px;max-width:260px}
+  .adv-row select{margin:0}
+  @media (max-width:560px){ .adv-row,.adv-row.adv4{grid-template-columns:1fr} }
+
+  /* Signatures */
+  .sig-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+  .sig-box{border:1px solid var(--rule);border-radius:8px;padding:10px}
+  .sig-box .role{font-weight:700;color:var(--ink)}
+  .sig-box img{display:block;max-width:100%;height:60px;object-fit:contain;margin:6px 0}
+  .pad-box{border:2px dashed #9FB2D6;border-radius:8px;background:#fff}
+  #pad{display:block;width:100%;height:170px;touch-action:none;cursor:crosshair}
+
+  /* Printable cards for the learner */
+  .sheet{border:1px solid var(--rule);border-radius:8px;padding:12px;background:#fff;overflow-x:auto}
+  #printArea{display:none}
+  .card{background:#fff;color:#000}
+  .card h4{display:flex;justify-content:space-between;font:700 1rem var(--ui);margin:0 0 10px;color:#000}
+  .card h4 small{font-weight:400;color:#555}
+  .lcard{display:grid;grid-template-columns:repeat(4,1fr);border-top:1.5px solid #555;border-left:1.5px solid #555}
+  .lcard div{font-family:var(--read);font-size:2rem;text-align:center;padding:8px 0;border-right:1.5px solid #555;border-bottom:1.5px solid #555;line-height:1.2}
+  .wtable{width:100%;border-collapse:collapse;table-layout:fixed}
+  .wtable td{font-family:var(--read);font-size:1.3rem;padding:4px 6px;border-bottom:1px solid #bbb;white-space:nowrap;overflow:hidden}
+  .wtable td.n{width:2.2em;font:.8rem var(--ui);color:#555}
+  .card-empty{color:var(--margin)}
+
+  @media (max-width:560px){
+    main{padding:12px}
+    .panel{padding:14px}
+    .top{padding:8px 12px}
+    .app{display:none}
+  }
+  @media print{
+    @page{size:A4;margin:12mm}
+    .top,.tabs,.actions,.tools,.dock,#recordBtn{display:none!important}
+    body{background:#fff;padding:0!important}
+    body.pc > *:not(#printArea){display:none!important}
+    body.pc #printArea{display:block}
+    .card{break-after:page;page-break-after:always;break-inside:avoid;page-break-inside:avoid}
+    .card:last-child{break-after:auto;page-break-after:auto}
+    .card h4{font-size:13pt;margin-bottom:4mm}
+    .lcard div{font-size:46pt;padding:3mm 0}
+    .wtable td.n{font-size:9pt;width:8mm}
+    .card.ks1 .wtable td{font-size:24pt;padding:1.6mm 1.5mm}
+    .card.ks2 .wtable td{font-size:21pt;padding:1.4mm 1.5mm}
+  }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div>
+    <div class="school">Baluyan Elementary School</div>
+    <div class="app">School-based Reading Assessment</div>
+  </div>
+  <div class="top-right">
+    <button id="syncPill" class="pill" type="button" title="Tap to sync now">Starting</button>
+    <button id="logoutBtn" class="btn small ghost hidden" type="button">Log out</button>
+  </div>
+</header>
+
+<main>
+
+  <!-- Sign in -->
+  <section id="viewLogin" class="hidden">
+    <h1>Who Is Signing In?</h1>
+    <p class="hint">School-based Reading Assessment</p>
+    <div class="login-grid">
+      <form id="adminForm" class="panel" autocomplete="off">
+        <h2>School Head</h2>
+        <p>Assess learners, manage the learner list, print, record, and send results.</p>
+        <label>PIN<input type="password" id="adminPin" inputmode="numeric"></label>
+        <button class="btn primary" type="submit">Sign In</button>
+        <p class="msg" id="adminMsg"></p>
+      </form>
+      <form id="teacherForm" class="panel" autocomplete="off">
+        <h2>Teacher, Parent, or Learner</h2>
+        <p>See the result, remarks, and reading materials, then sign to confirm.</p>
+        <label>Learner LRN (12 Digits)<input id="teacherLrn" inputmode="numeric" maxlength="12"></label>
+        <button class="btn primary" type="submit">View Results</button>
+        <p class="msg" id="teacherMsg"></p>
+      </form>
+      <form id="adviserForm" class="panel" autocomplete="off">
+        <h2>Adviser</h2>
+        <p>Listen to your learners' practice recordings and give stars or a redo.</p>
+        <label>Email<input id="advEmail" type="email"></label>
+        <label>PIN<input id="advPin" type="password" inputmode="numeric"></label>
+        <button class="btn primary" type="submit">Sign In</button>
+        <p class="msg" id="advLoginMsg"></p>
+      </form>
+    </div>
+
+    <div class="panel" id="boardPanel">
+      <h2>School Reading Dashboard</h2>
+      <p class="hint" id="boardNote">Loading the dashboard.</p>
+      <div class="dash-grid">
+        <div class="pie-wrap">
+          <div id="pieChart"></div>
+          <div class="legend" id="pieLegend"></div>
+        </div>
+        <div>
+          <div class="stats">
+            <div class="stat"><b id="bTotal">0</b><span>School Population</span></div>
+            <div class="stat"><b id="bAssessed">0</b><span>Learners Assessed</span></div>
+            <div class="stat"><b id="bStars">0</b><span>Stars Earned in Practice</span></div>
+          </div>
+          <h3>Assessed per Grade</h3>
+          <div id="gradeBars"></div>
+        </div>
+      </div>
+      <h3>Top Readers</h3>
+      <p class="hint">Learners earn one star for every practice word read correctly.</p>
+      <ol class="board" id="boardList"></ol>
+    </div>
+  </section>
+
+  <!-- School Head -->
+  <section id="viewAdmin" class="hidden">
+    <nav class="tabs" role="tablist">
+      <button class="tab" role="tab" type="button" data-tab="assess" aria-selected="true">Reading Assessment</button>
+      <button class="tab" role="tab" type="button" data-tab="learners" aria-selected="false">Learners</button>
+      <button class="tab" role="tab" type="button" data-tab="records" aria-selected="false">Records</button>
+      <button class="tab" role="tab" type="button" data-tab="print" aria-selected="false">Printables</button>
+      <button class="tab" role="tab" type="button" data-tab="practice" aria-selected="false">Practice Review</button>
+      <button class="tab" role="tab" type="button" disabled>Numeracy <small>(Coming Soon)</small></button>
+    </nav>
+
+    <!-- Assessment form -->
+    <div id="tab-assess">
+      <div class="panel">
+        <h2>Assessment Details</h2>
+        <div class="fields">
+          <label>Grade<select id="aGrade"></select></label>
+          <label>Learner<select id="aLearner"></select></label>
+          <label>Date of Assessment<input type="date" id="aDate"></label>
+          <label>Assessor<input id="aAssessor"></label>
+          <label><span id="aLevelLabel">BOSY Reading Profile</span><select id="aLevel"></select></label>
+          <label>Learner Reads From
+            <select id="aSource">
+              <option value="screen">Learner Screen (random order)</option>
+              <option value="print">Printed Card (fixed order)</option>
+            </select>
+          </label>
+        </div>
+        <div id="codeBox"></div>
+        <div id="learnerNote"></div>
+        <p class="hint" id="aToolHint"></p>
+      </div>
+
+      <div class="panel">
+        <h2>Task 1: Letter Names</h2>
+        <p class="hint">Tick when the learner names the letter. The list is in the same order the learner sees, and each number matches the card number on the learner's screen. The timer on the side starts on your first tick.</p>
+        <div class="tools">
+          <button type="button" class="btn small" data-all="t1">Tick All</button>
+          <button type="button" class="btn small" data-none="t1">Clear</button>
+        </div>
+        <div id="grid1" class="letters lgrid"></div>
+        <div class="scoreline" id="scores1"></div>
+      </div>
+
+      <div class="panel">
+        <h2>Task 2: Letter Sounds</h2>
+        <p class="hint">Tick when the learner gives the letter sound. The letters are shuffled again for this task, so the order is different from Task 1.</p>
+        <div class="tools">
+          <button type="button" class="btn small" data-all="t2">Tick All</button>
+          <button type="button" class="btn small" data-none="t2">Clear</button>
+        </div>
+        <div id="grid2" class="letters lgrid"></div>
+        <div class="scoreline" id="scores2"></div>
+      </div>
+
+      <div class="panel" id="task3Panel">
+        <h2>Task 3: Reading Words by Pattern</h2>
+        <p class="hint">Tick each word read correctly. The patterns go from simplest to hardest, and the words are shuffled only within their own pattern. The small number on each word matches the card number on the learner's screen. The timer starts on your first tick.</p>
+        <p class="ks-note" id="ksNote"></p>
+        <div id="wordArea"></div>
+        <div class="scoreline" id="wordScore"></div>
+      </div>
+
+      <div class="panel">
+        <h2>Results</h2>
+        <div id="summaryBox"></div>
+        <label>Remarks<textarea id="aRemarks" rows="5"></textarea></label>
+        <label>Assigned Reading Materials<textarea id="aMaterials" rows="6"></textarea></label>
+        <button id="refreshAuto" class="btn small" type="button">Rewrite Remarks and Materials from the Scores</button>
+        <div class="actions">
+          <button id="newBtn" class="btn" type="button">Start New</button>
+          <button id="recordBtn" class="btn primary big" type="button">Record Assessment</button>
+        </div>
+        <p class="msg" id="recordMsg"></p>
+      </div>
+    </div>
+
+    <!-- Learners -->
+    <div id="tab-learners" class="hidden">
+      <div class="panel">
+        <h2>Add a Learner</h2>
+        <form id="addLearnerForm" autocomplete="off">
+          <div class="fields">
+            <label>Grade<select id="nGrade"></select></label>
+            <label>Last Name<input id="nLast"></label>
+            <label>First Name<input id="nFirst"></label>
+            <label>LRN (Optional)<input id="nLrn" inputmode="numeric" maxlength="12"></label>
+            <label id="nAdviserWrap" class="hidden">Adviser<select id="nAdviser"></select></label>
+          </div>
+          <button class="btn primary" type="submit">Add Learner</button>
+          <p class="msg" id="addMsg"></p>
+        </form>
+      </div>
+
+      <div class="panel">
+        <h2>Advisers</h2>
+        <p class="hint">Results are emailed to the adviser of each grade. When a grade has two or more advisers, choose each learner's adviser in the Learner List. Give each adviser a PIN so they can sign in and review practice recordings.</p>
+        <div id="adviserList"></div>
+        <div class="print-btns" style="margin-top:10px">
+          <button id="addAdviser" class="btn" type="button">Add Adviser</button>
+          <button id="saveAdvisers" class="btn primary" type="button">Save Advisers</button>
+        </div>
+        <p class="msg" id="advMsg"></p>
+      </div>
+
+      <div class="panel">
+        <h2>Upload LRNs</h2>
+        <p class="hint">Copy from Excel or Google Sheets and paste below, one learner per line in this order: LRN, Last name, First name, Grade. Names already on the list get their LRN. New names are added. In Excel, set the LRN column to Text first so the numbers stay complete.</p>
+        <textarea id="lrnPaste" rows="6" placeholder="LRN	Last name	First name	Grade"></textarea>
+        <div class="fields" style="margin-top:10px">
+          <label>Grade for New Names Without a Grade<select id="uGrade"></select></label>
+          <label>Or Choose a CSV File<input type="file" id="lrnFile" accept=".csv,.txt"></label>
+        </div>
+        <button id="lrnImportBtn" class="btn primary" type="button">Upload LRNs</button>
+        <p class="msg" id="lrnMsg"></p>
+      </div>
+
+      <div class="panel">
+        <h2>Learner List</h2>
+        <div class="toolbar"><label>Show<select id="lFilter"></select></label></div>
+        <p class="hint" id="learnerCount"></p>
+        <div id="learnerList"></div>
+        <p class="msg" id="listMsg"></p>
+      </div>
+    </div>
+
+    <!-- Records -->
+    <div id="tab-records" class="hidden">
+      <div class="panel">
+        <h2>Recorded Assessments</h2>
+        <div class="toolbar"><label>Show<select id="rFilter"></select></label><label id="rAdviserWrap" class="hidden">Adviser<select id="rAdviser"></select></label></div>
+        <div class="print-btns">
+          <button type="button" class="btn" id="bulkPrint">Print These Results</button>
+          <button type="button" class="btn primary" id="bulkSend">Email These Results to the Adviser</button>
+        </div>
+        <p class="hint" id="bulkHint"></p>
+        <div class="panel inset hidden" id="sendPanel">
+          <h2 id="sendTitle">Email Results</h2>
+          <label>Send To (Email)<input id="sendTo" type="email" placeholder="adviser@deped.gov.ph"></label>
+          <label>Short Note (Optional)<textarea id="sendNote" rows="2"></textarea></label>
+          <p class="hint">Each learner's one page result sheet is attached as a PDF. The email needs internet.</p>
+          <div class="actions">
+            <button type="button" class="btn" id="sendCancel">Cancel</button>
+            <button type="button" class="btn primary" id="sendGo">Send Email</button>
+          </div>
+          <p class="msg" id="sendMsg"></p>
+        </div>
+        <div id="recordList"></div>
+      </div>
+      <div class="panel hidden" id="recordDetail"></div>
+    </div>
+
+    <!-- Practice Review -->
+    <div id="tab-practice" class="hidden"><div id="revAdmin"></div></div>
+
+    <!-- Printables -->
+    <div id="tab-print" class="hidden">
+      <div class="panel">
+        <h2>Printable Materials for the Learner</h2>
+        <p class="hint">Print these so the learner reads from paper while you tick on your device. Each card fits on one A4 sheet. The word cards show words only, with no pattern names. Collect the cards after each assessment.</p>
+        <div class="fields">
+          <label>Letter Order
+            <select id="pOrder">
+              <option value="az">A to Z</option>
+              <option value="mixed">Mixed, so the learner cannot recite the alphabet</option>
+            </select>
+          </label>
+        </div>
+        <p class="hint">When a learner reads from these printed cards, set Learner Reads From to Printed Card in the assessment form so your tick sheet follows the same order.</p>
+        <div class="print-btns">
+          <button type="button" class="btn primary" data-print="letters">Print Letter Card</button>
+          <button type="button" class="btn primary" data-print="ks1">Print Key Stage 1 Word Card</button>
+          <button type="button" class="btn primary" data-print="ks2">Print Key Stage 2 Word Card</button>
+          <button type="button" class="btn" data-print="all">Print All Three</button>
+        </div>
+        <p class="msg" id="printMsg"></p>
+      </div>
+      <div class="panel">
+        <h2>Preview</h2>
+        <div class="toolbar">
+          <label>Show
+            <select id="pPreview">
+              <option value="letters">Letter Card</option>
+              <option value="ks1">Key Stage 1 Word Card</option>
+              <option value="ks2">Key Stage 2 Word Card</option>
+            </select>
+          </label>
+        </div>
+        <div class="sheet" id="printPreview"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Frog Letters game -->
+  <section id="viewGame" class="game hidden" aria-label="Frog Letters game">
+    <div class="g-top">
+      <button type="button" class="g-btn" id="gExit" aria-label="Exit the game">✕</button>
+      <div class="g-ask" id="gAsk"></div>
+      <button type="button" class="g-btn" id="gSpeak" aria-label="Hear it again"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H3v6h3l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 5.5a9 9 0 0 1 0 13"/></svg></button>
+    </div>
+    <div class="g-stage" id="gStage">
+      <svg class="g-tongue" id="gTongue"></svg>
+      <div id="gBubbles"></div>
+      <div class="g-frog" id="gFrog"></div>
+      <div class="g-overlay hidden" id="gOverlay"></div>
+    </div>
+  </section>
+
+  <!-- Learner reading screen -->
+  <section id="viewReader" class="reader hidden">
+    <div class="r-top"><span id="rTitle"></span><span><span id="rCount"></span> <span class="sub" id="rCode"></span> <button type="button" class="btn small" id="rExit">Exit</button></span></div>
+    <div class="r-card"><div id="rGlyph" class="r-glyph"></div></div>
+    <div class="r-nav">
+      <button type="button" class="btn big" id="rBack">Back</button>
+      <button type="button" class="btn primary big" id="rNext">Next</button>
+    </div>
+  </section>
+
+  <!-- Teacher, Parent, or Learner -->
+  <section id="viewAdviser" class="hidden">
+    <div id="revAdviser"></div>
+  </section>
+
+  <section id="viewTeacher" class="hidden">
+    <div id="teacherBody"></div>
+  </section>
+</main>
+
+<aside id="timerDock" class="dock hidden" aria-label="Timers">
+  <div id="timer1"></div><div id="timer2"></div><div id="timer3"></div>
+</aside>
+
+<div id="printArea" aria-hidden="true"></div>
+
+<script>
+/* =========================================================
+   SETTINGS
+   ========================================================= */
+
+// Leave empty when the page is opened from the Apps Script web app link.
+// For the offline copy saved on a device, paste the Web app URL between the quotes.
+const API_URL = 'https://script.google.com/macros/s/AKfycbxow520bER1W7qn2FW__VQUtazLiX3Kfol4UC798vVsUplfpbOZdxUk80gkaX6r8GiXBw/exec';
+
+// The link of the copy that allows the microphone (for example, your GitHub Pages link).
+// Learners are sent there when recording does not work on the page they opened.
+const PRACTICE_URL = '';
+
+const SBRA = 'School-based Reading Assessment';
+const STORE_KEY = 'baluyanAssess_v1';
+const DRAFT_KEY = 'baluyanAssess_draft_v2';
+const LETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+const LETTERS_MIXED = 'SAMTIPNCODGELFHRBUKWJYVQXZ'.split('');
+const GRADES = [['K','Kindergarten'],['1','Grade 1'],['2','Grade 2'],['3','Grade 3'],['4','Grade 4'],['5','Grade 5'],['6','Grade 6']];
+const CRLA_LEVELS = ['Low Emerging Reader','High Emerging Reader','Developing Reader','Transitioning Reader','Reading at Grade Level'];
+const PHILIRI_LEVELS = ['Non-Reader','Frustration','Instructional','Independent'];
+const LOW_READING = ['Low Emerging Reader','High Emerging Reader','Non-Reader','Frustration'];
+const MID_READING = ['Developing Reader','Transitioning Reader','Instructional'];
+const ROLES = ['teacher','parent','learner'];
+const ROLE_LABEL = { teacher: 'Adviser', parent: 'Parent or Guardian', learner: 'Learner' };
+
+// Scoring formula settings
+const SETTINGS = {
+  target: { t1: 40, t2: 30, t3: { '1': 15, '2': 25, '3': 35, '4': 45, '5': 55, '6': 60 } }, // correct items per minute
+  weightAccuracy: 0.7, weightSpeed: 0.3,
+  weightT1: 0.25, weightT2: 0.25, weightT3: 0.5,
+  passOf5: 4,   // Key Stage 2: words out of 5 to pass a pattern
+  passOf3: 2    // Key Stage 1: words out of 3 to pass a pattern
+};
+const BANDS = [[85,'Proficient','proficient'],[70,'Developing','developing'],[50,'Emerging','emerging'],[0,'Needs Intensive Support','intensive']];
+
+/* One page result sheet style, used for printing and for the emailed PDF */
+const RESULT_CSS = `
+.rpage{font-family:Arial,Helvetica,sans-serif;font-size:9.5pt;color:#000;line-height:1.3;page-break-after:always;break-after:page}
+.rpage:last-child{page-break-after:auto;break-after:auto}
+.rpage table{width:100%;border-collapse:collapse}
+.rp-head td{vertical-align:top;padding-bottom:4pt;border-bottom:1.5pt solid #1F3A93}
+.rp-title{text-align:right;font-weight:bold;font-size:12pt;color:#1F3A93}
+.rp-title span{font-size:9.5pt;color:#000;font-weight:normal}
+.rp-info{margin:5pt 0}
+.rp-info td{padding:1.5pt 0;width:50%;vertical-align:top}
+.rp-index td{padding:2pt 8pt 4pt 0;vertical-align:middle}
+.rp-index .big{font-size:24pt;font-weight:bold;color:#1F3A93;width:1%;white-space:nowrap}
+.rp-tasks th,.rp-tasks td{border:0.75pt solid #999;padding:2.5pt 4pt;text-align:left}
+.rp-tasks th{background:#E8EEFA;font-size:8.5pt}
+.rpage p{margin:3pt 0}
+.rp-h{font-weight:bold;margin-top:6pt!important;color:#1F3A93}
+.rp-pats td{padding:1.5pt 4pt;border-bottom:0.5pt solid #ccc;font-size:9pt}
+.rp-pats .ps{text-align:right;white-space:nowrap;width:12%}
+.rp-pats .low{color:#C8323B;font-weight:bold}
+.rp-sigs{margin-top:12pt}
+.rp-sigs td{width:33%;padding:0 8pt;vertical-align:bottom;text-align:center}
+.sig-img{height:36pt}
+.sig-img img{max-height:36pt;max-width:100%}
+.sig-line{border-top:0.75pt solid #000;padding-top:2pt;font-weight:bold;min-height:11pt}
+.sig-role{font-size:8.5pt}
+.rpage .pre{white-space:pre-wrap}
+`;
+
+/* =========================================================
+   HELPERS
+   ========================================================= */
+const $ = id => document.getElementById(id);
+const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function uid(){ return Date.now().toString(36) + Math.random().toString(36).slice(2, 8); }
+function today(){ const d = new Date(); d.setMinutes(d.getMinutes() - d.getTimezoneOffset()); return d.toISOString().slice(0, 10); }
+function nowIso(){ return new Date().toISOString(); }
+function fmtTime(sec){ sec = Math.max(0, Math.round(sec || 0)); return Math.floor(sec / 60) + ':' + String(sec % 60).padStart(2, '0'); }
+function fmtDay(ymd){
+  const m = String(ymd || '').match(/^(\d{4})-(\d{2})-(\d{2})/);
+  const d = m ? new Date(+m[1], +m[2] - 1, +m[3]) : new Date(ymd);
+  return isNaN(d) ? String(ymd || '') : d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+}
+function gradeLabel(g){ const f = GRADES.find(x => x[0] === String(g)); return f ? f[1] : (g ? 'Grade ' + g : ''); }
+function gradeOrder(g){ const i = GRADES.findIndex(x => x[0] === String(g)); return i < 0 ? 99 : i; }
+function toolFor(g){ g = String(g || ''); if (['K','1','2','3'].includes(g)) return 'CRLA'; if (['4','5','6'].includes(g)) return 'Phil-IRI'; return ''; }
+function keyStage(g){ g = String(g || ''); if (['K','1','2','3'].includes(g)) return 1; if (['4','5','6'].includes(g)) return 2; return 0; }
+function hasTask3(g){ return keyStage(g) > 0 && String(g) !== 'K'; }
+function wordCount(p, ks){
+  const n = ks === 1 ? (p.ks1 != null && p.ks1 !== '' ? +p.ks1 : (/cvc/i.test(p.pattern) ? 5 : 3)) : ks === 2 ? (p.ks2 != null && p.ks2 !== '' ? +p.ks2 : 5) : 0;
+  return Math.max(0, Math.min(n, p.words.length));
+}
+function wordsFor(p, ks){ return p.words.slice(0, wordCount(p, ks)); }
+function passMark(total){ if (total >= 5) return SETTINGS.passOf5; if (total === 3) return SETTINGS.passOf3; return total; }
+function letterOrder(){ return S.letterOrder === 'mixed' ? LETTERS_MIXED : LETTERS; }
+function norm(s){ return String(s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/\s+/g, ' ').trim(); }
+function parseGrade(s){ s = String(s || '').trim(); if (!s) return ''; if (/^k/i.test(s)) return 'K'; const m = s.match(/[1-6]/); return m ? m[0] : ''; }
+function setMsg(el, text, kind){ el.textContent = text || ''; el.className = 'msg' + (kind ? ' ' + kind : ''); }
+function ask(q){ try { return window.confirm(q); } catch(e){ return true; } }
+function tell(q){ try { window.alert(q); } catch(e){} }
+function hash(str){
+  let h1 = 0x811c9dc5, h2 = 0x1234567; const s = 'baluyan::' + str;
+  for (let i = 0; i < s.length; i++){ const c = s.charCodeAt(i); h1 ^= c; h1 = Math.imul(h1, 16777619); h2 = Math.imul(h2 ^ c, 2654435761); }
+  return (h1 >>> 0).toString(16) + (h2 >>> 0).toString(16);
+}
+function twoTap(btn, confirmText, fn){
+  if (btn.dataset.armed === '1'){ btn.dataset.armed = ''; btn.textContent = btn.dataset.old; fn(); return; }
+  btn.dataset.old = btn.textContent; btn.dataset.armed = '1'; btn.textContent = confirmText;
+  setTimeout(() => { if (btn.dataset.armed === '1'){ btn.dataset.armed = ''; btn.textContent = btn.dataset.old; } }, 3000);
+}
+function learnerName(l){ return l.last + ', ' + l.first; }
+
+/* Session code and shuffles. The server uses the same math, so both screens show the same order. */
+function hashNum(str){ let h = 0x811c9dc5; str = String(str); for (let i = 0; i < str.length; i++){ h ^= str.charCodeAt(i); h = Math.imul(h, 16777619); } return h >>> 0; }
+function sessionCode(pin, learnerId, date){ return String(hashNum('sbra|' + pin + '|' + learnerId + '|' + date) % 1000000).padStart(6, '0'); }
+function rng(seedStr){ let a = hashNum(seedStr); return () => { a = (a + 0x6D2B79F5) | 0; let t = Math.imul(a ^ (a >>> 15), 1 | a); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
+function shuffled(arr, seedStr){ const r = rng(seedStr), a = arr.slice(); for (let i = a.length - 1; i > 0; i--){ const j = Math.floor(r() * (i + 1)); const t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+function letterSeq(code, task){ return shuffled(LETTERS, code + '|' + task); }
+function wordSeq(code, pattern, n){ return shuffled(Array.from({ length: n }, (_, i) => i), code + '|' + pattern); }
+function advisersOf(grade){ return S.adviserList.filter(a => String(a.grade) === String(grade)); }
+function adviserById(id){ return S.adviserList.find(a => a.id === id); }
+function findDuplicate(last, first, exceptId){
+  return Object.values(S.learners).find(x => x.id !== exceptId && norm(x.last) === norm(last) && norm(x.first) === norm(first));
+}
+
+/* Storage (falls back to memory if the browser blocks it) */
+const memStore = {};
+function lsGet(k){ try { return localStorage.getItem(k); } catch(e){ return memStore[k] || null; } }
+function lsSet(k, v){ try { localStorage.setItem(k, v); } catch(e){ memStore[k] = v; } }
+function lsDel(k){ try { localStorage.removeItem(k); } catch(e){ delete memStore[k]; } }
+
+let S = loadState();
+function loadState(){
+  let s = null;
+  try { s = JSON.parse(lsGet(STORE_KEY) || 'null'); } catch(e){}
+  s = s || {};
+  s.learners = s.learners || {};
+  s.assessments = s.assessments || {};
+  s.queue = s.queue || {};
+  s.queue.learners = s.queue.learners || {};
+  s.queue.assessments = s.queue.assessments || {};
+  s.queue.signs = s.queue.signs || {};
+  s.queue.recs = s.queue.recs || {};
+  s.practiceCache = s.practiceCache || {};
+  s.queue.stars = s.queue.stars || {};
+  s.rewards = s.rewards || {};
+  s.earnedKeys = s.earnedKeys || {};
+  s.queue.advisers = !!s.queue.advisers;
+  s.wordBank = s.wordBank || [];
+  // Advisers: a list, so one grade can have more than one adviser
+  if (!Array.isArray(s.adviserList)){
+    s.adviserList = Object.keys(s.advisers || {}).map(g => ({ id: 'adv' + g, grade: g, name: s.advisers[g].name || '', email: s.advisers[g].email || '' }));
+  }
+  delete s.advisers;
+  s.queue.delLearners = s.queue.delLearners || {};
+  s.queue.delAssessments = s.queue.delAssessments || {};
+  s.signatures = s.signatures || {};
+  return s;
+}
+function persist(){ lsSet(STORE_KEY, JSON.stringify(S)); }
+
+/* Signatures for one record, including ones waiting to sync */
+function sigsFor(recordId, base){
+  const out = Object.assign({}, base || S.signatures[recordId] || {});
+  Object.values(S.queue.signs).forEach(sg => { if (sg.recordId === recordId) out[sg.role] = { name: sg.name, image: sg.image, signedAt: sg.signedAt }; });
+  return out;
+}
+
+/* =========================================================
+   SERVER CONNECTION AND SYNC
+   ========================================================= */
+function hasGAS(){ return typeof google !== 'undefined' && google.script && google.script.run; }
+function serverAvailable(){ return !!(hasGAS() || API_URL); }
+
+function callApi(req){
+  return new Promise((resolve, reject) => {
+    if (!serverAvailable()){ reject(new Error('noserver')); return; }
+    let finished = false;
+    const timer = setTimeout(() => { if (!finished){ finished = true; reject(new Error('timeout')); } }, 45000);
+    const ok = v => { if (!finished){ finished = true; clearTimeout(timer); resolve(v); } };
+    const bad = e => { if (!finished){ finished = true; clearTimeout(timer); reject(e); } };
+    if (hasGAS()){
+      google.script.run.withSuccessHandler(ok).withFailureHandler(bad).api(req);
+    } else {
+      fetch(API_URL, { method: 'POST', body: JSON.stringify(req) }).then(r => r.json()).then(ok, bad);
+    }
+  });
+}
+
+let syncing = false, syncError = '';
+function pendingCount(){
+  const q = S.queue;
+  return Object.keys(q.learners).length + Object.keys(q.assessments).length + Object.keys(q.signs).length + (q.advisers ? 1 : 0) +
+    Object.keys(q.delLearners).length + Object.keys(q.delAssessments).length + Object.keys(q.recs).length + Object.keys(q.stars).length;
+}
+
+function renderSync(){
+  const p = $('syncPill'); const n = pendingCount(); let t, c = '';
+  if (!serverAvailable()){ t = 'No server link'; c = 'err'; }
+  else if (syncing){ t = 'Saving to server'; }
+  else if (syncError){ t = 'Sync problem, tap to retry'; c = 'err'; }
+  else if (navigator.onLine === false){ t = n ? 'Offline, ' + n + ' waiting to sync' : 'Offline, saved on this device'; c = 'warn'; }
+  else if (n){ t = n + ' waiting to sync'; c = 'warn'; }
+  else { t = 'Online, all synced'; c = 'ok'; }
+  p.textContent = t; p.className = 'pill ' + c;
+  p.title = syncError || 'Tap to sync now';
+}
+
+async function flush(){
+  if (syncing || !serverAvailable() || navigator.onLine === false){ renderSync(); return; }
+  const q = S.queue;
+  const lids = Object.keys(q.learners), aids = Object.keys(q.assessments), sKeys = Object.keys(q.signs);
+  const dL = Object.keys(q.delLearners), dA = Object.keys(q.delAssessments);
+  const adminWork = S.pin && (lids.length || aids.length || q.advisers || dL.length || dA.length);
+  const rKeys = Object.keys(q.recs), stKeys = Object.keys(q.stars);
+  if (!adminWork && !sKeys.length && !rKeys.length && !stKeys.length){ syncError = ''; renderSync(); return; }
+  syncing = true; renderSync();
+  let problem = '';
+  try {
+    if (adminWork){
+      const learners = lids.map(id => S.learners[id]).filter(Boolean);
+      const assessments = aids.map(id => S.assessments[id]).filter(Boolean);
+      const stamp = {};
+      learners.forEach(l => stamp['l' + l.id] = l.updatedAt);
+      assessments.forEach(a => stamp['a' + a.id] = a.updatedAt);
+      const advStamp = S.advisersUpdated;
+      const res = await callApi({ action: 'sync', pin: S.pin, learners, assessments, advisers: q.advisers ? S.adviserList : null, deleteLearners: dL, deleteAssessments: dA });
+      if (res && res.ok){
+        lids.forEach(id => { const l = S.learners[id]; if (!l || l.updatedAt === stamp['l' + id]) delete q.learners[id]; });
+        aids.forEach(id => { const a = S.assessments[id]; if (!a || a.updatedAt === stamp['a' + id]) delete q.assessments[id]; });
+        if (S.advisersUpdated === advStamp) q.advisers = false;
+        dL.forEach(id => delete q.delLearners[id]);
+        dA.forEach(id => delete q.delAssessments[id]);
+        S.lastSync = nowIso();
+      } else problem = (res && res.error) || 'The server did not accept the data.';
+    }
+    for (const k of stKeys){
+      const st = q.stars[k]; if (!st) continue;
+      const res = await callApi({ action: 'earnStar', lrn: st.lrn, key: st.key, earnedAt: st.earnedAt });
+      if (res && res.ok){ delete q.stars[k]; S.rewards[st.lrn] = { practice: res.practice, tasks: res.tasks, games: res.games, frog: res.frog || [], progress: res.progress || { frog: res.frog || [] } }; }
+      else if (res && res.error){ delete q.stars[k]; }
+    }
+    if (stKeys.length && TV && $('viewGame').classList.contains('hidden') && !$('viewTeacher').classList.contains('hidden')) renderTeacher();
+    for (const k of rKeys){
+      const rc = q.recs[k]; if (!rc) continue;
+      const res = await callApi(Object.assign({ action: 'submitRecording' }, rc));
+      if (res && res.ok){
+        delete q.recs[k];
+        const c = S.practiceCache[rc.lrn];
+        if (c) c.items = c.items.map(x => x.id === rc.id ? Object.assign({}, x, res.item) : x);
+        if (PR && PR.lrn === rc.lrn){ PR.items = PR.items.map(x => x.id === rc.id ? Object.assign({}, x, res.item, { pendingUpload: false }) : x); if (TV) renderTeacher(); }
+      } else if (res && res.error){ problem = res.error; delete q.recs[k]; }
+    }
+    for (const k of sKeys){
+      const sg = q.signs[k]; if (!sg) continue;
+      const res = await callApi(Object.assign({ action: 'sign' }, sg));
+      if (res && res.ok){
+        if (q.signs[k] === sg) delete q.signs[k];
+        (S.signatures[sg.recordId] = S.signatures[sg.recordId] || {})[sg.role] = { name: sg.name, image: sg.image, signedAt: sg.signedAt };
+      } else if (res && res.error){ problem = res.error; }
+    }
+    persist();
+  } catch(e){ /* offline or timeout: try again later */ }
+  syncError = problem;
+  syncing = false; renderSync();
+  if (!$('viewAdmin').classList.contains('hidden')){ renderRecords(); renderLearners(); }
+}
+
+function mergeServer(res){
+  const q = S.queue;
+  (res.learners || []).forEach(l => { if (!q.learners[l.id] && !q.delLearners[l.id]) S.learners[l.id] = l; });
+  (res.assessments || []).forEach(a => { if (!q.assessments[a.id] && !q.delAssessments[a.id] && !q.delLearners[a.learnerId]) S.assessments[a.id] = a; });
+  if (Array.isArray(res.advisers) && !q.advisers) S.adviserList = res.advisers;
+  if (res.signatures) S.signatures = res.signatures;
+}
+
+async function silentRefresh(){
+  if (!S.pin || !serverAvailable() || navigator.onLine === false) return;
+  try {
+    const res = await callApi({ action: 'adminLogin', pin: S.pin });
+    if (res && res.ok){
+      S.wordBank = res.wordBank || []; mergeServer(res); persist(); advDraft = null;
+      renderWords(); renderLearnerSelect(); renderLearnerNote(); renderLearners(); renderAdvisers(); renderRecords(); update();
+    } else if (res && /PIN/i.test(res.error || '')){
+      logout(); setMsg($('adminMsg'), 'The PIN was changed. Sign in with the new PIN.', 'err');
+    }
+  } catch(e){}
+}
+
+/* =========================================================
+   VIEWS AND SIGN IN
+   ========================================================= */
+let currentTab = 'assess';
+function show(view){
+  ['viewLogin','viewAdmin','viewTeacher','viewReader','viewAdviser','viewGame'].forEach(v => $(v).classList.toggle('hidden', v !== view));
+  document.body.classList.toggle('reading', view === 'viewReader' || view === 'viewGame');
+  $('logoutBtn').classList.toggle('hidden', view === 'viewLogin');
+  $('logoutBtn').textContent = view === 'viewTeacher' ? 'Back' : 'Log Out';
+  if (view === 'viewLogin') loadBoard();
+  setDock();
+  window.scrollTo(0, 0);
+}
+
+function setDock(){
+  const on = !$('viewAdmin').classList.contains('hidden') && currentTab === 'assess';
+  $('timerDock').classList.toggle('hidden', !on);
+  document.body.classList.toggle('dock-on', on);
+  if (timers.t3){ timers.t3.hidden = !hasTask3(F.grade); timers.t3.render(); }
+}
+
+async function adminLogin(pin){
+  const m = $('adminMsg');
+  if (!pin){ setMsg(m, 'Enter the PIN.', 'err'); return; }
+  setMsg(m, 'Checking the PIN');
+  try {
+    const res = await callApi({ action: 'adminLogin', pin });
+    if (!res || !res.ok){ setMsg(m, (res && res.error) || 'Sign in failed.', 'err'); return; }
+    S.pin = pin; S.pinHash = hash(pin); S.wordBank = res.wordBank || [];
+    mergeServer(res); S.session = 'admin'; S.lastSync = nowIso(); persist();
+    setMsg(m, ''); $('adminPin').value = '';
+    enterAdmin(); flush();
+  } catch(e){
+    if (S.pinHash && S.pinHash === hash(pin)){
+      S.pin = pin; S.session = 'admin'; persist();
+      setMsg(m, ''); $('adminPin').value = '';
+      enterAdmin();
+    } else if (!serverAvailable()){
+      setMsg(m, 'This copy has no server link. Paste the Web app URL into API_URL in the file.', 'err');
+    } else {
+      setMsg(m, 'No internet. The first sign in on this device needs the internet.', 'err');
+    }
+  }
+}
+
+function logout(){
+  if (!$('viewTeacher').classList.contains('hidden')){ recCancel(); TV = null; LSess = null; PR = null; FG = null; show('viewLogin'); return; }
+  if (!$('viewAdviser').classList.contains('hidden')){ REV = null; show('viewLogin'); return; }
+  const n = pendingCount();
+  S.session = null; S.pin = null; persist();
+  $('printArea').innerHTML = ''; $('printPreview').innerHTML = '';
+  show('viewLogin');
+  if (n) setMsg($('adminMsg'), n + ' item(s) are still waiting to sync. They will sync the next time you sign in with internet.', 'err');
+}
+
+function enterAdmin(){
+  show('viewAdmin');
+  restoreDraft();
+  buildLetterGrid();
+  renderAssess();
+  renderLearners();
+  renderAdvisers();
+  renderRecords();
+  selectTab('assess');
+  renderSync();
+}
+
+function selectTab(name){
+  currentTab = name;
+  document.querySelectorAll('.tab[data-tab]').forEach(b => b.setAttribute('aria-selected', b.dataset.tab === name ? 'true' : 'false'));
+  ['assess','learners','records','print','practice'].forEach(t => $('tab-' + t).classList.toggle('hidden', t !== name));
+  if (name === 'practice') loadReview({ pin: S.pin }, $('revAdmin'));
+  if (name === 'records') renderRecords();
+  if (name === 'learners'){ renderLearners(); renderAdvisers(); }
+  if (name === 'print') renderPreview();
+  setDock();
+}
+
+function fillGradeSelects(){
+  const opts = GRADES.map(g => `<option value="${g[0]}">${g[1]}</option>`).join('');
+  $('aGrade').innerHTML = '<option value="">All grades</option>' + opts;
+  $('nGrade').innerHTML = '<option value="">Choose grade</option>' + opts;
+  $('uGrade').innerHTML = '<option value="">None</option>' + opts;
+  $('lFilter').innerHTML = '<option value="">All grades</option>' + opts;
+  $('rFilter').innerHTML = '<option value="">All grades</option>' + opts;
+}
+
+/* =========================================================
+   ASSESSMENT FORM
+   ========================================================= */
+function blankForm(){
+  return {
+    id: null, learnerId: '', grade: '', date: today(), assessor: 'School Head', readingLevel: '', source: 'screen',
+    t1: Array(26).fill(false), t2: Array(26).fill(false), t3: {},
+    timers: { t1: { acc: 0, status: 'idle', startedAt: null }, t2: { acc: 0, status: 'idle', startedAt: null }, t3: { acc: 0, status: 'idle', startedAt: null } },
+    remarks: '', materials: '', remarksEdited: false, materialsEdited: false
+  };
+}
+let F = blankForm();
+
+function saveDraft(){ if (S.session === 'admin') lsSet(DRAFT_KEY, JSON.stringify(F)); }
+function restoreDraft(){
+  try {
+    const d = JSON.parse(lsGet(DRAFT_KEY) || 'null');
+    if (d && Array.isArray(d.t1)){
+      const b = blankForm();
+      d.timers = Object.assign(b.timers, d.timers || {});
+      F = Object.assign(b, d);
+    }
+  } catch(e){}
+}
+
+/* Floating timers with start, pause, resume, stop */
+const SYM = { start: '\u25B6', resume: '\u25B6', pause: '\u275A\u275A', stop: '\u25A0', reset: '\u21BA' };
+class Timer {
+  constructor(key, el, title){
+    this.key = key; this.el = el; this.title = title; this.iv = null; this.hidden = false;
+    el.addEventListener('click', e => {
+      const b = e.target.closest('button[data-act]'); if (!b) return;
+      if (b.dataset.act === 'reset') twoTap(b, '?', () => this.reset());
+      else this[b.dataset.act]();
+    });
+  }
+  get st(){ return F.timers[this.key]; }
+  ms(){ const s = this.st; return s.acc + (s.status === 'running' && s.startedAt ? Date.now() - s.startedAt : 0); }
+  seconds(){ return Math.round(this.ms() / 1000); }
+  start(){ const s = this.st; s.status = 'running'; s.startedAt = Date.now(); this.changed(); }
+  resume(){ this.start(); }
+  pause(){ const s = this.st; if (s.status !== 'running') return; s.acc += Date.now() - s.startedAt; s.startedAt = null; s.status = 'paused'; this.changed(); }
+  stop(){ const s = this.st; if (s.status === 'running') s.acc += Date.now() - s.startedAt; s.startedAt = null; s.status = 'stopped'; this.changed(); }
+  reset(){ F.timers[this.key] = { acc: 0, status: 'idle', startedAt: null }; this.changed(); }
+  changed(){ this.loop(); this.render(); update(); }
+  loop(){
+    clearInterval(this.iv); this.iv = null;
+    if (this.st.status === 'running') this.iv = setInterval(() => { this.paintTime(); update(); }, 1000);
+  }
+  paintTime(){ const t = this.el.querySelector('.t-time'); if (t) t.textContent = fmtTime(this.seconds()); }
+  render(){
+    const s = this.st.status || 'idle';
+    const label = { idle: 'Not started', running: 'Running', paused: 'Paused', stopped: 'Done' }[s];
+    const btns = {
+      idle: [['start','Start','primary']],
+      running: [['pause','Pause',''],['stop','Stop','primary']],
+      paused: [['resume','Resume','primary'],['stop','Stop',''],['reset','Reset','']],
+      stopped: [['reset','Reset','']]
+    }[s];
+    this.el.className = 'timer ' + s + (this.hidden ? ' off' : '');
+    this.el.innerHTML = `<div class="t-top"><span class="t-title">${this.title}</span><span class="t-state">${label}</span></div>
+      <div class="t-time">${fmtTime(this.seconds())}</div>
+      <div class="t-btns">${btns.map(b => `<button type="button" class="tbtn ${b[2]}" data-act="${b[0]}" aria-label="${this.title} ${b[1]}" title="${b[1]}">${SYM[b[0]]}</button>`).join('')}</div>`;
+  }
+}
+const timers = {};
+function refreshTimers(){ Object.values(timers).forEach(t => { t.loop(); t.render(); }); setDock(); }
+function autoStart(key){ const t = timers[key]; if (!t) return; const s = t.st.status; if (s === 'idle' || s === 'paused') t.start(); }
+
+function currentCode(){ return (F.learnerId && S.pin && F.date) ? sessionCode(S.pin, F.learnerId, F.date) : ''; }
+/* The order the learner sees, for each task */
+function currentOrders(){
+  const code = currentCode();
+  const screen = F.source !== 'print' && !!code;
+  const wb = S.wordBank || [], ks = keyStage(F.grade);
+  const t3 = {};
+  wb.forEach(p => { const n = wordCount(p, ks); t3[p.pattern] = screen ? wordSeq(code, p.pattern, n) : Array.from({ length: n }, (_, i) => i); });
+  return { source: screen ? 'screen' : 'print', code, t1: screen ? letterSeq(code, 't1') : letterOrder(), t2: screen ? letterSeq(code, 't2') : letterOrder(), t3 };
+}
+function buildLetterGrid(){
+  const o = currentOrders();
+  ['t1','t2'].forEach((t, n) => {
+    const order = o[t]; const cols = [order.slice(0, 13), order.slice(13)];
+    $('grid' + (n + 1)).innerHTML = cols.map((col, ci) => `
+      <div class="lcol">
+        <div class="lhead"><span>No.</span><span>Letter</span><span>${t === 't1' ? 'Named' : 'Sounded'}</span></div>
+        ${col.map((L, j) => { const i = LETTERS.indexOf(L); return `
+          <div class="lrow">
+            <span class="seq">${ci * 13 + j + 1}</span>
+            <span class="glyph">${L}${L.toLowerCase()}</span>
+            <button type="button" class="tick" data-t="${t}" data-i="${i}" aria-pressed="false" aria-label="${L} ${t === 't1' ? 'named' : 'sounded'}"></button>
+          </div>`; }).join('')}
+      </div>`).join('');
+  });
+  paintLetters();
+  renderCodeBox(o);
+}
+function paintLetters(){
+  document.querySelectorAll('.lgrid .tick').forEach(b => b.setAttribute('aria-pressed', F[b.dataset.t][+b.dataset.i] ? 'true' : 'false'));
+}
+function renderCodeBox(o){
+  const el = $('codeBox');
+  if (!F.learnerId){ el.innerHTML = ''; return; }
+  el.innerHTML = o.source === 'screen'
+    ? `<div class="codebox"><div><div class="sub">Learner Screen Code</div><div class="code">${o.code}</div></div>
+       <div class="sub" style="flex:1;min-width:200px">On the learner's device, sign in with the learner's LRN, then enter this code. The code works only for this learner, for the date of assessment (${esc(fmtDay(F.date))}).</div></div>`
+    : `<p class="hint">The learner reads from the printed cards. Your tick sheet follows the printed order.</p>`;
+}
+
+function renderWords(){
+  const wb = S.wordBank || [], el = $('wordArea');
+  $('task3Panel').classList.toggle('hidden', String(F.grade) === 'K');
+  const ks = keyStage(F.grade);
+  if (!wb.length){
+    $('ksNote').textContent = '';
+    el.innerHTML = '<p class="msg err">The word list is not on this device yet. Connect to the internet, then log out and sign in again to load it.</p>';
+    return;
+  }
+  if (!hasTask3(F.grade)){
+    $('ksNote').textContent = '';
+    el.innerHTML = '<p class="hint">Choose a learner first. The word list follows the learner\'s Key Stage.</p>';
+    return;
+  }
+  const total = wb.reduce((s, p) => s + wordCount(p, ks), 0);
+  $('ksNote').textContent = 'Key Stage ' + ks + ' word list: ' + total + ' words';
+  const o = currentOrders();
+  const groups = []; let seq = 0;
+  wb.forEach((p, k) => {
+    if (!wordCount(p, ks)) return;
+    let g = groups[groups.length - 1];
+    if (!g || g.name !== p.group){ g = { name: p.group, items: [] }; groups.push(g); }
+    g.items.push({ p, k });
+  });
+  el.innerHTML = groups.map(g => `
+    <div class="pgroup"><h3>${esc(g.name)}</h3>
+      ${g.items.map(({ p, k }) => { const ticks = F.t3[p.pattern] || []; const single = g.items.length === 1 && p.pattern === g.name; const words = wordsFor(p, ks); return `
+        <div class="pattern">
+          <div class="phead"><span><span class="pnum">${k + 1}.</span>${single ? 'Words' : esc(p.pattern)}</span><span class="pscore" data-k="${k}"></span></div>
+          <div class="words">${(o.t3[p.pattern] || []).map(i => { seq++; return `<button type="button" class="word" data-k="${k}" data-i="${i}" aria-pressed="${ticks[i] ? 'true' : 'false'}"><span class="seq">${seq}</span>${esc(words[i])}</button>`; }).join('')}</div>
+        </div>`; }).join('')}
+    </div>`).join('');
+}
+
+function learnersSorted(grade){
+  return Object.values(S.learners)
+    .filter(l => !grade || String(l.grade) === String(grade))
+    .sort((a, b) => gradeOrder(a.grade) - gradeOrder(b.grade) || norm(a.last).localeCompare(norm(b.last)) || norm(a.first).localeCompare(norm(b.first)));
+}
+
+function renderLearnerSelect(){
+  const g = $('aGrade').value, sel = $('aLearner');
+  const list = learnersSorted(g);
+  sel.innerHTML = '<option value="">' + (list.length ? 'Choose a learner' : 'No learners yet') + '</option>' +
+    list.map(l => `<option value="${esc(l.id)}">${esc(learnerName(l))}${g ? '' : ' (' + gradeLabel(l.grade) + ')'}${recordOf(l.id) ? ' \u2713' : ''}</option>`).join('');
+  if (F.learnerId && list.some(l => l.id === F.learnerId)) sel.value = F.learnerId;
+  else if (F.learnerId && g){ F.learnerId = ''; F.grade = ''; renderLevelSelect(); }
+}
+
+function recordOf(learnerId, exceptId){
+  return Object.values(S.assessments).find(a => a.learnerId === learnerId && a.id !== exceptId);
+}
+
+function renderLearnerNote(){
+  const el = $('learnerNote');
+  const ex = F.learnerId ? recordOf(F.learnerId, F.id) : null;
+  el.innerHTML = ex ? `<div class="notice">This learner already has a result recorded on ${esc(fmtDay(ex.date))}. Recording again will replace it. <button type="button" class="btn small" id="openExisting">Open That Result</button></div>` : '';
+  if (ex) $('openExisting').onclick = () => openInForm(ex.id);
+}
+
+function renderLevelSelect(){
+  const tool = toolFor(F.grade);
+  const lv = tool === 'CRLA' ? CRLA_LEVELS : tool === 'Phil-IRI' ? PHILIRI_LEVELS : [];
+  if (!lv.includes(F.readingLevel)) F.readingLevel = '';
+  $('aLevel').innerHTML = '<option value="">' + (tool ? 'Choose a level' : 'Choose a learner first') + '</option>' +
+    lv.map(x => `<option${x === F.readingLevel ? ' selected' : ''}>${esc(x)}</option>`).join('');
+  $('aLevelLabel').textContent = tool ? 'BOSY Reading Profile (' + tool + ')' : 'BOSY Reading Profile';
+  $('aToolHint').textContent =
+    String(F.grade) === 'K' ? 'Kindergarten: Task 1 and Task 2 only. BOSY reading profile based on the CRLA.' :
+    tool === 'CRLA' ? 'Key Stage 1: BOSY reading profile based on the CRLA.' :
+    tool === 'Phil-IRI' ? 'Key Stage 2: BOSY reading level based on the Phil-IRI.' : '';
+  renderWords();
+  buildLetterGrid();
+  setDock();
+}
+
+function renderAssess(){
+  const l = S.learners[F.learnerId];
+  $('aGrade').value = l ? String(l.grade) : '';
+  if (l) F.grade = l.grade;
+  renderLearnerSelect();
+  $('aDate').value = F.date || today();
+  $('aAssessor').value = F.assessor || '';
+  $('aSource').value = F.source === 'print' ? 'print' : 'screen';
+  renderLevelSelect();
+  renderLearnerNote();
+  paintLetters();
+  refreshTimers();
+  $('aRemarks').value = F.remarks || '';
+  $('aMaterials').value = F.materials || '';
+  $('recordBtn').textContent = F.id ? 'Update Record' : 'Record Assessment';
+  setMsg($('recordMsg'), '');
+  update();
+}
+
+/* Scoring */
+function taskScore(correct, total, seconds, target){
+  const accuracy = total ? correct / total : 0;
+  if (!seconds) return { accuracy, rate: null, speed: null, index: Math.round(accuracy * 100), timed: false };
+  const rate = correct / (seconds / 60);
+  const speed = Math.min(1, rate / target);
+  return { accuracy, rate: Math.round(rate * 10) / 10, speed, index: Math.round(100 * (SETTINGS.weightAccuracy * accuracy + SETTINGS.weightSpeed * speed)), timed: true };
+}
+
+function compute(){
+  const l = S.learners[F.learnerId];
+  const grade = (l && l.grade) || F.grade || '';
+  const ks = keyStage(grade);
+  const t1c = F.t1.filter(Boolean).length, t2c = F.t2.filter(Boolean).length;
+  const t1s = timers.t1.seconds(), t2s = timers.t2.seconds(), t3s = timers.t3.seconds();
+  const t1 = Object.assign({ administered: true, correct: t1c, total: 26, seconds: t1s, missing: LETTERS.filter((L, i) => !F.t1[i]) }, taskScore(t1c, 26, t1s, SETTINGS.target.t1));
+  const t2 = Object.assign({ administered: true, correct: t2c, total: 26, seconds: t2s, missing: LETTERS.filter((L, i) => !F.t2[i]) }, taskScore(t2c, 26, t2s, SETTINGS.target.t2));
+  const wb = hasTask3(grade) ? (S.wordBank || []) : [];
+  const patterns = wb.map(p => {
+    const ticks = F.t3[p.pattern] || [];
+    const words = wordsFor(p, ks);
+    return { group: p.group, pattern: p.pattern, correct: words.filter((w, i) => ticks[i]).length, total: words.length, missed: words.filter((w, i) => !ticks[i]) };
+  });
+  const t3c = patterns.reduce((s, p) => s + p.correct, 0), t3t = patterns.reduce((s, p) => s + p.total, 0);
+  const given = t3t > 0 && (t3s > 0 || t3c > 0);
+  const t3 = Object.assign({ administered: given, keyStage: hasTask3(grade) ? ks : 0, correct: t3c, total: t3t, seconds: given ? t3s : 0, patterns },
+    given ? taskScore(t3c, t3t, t3s, SETTINGS.target.t3[grade] || 30) : { accuracy: 0, rate: null, speed: null, index: null, timed: false });
+  let li = given ? SETTINGS.weightT1 * t1.index + SETTINGS.weightT2 * t2.index + SETTINGS.weightT3 * t3.index : (t1.index + t2.index) / 2;
+  li = Math.round(li);
+  const band = BANDS.find(b => li >= b[0]);
+  return { grade, keyStage: ks, tool: toolFor(grade), t1, t2, t3, literacyIndex: li, level: band[1], levelKey: band[2] };
+}
+
+function weakPatterns(t3){ return (t3.patterns || []).filter(p => p.total > 0 && p.correct < passMark(p.total)); }
+function slowTasks(r){
+  return [['Task 1', r.t1], ['Task 2', r.t2], ['Task 3', r.t3]]
+    .filter(([n, t]) => t.administered && t.timed && t.accuracy >= 0.8 && t.speed < 0.6).map(x => x[0]);
+}
+function lowAccuracyTasks(r){
+  return [['Task 1', r.t1], ['Task 2', r.t2], ['Task 3', r.t3]].filter(([n, t]) => t.administered && t.accuracy < 0.5).map(x => x[0]);
+}
+
+function autoRemarks(r){
+  const l = S.learners[F.learnerId]; const name = l ? l.first : 'The learner';
+  const out = [];
+  out.push(`${name} is at the ${r.level} level with a literacy index of ${r.literacyIndex}.`);
+  out.push(r.t1.missing.length ? `Names ${r.t1.correct} of 26 letters. Focus on: ${r.t1.missing.join(', ')}.` : 'Names all 26 letters.');
+  out.push(r.t2.missing.length ? `Gives the sound of ${r.t2.correct} of 26 letters. Focus on: ${r.t2.missing.join(', ')}.` : 'Gives the sound of all 26 letters.');
+  if (r.t3.administered){
+    const weak = weakPatterns(r.t3);
+    out.push(weak.length ? `Reads ${r.t3.correct} of ${r.t3.total} pattern words. Needs support in: ${weak.map(p => p.pattern).join(', ')}.` : `Reads ${r.t3.correct} of ${r.t3.total} pattern words and handles all patterns well.`);
+  } else if (hasTask3(r.grade)) out.push('Task 3 was not given.');
+  const slow = slowTasks(r);
+  if (slow.length) out.push(`Accurate but slow in ${slow.join(' and ')}. Build speed through short timed practice.`);
+  const low = lowAccuracyTasks(r);
+  if (low.length) out.push(`Work on accuracy first in ${low.join(' and ')}, then speed.`);
+  return out.join(' ');
+}
+
+function autoMaterials(r){
+  const m = [];
+  if (r.t1.missing.length) m.push(`Alphabet flash cards and letter tracing sheets for: ${r.t1.missing.join(', ')}`);
+  if (r.t2.missing.length) m.push(`Letter sound cards with picture cues and a daily 5 minute sound drill for: ${r.t2.missing.join(', ')}`);
+  if (r.t3.administered){
+    const byGroup = {};
+    weakPatterns(r.t3).forEach(p => (byGroup[p.group] = byGroup[p.group] || []).push(p.pattern));
+    Object.keys(byGroup).forEach(g => {
+      const list = byGroup[g];
+      m.push(list.length === 1 && list[0] === g ? `${g}: phonics word cards and decodable sentences` : `${g}: phonics word cards and decodable sentences for ${list.join(', ')}`);
+    });
+  }
+  if (slowTasks(r).length) m.push('Timed repeated reading of familiar word lists, 3 times a week');
+  if (LOW_READING.includes(F.readingLevel)) m.push('Leveled readers below grade level, read with the teacher in small group guided reading');
+  else if (MID_READING.includes(F.readingLevel)) m.push('Leveled readers at instructional level with guided reading');
+  if (!m.length || r.levelKey === 'proficient') m.push('Grade level storybooks for independent reading');
+  return m.map(x => '\u2022 ' + x).join('\n');
+}
+
+function chips(arr){ return arr.length ? `<span class="chips">${arr.map(x => `<span class="chip">${esc(x)}</span>`).join('')}</span>` : '<span class="none">None</span>'; }
+
+function taskRow(name, t, unit){
+  const given = t && t.administered !== false;
+  t = t || {};
+  return `<tr><td>${name}</td><td>${given ? t.correct + ' of ' + t.total : 'Not given'}</td><td>${given && t.seconds ? fmtTime(t.seconds) : (given ? 'Not timed' : '')}</td><td>${t.rate != null ? t.rate + ' ' + unit + ' per min' : ''}</td><td><b>${t.index == null ? '' : t.index}</b></td></tr>`;
+}
+function taskRows(r){
+  const k = String(r.grade) === 'K';
+  return taskRow('Task 1: Letter names', r.t1, 'letters') + taskRow('Task 2: Letter sounds', r.t2, 'sounds') + (k ? '' : taskRow('Task 3: Pattern words', r.t3, 'words'));
+}
+function scoreTable(r){
+  return `<div class="tablewrap"><table class="stable">
+    <thead><tr><th>Task</th><th>Score</th><th>Time</th><th>Speed</th><th>Index</th></tr></thead>
+    <tbody>${taskRows(r)}</tbody></table></div>`;
+}
+function indexBlock(r){
+  return `<div class="index-big"><span class="num">${r.literacyIndex}</span><span><span class="level lv-${esc(r.levelKey)}">${esc(r.level)}</span><br><span class="sub">Literacy Index out of 100</span></span></div>`;
+}
+
+function update(){
+  if ($('viewAdmin').classList.contains('hidden') || !timers.t1) return;
+  const r = compute();
+  $('scores1').innerHTML = `<div><b>${r.t1.correct}</b> of 26 letters named. Focus on: ${chips(r.t1.missing)}</div>`;
+  $('scores2').innerHTML = `<div><b>${r.t2.correct}</b> of 26 letter sounds. Focus on: ${chips(r.t2.missing)}</div>`;
+  const weak = weakPatterns(r.t3);
+  $('wordScore').innerHTML = hasTask3(r.grade) && r.t3.total
+    ? `<div><b>${r.t3.correct}</b> of ${r.t3.total} words read correctly.${r.t3.administered && weak.length ? ' Patterns to focus on: ' + esc(weak.map(p => p.pattern).join(', ')) + '.' : ''}</div>` : '';
+  document.querySelectorAll('.pscore').forEach(el => {
+    const p = r.t3.patterns[+el.dataset.k]; if (!p) return;
+    el.textContent = p.correct + ' of ' + p.total;
+    el.classList.toggle('low', p.correct < passMark(p.total));
+  });
+  $('summaryBox').innerHTML = indexBlock(r) + scoreTable(r) +
+    `<p class="hint">Each task index is 70% accuracy and 30% speed, compared with the target pace for the grade. Literacy index = Task 1 (25%) + Task 2 (25%) + Task 3 (50%). For Kindergarten, or when Task 3 is not given, the index is the average of Tasks 1 and 2. A task that is not timed is scored on accuracy only.</p>`;
+  if (!F.remarksEdited){ const t = autoRemarks(r); if (F.remarks !== t){ F.remarks = t; $('aRemarks').value = t; } }
+  if (!F.materialsEdited){ const t = autoMaterials(r); if (F.materials !== t){ F.materials = t; $('aMaterials').value = t; } }
+  saveDraft();
+}
+
+function recordAssessment(){
+  const msg = $('recordMsg');
+  const l = S.learners[F.learnerId];
+  if (!l){ setMsg(msg, 'Choose a learner first.', 'err'); return; }
+  if (!F.date){ setMsg(msg, 'Enter the date of assessment.', 'err'); return; }
+  const ex = recordOf(l.id, F.id);
+  if (ex){
+    if (!ask(`${l.first} ${l.last} already has a result recorded on ${fmtDay(ex.date)}.\n\nReplace the old result with this one?`)){
+      setMsg(msg, 'Not recorded. The old result was kept.', 'err'); return;
+    }
+    if (F.id && S.assessments[F.id] && S.assessments[F.id].learnerId !== l.id){ /* keep the other learner's record */ }
+    F.id = ex.id;
+  }
+  Object.values(timers).forEach(t => { if (t.st.status === 'running' || t.st.status === 'paused') t.stop(); });
+  const r = compute(); const now = nowIso();
+  const id = F.id || uid(); const prev = S.assessments[id];
+  const a = {
+    id, learnerId: l.id, lrn: l.lrn || '', learnerName: learnerName(l), first: l.first, last: l.last, grade: l.grade,
+    type: SBRA, keyStage: r.keyStage, date: F.date, assessor: F.assessor, tool: r.tool, readingLevel: F.readingLevel,
+    t1: r.t1, t2: r.t2, t3: r.t3, literacyIndex: r.literacyIndex, level: r.level, levelKey: r.levelKey,
+    remarks: $('aRemarks').value.trim(), materials: $('aMaterials').value.trim(),
+    ticks: { t1: F.t1.slice(), t2: F.t2.slice(), t3: JSON.parse(JSON.stringify(F.t3)) },
+    orders: (() => { const o = currentOrders(); const ks = keyStage(l.grade); const words = {};
+      if (hasTask3(l.grade)) (S.wordBank || []).forEach(p => { const w = wordsFor(p, ks); if (w.length) words[p.pattern] = (o.t3[p.pattern] || []).map(i => w[i]); });
+      return { source: o.source, t1: o.t1.slice(), t2: o.t2.slice(), t3: words }; })(),
+    savedAt: prev ? prev.savedAt : now, updatedAt: now
+  };
+  S.assessments[id] = a; S.queue.assessments[id] = true; F.id = id;
+  persist(); saveDraft();
+  $('recordBtn').textContent = 'Update Record';
+  renderLearnerNote(); renderLearnerSelect();
+  const who = l.first + ' ' + l.last;
+  setMsg(msg, navigator.onLine === false ? `Recorded for ${who}. Saved on this device. It will sync when the internet is back.` : `Recorded for ${who}. Saving to server.`, 'good');
+  renderRecords();
+  flush().then(() => { if (!S.queue.assessments[id]) setMsg(msg, `Recorded and synced for ${who}.`, 'good'); });
+}
+
+function newForm(){
+  Object.values(timers).forEach(t => { clearInterval(t.iv); t.iv = null; });
+  F = blankForm(); lsDel(DRAFT_KEY);
+  renderAssess(); window.scrollTo(0, 0);
+}
+
+function openInForm(id){
+  const a = S.assessments[id]; if (!a) return;
+  Object.values(timers).forEach(t => { clearInterval(t.iv); t.iv = null; });
+  const f = blankForm();
+  f.id = a.id; f.learnerId = a.learnerId; f.grade = a.grade; f.date = a.date;
+  f.assessor = a.assessor || ''; f.readingLevel = a.readingLevel || ''; f.source = (a.orders && a.orders.source) || 'print';
+  if (a.ticks){ f.t1 = (a.ticks.t1 || f.t1).slice(); f.t2 = (a.ticks.t2 || f.t2).slice(); f.t3 = JSON.parse(JSON.stringify(a.ticks.t3 || {})); }
+  ['t1','t2','t3'].forEach(k => { const sec = (a[k] && a[k].seconds) || 0; f.timers[k] = { acc: sec * 1000, status: sec ? 'stopped' : 'idle', startedAt: null }; });
+  f.remarks = a.remarks || ''; f.materials = a.materials || ''; f.remarksEdited = true; f.materialsEdited = true;
+  F = f; selectTab('assess'); renderAssess(); window.scrollTo(0, 0);
+}
+
+/* =========================================================
+   LEARNERS AND ADVISERS
+   ========================================================= */
+function setLrn(id, lrn){
+  lrn = String(lrn || '').replace(/\D/g, '');
+  if (lrn && lrn.length !== 12) return 'LRN must be 12 digits.';
+  const dup = lrn && Object.values(S.learners).find(x => x.id !== id && x.lrn === lrn);
+  if (dup) return `That LRN already belongs to ${dup.first} ${dup.last}.`;
+  const l = S.learners[id]; if (!l) return 'Learner not found.';
+  if (l.lrn === lrn) return '';
+  l.lrn = lrn; l.updatedAt = nowIso(); S.queue.learners[id] = true;
+  return '';
+}
+
+function renderLearners(){
+  const g = $('lFilter').value; const list = learnersSorted(g);
+  const noLrn = list.filter(l => !l.lrn).length;
+  $('learnerCount').textContent = list.length ? `${list.length} learner(s). ${noLrn ? noLrn + ' still without LRN.' : 'All have LRN.'}` : '';
+  $('learnerList').innerHTML = list.length ? list.map(l => `
+    <div class="row">
+      <div><div class="nm">${esc(learnerName(l))}</div>
+        <div class="sub">${gradeLabel(l.grade)} ${recordOf(l.id) ? '<span class="tag ok">Assessed</span>' : ''} ${S.queue.learners[l.id] ? '<span class="tag">Waiting to sync</span>' : ''}</div></div>
+      <div class="rec-btns" style="align-items:flex-end">
+        ${advisersOf(l.grade).length > 1 ? `<label class="lrn-in">Adviser<select data-adv="${esc(l.id)}"><option value="">Choose</option>${advisersOf(l.grade).map(a => `<option value="${esc(a.id)}"${a.id === l.adviserId ? ' selected' : ''}>${esc(a.name || a.email)}</option>`).join('')}</select></label>` : ''}
+        <label class="lrn-in">LRN<input data-id="${esc(l.id)}" value="${esc(l.lrn || '')}" inputmode="numeric" maxlength="12" placeholder="12 digits"></label>
+        <button type="button" class="btn small" data-del="${esc(l.id)}">Delete</button>
+      </div>
+    </div>`).join('') : '<p class="hint">No learners yet. Add a learner above or paste a class list with LRNs.</p>';
+}
+
+function addLearner(e){
+  e.preventDefault();
+  const m = $('addMsg');
+  const grade = $('nGrade').value, last = $('nLast').value.trim(), first = $('nFirst').value.trim(), lrn = $('nLrn').value.replace(/\D/g, '');
+  if (!grade || !last || !first){ setMsg(m, 'Choose the grade and type the last and first name.', 'err'); return; }
+  const dup = findDuplicate(last, first);
+  if (dup){
+    const text = `${dup.first} ${dup.last} is already on the list in ${gradeLabel(dup.grade)}. The name was not added again.`;
+    setMsg(m, text, 'err'); tell(text); return;
+  }
+  if (lrn && lrn.length !== 12){ setMsg(m, 'LRN must be 12 digits.', 'err'); return; }
+  const l = { id: uid(), lrn: '', last, first, grade, updatedAt: nowIso(), adviserId: advisersOf(grade).length > 1 ? $('nAdviser').value : '' };
+  S.learners[l.id] = l;
+  if (lrn){ const err = setLrn(l.id, lrn); if (err){ delete S.learners[l.id]; setMsg(m, err, 'err'); tell(err); return; } }
+  S.queue.learners[l.id] = true; persist();
+  $('nLast').value = ''; $('nFirst').value = ''; $('nLrn').value = ''; $('nLast').focus();
+  setMsg(m, `Added ${first} ${last} to ${gradeLabel(grade)}.`, 'good');
+  renderLearners(); renderLearnerSelect(); flush();
+}
+
+function importLrns(){
+  const m = $('lrnMsg');
+  const lines = $('lrnPaste').value.split(/\r?\n/).map(s => s.trim()).filter(Boolean);
+  if (!lines.length){ setMsg(m, 'Paste the list first or choose a CSV file.', 'err'); return; }
+  let updated = 0, added = 0; const problems = []; const seen = {};
+  const defGrade = $('uGrade').value;
+  lines.forEach((line, n) => {
+    const c = line.split(/\t|,|;/).map(s => s.trim().replace(/^"|"$/g, ''));
+    if (n === 0 && !/\d/.test(c[0] || '')) return; // header row
+    if (/e\+/i.test(c[0] || '')){ problems.push(`Line ${n + 1}: the LRN was shortened by Excel. Set the column to Text and copy again.`); return; }
+    const lrn = (c[0] || '').replace(/\D/g, ''), last = c[1] || '', first = c[2] || '', grade = parseGrade(c[3]);
+    if (!last || !first){ problems.push(`Line ${n + 1}: missing name.`); return; }
+    const key = norm(last) + '|' + norm(first);
+    if (seen[key]){ problems.push(`Line ${n + 1}: ${first} ${last} appears twice in the pasted list.`); return; }
+    seen[key] = true;
+    if (lrn.length !== 12){ problems.push(`Line ${n + 1} (${first} ${last}): LRN must be 12 digits.`); return; }
+    let l = findDuplicate(last, first);
+    let isNew = false;
+    if (l && grade && String(l.grade) !== grade) problems.push(`Line ${n + 1}: ${first} ${last} is already listed in ${gradeLabel(l.grade)}, so no second entry was made.`);
+    if (!l){
+      const g = grade || defGrade;
+      if (!g){ problems.push(`Line ${n + 1} (${first} ${last}): not on the list and no grade given.`); return; }
+      l = { id: uid(), lrn: '', last, first, grade: g, updatedAt: nowIso() };
+      S.learners[l.id] = l; S.queue.learners[l.id] = true; isNew = true; added++;
+    }
+    const before = l.lrn;
+    const err = setLrn(l.id, lrn);
+    if (err) problems.push(`Line ${n + 1} (${first} ${last}): ${err}`);
+    else if (!isNew && before !== lrn) updated++;
+  });
+  persist();
+  setMsg(m, `${updated} LRN(s) updated, ${added} new learner(s) added.` + (problems.length ? ' Check these: ' + problems.join(' ') : ''), problems.length ? 'err' : 'good');
+  if (!problems.length) $('lrnPaste').value = '';
+  renderLearners(); renderLearnerSelect(); flush();
+}
+
+let advDraft = null;
+function renderAdvisers(){
+  if (!advDraft) advDraft = S.adviserList.map(a => Object.assign({}, a));
+  const opts = g => GRADES.map(x => `<option value="${x[0]}"${x[0] === String(g) ? ' selected' : ''}>${x[1]}</option>`).join('');
+  $('adviserList').innerHTML = advDraft.length ? advDraft.map((a, i) => `
+    <div class="adv-row adv4">
+      <select data-i="${i}" data-f="grade" aria-label="Grade">${opts(a.grade)}</select>
+      <input data-i="${i}" data-f="name" placeholder="Adviser name" value="${esc(a.name || '')}" aria-label="Adviser name">
+      <input data-i="${i}" data-f="email" type="email" placeholder="Email" value="${esc(a.email || '')}" aria-label="Adviser email">
+      <input data-i="${i}" data-f="pin" inputmode="numeric" placeholder="PIN" value="${esc(a.pin || '')}" aria-label="Adviser PIN">
+      <button type="button" class="btn small" data-rm="${i}">Remove</button>
+    </div>`).join('') : '<p class="hint">No advisers yet. Tap Add Adviser.</p>';
+  renderAdviserSelect();
+}
+
+function renderAdviserSelect(){
+  const g = $('nGrade').value, list = advisersOf(g);
+  $('nAdviserWrap').classList.toggle('hidden', list.length < 2);
+  $('nAdviser').innerHTML = '<option value="">Choose</option>' + list.map(a => `<option value="${esc(a.id)}">${esc(a.name || a.email)}</option>`).join('');
+}
+
+function saveAdvisers(){
+  let bad = '';
+  const list = advDraft.map(a => ({ id: a.id || uid(), grade: String(a.grade || ''), name: (a.name || '').trim(), email: (a.email || '').trim(), pin: String(a.pin || '').trim() }))
+    .filter(a => a.grade && (a.name || a.email));
+  list.forEach(a => { if (a.email && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(a.email)) bad = a.name || gradeLabel(a.grade); });
+  if (bad){ setMsg($('advMsg'), 'Check the email for ' + bad + '.', 'err'); return; }
+  S.adviserList = list; advDraft = null; S.advisersUpdated = nowIso(); S.queue.advisers = true; persist();
+  renderAdvisers(); renderLearners(); renderRecords();
+  setMsg($('advMsg'), 'Advisers saved.', 'good'); flush();
+}
+
+function deleteLearner(id){
+  const l = S.learners[id]; if (!l) return;
+  const recs = Object.values(S.assessments).filter(a => a.learnerId === id);
+  const q = recs.length
+    ? `Delete ${l.first} ${l.last} (${gradeLabel(l.grade)})?\n\nThis also deletes ${recs.length === 1 ? 'the recorded result' : 'the ' + recs.length + ' recorded results'} and signatures. This cannot be undone.`
+    : `Delete ${l.first} ${l.last} (${gradeLabel(l.grade)})? This cannot be undone.`;
+  if (!ask(q)) return;
+  recs.forEach(a => { delete S.assessments[a.id]; delete S.queue.assessments[a.id]; delete S.signatures[a.id]; });
+  Object.keys(S.queue.signs).forEach(k => { if (recs.some(a => k.indexOf(a.id + '|') === 0)) delete S.queue.signs[k]; });
+  delete S.learners[id]; delete S.queue.learners[id]; S.queue.delLearners[id] = true;
+  if (F.learnerId === id) newForm();
+  persist();
+  setMsg($('listMsg'), `${l.first} ${l.last} was deleted.`, 'good');
+  renderLearners(); renderLearnerSelect(); renderRecords(); flush();
+}
+
+function deleteRecord(id){
+  const a = S.assessments[id]; if (!a) return;
+  if (!ask(`Delete the result of ${a.learnerName} recorded on ${fmtDay(a.date)}? The learner stays on the list. This cannot be undone.`)) return;
+  delete S.assessments[id]; delete S.queue.assessments[id]; delete S.signatures[id]; S.queue.delAssessments[id] = true;
+  if (F.id === id) newForm();
+  $('recordDetail').classList.add('hidden');
+  persist(); renderRecords(); renderLearners(); renderLearnerSelect(); flush();
+}
+
+/* =========================================================
+   RECORDS, PRINTING RESULTS, EMAIL
+   ========================================================= */
+function renderAdviserFilter(){
+  const g = $('rFilter').value, list = g ? advisersOf(g) : [];
+  const cur = $('rAdviser').value;
+  $('rAdviserWrap').classList.toggle('hidden', list.length < 2);
+  $('rAdviser').innerHTML = '<option value="">All advisers</option>' + list.map(a => `<option value="${esc(a.id)}">${esc(a.name || a.email)}</option>`).join('');
+  if (list.some(a => a.id === cur)) $('rAdviser').value = cur;
+}
+function filteredRecords(){
+  const g = $('rFilter').value;
+  const adv = !$('rAdviserWrap').classList.contains('hidden') ? $('rAdviser').value : '';
+  return Object.values(S.assessments).filter(a => !g || String(a.grade) === g)
+    .filter(a => { if (!adv) return true; const l = S.learners[a.learnerId]; return l && l.adviserId === adv; })
+    .sort((a, b) => gradeOrder(a.grade) - gradeOrder(b.grade) || norm(a.learnerName).localeCompare(norm(b.learnerName)));
+}
+
+function renderRecords(){
+  renderAdviserFilter();
+  const list = filteredRecords(); const g = $('rFilter').value;
+  $('bulkPrint').disabled = !list.length;
+  $('bulkSend').disabled = !list.length || !g;
+  $('bulkHint').textContent = !list.length ? '' : g ? `${list.length} result(s) in ${gradeLabel(g)}. Each prints on one page.` : 'Choose a grade to email all its results at once.';
+  $('recordList').innerHTML = list.length ? list.map(a => {
+    const sg = sigsFor(a.id); const signed = ROLES.filter(r => sg[r]).map(r => ROLE_LABEL[r]);
+    return `
+    <div class="row">
+      <div><div class="nm">${esc(a.learnerName)}</div>
+        <div class="sub">${gradeLabel(a.grade)}, ${esc(fmtDay(a.date))}${a.readingLevel ? ', BOSY: ' + esc(a.readingLevel) : ''}</div>
+        <div><span class="level lv-${esc(a.levelKey)}">${a.literacyIndex} ${esc(a.level)}</span>
+          ${S.queue.assessments[a.id] ? '<span class="tag">Waiting to sync</span>' : '<span class="tag ok">Synced</span>'}
+          <span class="sub">${signed.length ? 'Signed by: ' + signed.join(', ') : 'Not signed yet'}</span></div></div>
+      <div class="rec-btns">
+        <button type="button" class="btn small" data-view="${esc(a.id)}">View</button>
+        <button type="button" class="btn small" data-edit="${esc(a.id)}">Edit</button>
+        <button type="button" class="btn small" data-print1="${esc(a.id)}">Print</button>
+        <button type="button" class="btn small" data-send1="${esc(a.id)}">Email</button>
+        <button type="button" class="btn small" data-delrec="${esc(a.id)}">Delete</button>
+      </div>
+    </div>`; }).join('') : '<p class="hint">No assessments recorded yet. Use the Reading assessment tab to record one.</p>';
+}
+
+/* Screen view of a result. Words appear only for the School Head (missed words). */
+function resultHtml(a, admin){
+  const t3 = a.t3 || {};
+  const pats = (t3.patterns || []).filter(p => p.total > 0);
+  const groups = [];
+  pats.forEach(p => { let g = groups.find(x => x.name === p.group); if (!g){ g = { name: p.group, items: [] }; groups.push(g); } g.items.push(p); });
+  const t1 = a.t1 || { missing: [] }, t2 = a.t2 || { missing: [] };
+  const k = String(a.grade) === 'K';
+  return `
+    <div class="res-head">
+      <div><h2>${esc(a.learnerName)}</h2>
+        <div class="sub">${gradeLabel(a.grade)}${a.lrn ? ', LRN ' + esc(a.lrn) : ''}</div>
+        <div class="sub">${SBRA}, ${esc(fmtDay(a.date))}</div></div>
+      ${indexBlock(a)}
+    </div>
+    <p><b>BOSY Reading Profile${a.tool ? ' (' + esc(a.tool) + ')' : ''}:</b> ${esc(a.readingLevel || 'Not set')}</p>
+    ${scoreTable(a)}
+    <h3>Letters to Focus On</h3>
+    <div class="scoreline">
+      <div>Letter names: ${chips(t1.missing || [])}</div>
+      <div>Letter sounds: ${chips(t2.missing || [])}</div>
+    </div>
+    ${k ? '' : `<h3>Word Patterns${t3.keyStage ? ' (Key Stage ' + t3.keyStage + ' list)' : ''}</h3>
+    ${t3.administered ? groups.map(g => `
+      ${g.items.length > 1 || g.items[0].pattern !== g.name ? `<div class="gname">${esc(g.name)}</div>` : ''}
+      ${g.items.map(p => { const low = p.correct < passMark(p.total); return `
+        <div class="pbar">
+          <div class="pb-top"><span>${esc(p.pattern)}</span><span>${p.correct} of ${p.total}</span></div>
+          <div class="bar"><i class="${low ? 'low' : ''}" style="width:${p.total ? Math.round(100 * p.correct / p.total) : 0}%"></i></div>
+          ${admin && p.missed && p.missed.length ? `<div class="missed">Missed: ${p.missed.map(esc).join(', ')}</div>` : ''}
+        </div>`; }).join('')}`).join('') : '<p class="hint">Task 3 was not given.</p>'}`}
+    <h3>Remarks</h3><p class="pre">${esc(a.remarks || 'None')}</p>
+    <h3>Assigned Reading Materials</h3><p class="pre">${esc(a.materials || 'None')}</p>`;
+}
+
+/* One page result sheet. Never includes the Task 3 words. */
+function resultPrintHtml(a, sigs){
+  sigs = sigs || {};
+  const t1 = a.t1 || { missing: [] }, t2 = a.t2 || { missing: [] }, t3 = a.t3 || {};
+  const k = String(a.grade) === 'K';
+  const pats = (t3.patterns || []).filter(p => p.total > 0);
+  const half = Math.ceil(pats.length / 2);
+  const patCell = (p, n) => p ? `<td>${n}. ${esc(p.pattern)}</td><td class="ps${p.correct < passMark(p.total) ? ' low' : ''}">${p.correct} of ${p.total}</td>` : '<td></td><td></td>';
+  const patRows = Array.from({ length: half }, (_, i) => `<tr>${patCell(pats[i], i + 1)}${patCell(pats[i + half], i + half + 1)}</tr>`).join('');
+  const tr = (n, t, unit) => { const g = t && t.administered !== false; t = t || {}; return `<tr><td>${n}</td><td>${g ? t.correct + ' of ' + t.total : 'Not given'}</td><td>${g && t.seconds ? fmtTime(t.seconds) : (g ? 'Not timed' : '')}</td><td>${t.rate != null ? t.rate + ' ' + unit + '/min' : ''}</td><td><b>${t.index == null ? '' : t.index}</b></td></tr>`; };
+  const sig = role => { const s = sigs[role]; return `<td><div class="sig-img">${s && s.image ? `<img src="${s.image}" alt="">` : ''}</div><div class="sig-line">${s ? esc(s.name) : '&nbsp;'}</div><div class="sig-role">${ROLE_LABEL[role]}${s && s.signedAt ? ', ' + esc(fmtDay(s.signedAt)) : ''}</div></td>`; };
+  return `<div class="rpage">
+    <table class="rp-head"><tr>
+      <td><b>Baluyan Elementary School</b><br>School ID 125592, Imelda District<br>Schools Division of Zamboanga Sibugay</td>
+      <td class="rp-title">${SBRA}<br><span>Learner Result Sheet</span></td></tr></table>
+    <table class="rp-info">
+      <tr><td><b>Learner:</b> ${esc(a.learnerName)}</td><td><b>LRN:</b> ${esc(a.lrn || 'Not yet assigned')}</td></tr>
+      <tr><td><b>Grade:</b> ${gradeLabel(a.grade)}</td><td><b>Date of Assessment:</b> ${esc(fmtDay(a.date))}</td></tr>
+      <tr><td><b>Assessor:</b> ${esc(a.assessor || '')}</td><td><b>BOSY Reading Profile${a.tool ? ' (' + esc(a.tool) + ')' : ''}:</b> ${esc(a.readingLevel || 'Not set')}</td></tr>
+    </table>
+    <table class="rp-index"><tr><td class="big">${a.literacyIndex}</td><td><b>${esc(a.level)}</b><br>Literacy Index out of 100</td></tr></table>
+    <table class="rp-tasks"><tr><th>Task</th><th>Score</th><th>Time</th><th>Speed</th><th>Index</th></tr>
+      ${tr('Task 1: Letter names', a.t1, 'letters')}${tr('Task 2: Letter sounds', a.t2, 'sounds')}${k ? '' : tr('Task 3: Pattern words', a.t3, 'words')}</table>
+    <p class="rp-h">Letters to Focus On</p>
+    <p><b>Names:</b> ${esc((t1.missing || []).join(', ') || 'None')}</p>
+    <p><b>Sounds:</b> ${esc((t2.missing || []).join(', ') || 'None')}</p>
+    ${k ? '' : `<p class="rp-h">Word Patterns${t3.keyStage ? ' (Key Stage ' + t3.keyStage + ' list)' : ''}</p>
+    ${t3.administered ? `<table class="rp-pats">${patRows}</table>` : '<p>Task 3 was not given.</p>'}`}
+    <p class="rp-h">Remarks</p><p class="pre">${esc(a.remarks || 'None')}</p>
+    <p class="rp-h">Assigned Reading Materials</p><p class="pre">${esc(a.materials || 'None')}</p>
+    <table class="rp-sigs"><tr>${sig('teacher')}${sig('parent')}${sig('learner')}</tr></table>
+  </div>`;
+}
+
+function pdfDoc(list){
+  return `<!DOCTYPE html><html><head><meta charset="utf-8"><style>@page{size:A4;margin:12mm}body{margin:0}${RESULT_CSS}</style></head><body>${list.map(a => resultPrintHtml(a, sigsFor(a.id, a.signatures))).join('')}</body></html>`;
+}
+
+function printHtml(html){
+  const area = $('printArea');
+  area.innerHTML = html;
+  document.body.classList.add('pc');
+  const done = () => { document.body.classList.remove('pc'); area.innerHTML = ''; };
+  window.addEventListener('afterprint', done, { once: true });
+  try { window.print(); } catch(e){ tell('Printing is blocked here. Open the web app link directly in Chrome and try again.'); }
+  setTimeout(() => { if (document.body.classList.contains('pc')) done(); }, 60000);
+}
+function printResults(list){
+  if (!list.length) return;
+  printHtml(list.map(a => resultPrintHtml(a, sigsFor(a.id, a.signatures))).join(''));
+}
+
+function viewRecord(id){
+  const a = S.assessments[id]; if (!a) return;
+  const d = $('recordDetail'); const sg = sigsFor(id);
+  d.innerHTML = resultHtml(a, true) +
+    (a.orders ? `<h3>Order Presented (${a.orders.source === 'screen' ? 'Learner Screen' : 'Printed Card'})</h3>
+      <p><b>Task 1:</b> <span class="order-line">${a.orders.t1.join(' ')}</span></p>
+      <p><b>Task 2:</b> <span class="order-line">${a.orders.t2.join(' ')}</span></p>
+      ${Object.keys(a.orders.t3 || {}).length ? `<p><b>Task 3:</b> <span class="order-line">${Object.values(a.orders.t3).map(w => w.map(esc).join(', ')).join(' | ')}</span></p>` : ''}` : '') +
+    `<h3>Signatures</h3><p>${ROLES.map(r => `${ROLE_LABEL[r]}: ${sg[r] ? esc(sg[r].name) + ' (' + esc(fmtDay(sg[r].signedAt)) + ')' : 'not signed yet'}`).join('<br>')}</p>` +
+    '<div class="actions"><button type="button" class="btn" id="closeDetail">Close</button><button type="button" class="btn primary" id="printDetail">Print Result Sheet</button></div>';
+  d.classList.remove('hidden');
+  $('closeDetail').onclick = () => d.classList.add('hidden');
+  $('printDetail').onclick = () => printResults([a]);
+  d.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+let pendingSend = null;
+function openSend(ids){
+  const list = ids.map(id => S.assessments[id]).filter(Boolean);
+  if (!list.length) return;
+  const grade = list[0].grade;
+  pendingSend = ids;
+  const adv = recipientsFor(list);
+  $('sendTitle').textContent = list.length === 1 ? 'Email Result of ' + list[0].learnerName : `Email ${list.length} Results for ${gradeLabel(grade)}`;
+  $('sendTo').value = adv.email || '';
+  $('sendNote').value = '';
+  setMsg($('sendMsg'), adv.email ? '' : 'No adviser email saved for ' + gradeLabel(grade) + '. Type it here or add it in the Learners tab.');
+  $('sendTo').type = 'text';
+  $('sendPanel').classList.remove('hidden');
+  $('sendPanel').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+/* Who gets the email: the learner's own adviser when a grade has two or more */
+function recipientsFor(list){
+  const grade = list[0].grade; const all = advisersOf(grade);
+  let chosen = all;
+  if (all.length > 1){
+    const ids = {}; list.forEach(a => { const l = S.learners[a.learnerId]; if (l && l.adviserId) ids[l.adviserId] = true; });
+    const picked = all.filter(x => ids[x.id]);
+    if (picked.length) chosen = picked;
+  }
+  chosen = chosen.filter(x => x.email);
+  return { email: chosen.map(x => x.email).join(', '), name: chosen.map(x => x.name).filter(Boolean).join(' and ') };
+}
+
+function emailBody(list, adviserName, note){
+  const one = list.length === 1;
+  const td = 'border:1px solid #ccc;padding:6px 8px;text-align:left;font-size:13px';
+  const rows = list.map(a => `<tr><td style="${td}">${esc(a.learnerName)}</td><td style="${td}">${esc(a.lrn || 'None yet')}</td><td style="${td}">${a.literacyIndex}</td><td style="${td}">${esc(a.level)}</td><td style="${td}">${esc(a.readingLevel || 'Not set')}</td></tr>`).join('');
+  return `<div style="font-family:Arial,sans-serif;font-size:14px;color:#222">
+    <p>Good day${adviserName ? ', ' + esc(adviserName) : ''}.</p>
+    <p>Attached ${one ? 'is the ' + SBRA + ' result of ' + esc(list[0].learnerName) : 'are the ' + SBRA + ' results for ' + gradeLabel(list[0].grade)}. Each learner has a one page result sheet in the PDF.</p>
+    ${note ? `<p>${esc(note)}</p>` : ''}
+    <table style="border-collapse:collapse;margin:8px 0">
+      <tr><th style="${td};background:#E8EEFA">Learner</th><th style="${td};background:#E8EEFA">LRN</th><th style="${td};background:#E8EEFA">Literacy Index</th><th style="${td};background:#E8EEFA">Level</th><th style="${td};background:#E8EEFA">BOSY Reading Profile</th></tr>
+      ${rows}
+    </table>
+    <p>To view a result and sign it, open the link below and sign in with the learner's LRN. Parents and learners can sign the same way.</p>
+  </div>`;
+}
+
+async function doSend(){
+  const m = $('sendMsg');
+  const to = $('sendTo').value.trim();
+  if (!to || to.split(/[,;\s]+/).filter(Boolean).some(e => !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(e))){ setMsg(m, 'Enter a valid email address.', 'err'); return; }
+  if (navigator.onLine === false || !serverAvailable()){ setMsg(m, 'Sending email needs the internet. Try again when you are online.', 'err'); return; }
+  setMsg(m, 'Syncing first');
+  await flush();
+  const ids = pendingSend || [];
+  if (ids.some(id => S.queue.assessments[id])){ setMsg(m, 'Some results are not synced yet. Wait for the green "all synced" badge, then send.', 'err'); return; }
+  const list = ids.map(id => S.assessments[id]).filter(Boolean);
+  const grade = list[0].grade; const adv = recipientsFor(list);
+  const one = list.length === 1;
+  setMsg(m, 'Sending the email');
+  $('sendGo').disabled = true;
+  try {
+    const res = await callApi({
+      action: 'sendResults', pin: S.pin, to,
+      subject: one ? `${SBRA} result: ${list[0].learnerName}` : `${SBRA} results: ${gradeLabel(grade)}`,
+      htmlBody: emailBody(list, adv.name, $('sendNote').value.trim()),
+      pdfHtml: pdfDoc(list),
+      fileName: one ? `SBRA Result ${list[0].learnerName}` : `SBRA Results ${gradeLabel(grade)}`
+    });
+    if (res && res.ok) setMsg(m, `Sent to ${to}.` + (res.quota != null ? ` You can send ${res.quota} more email(s) today.` : ''), 'good');
+    else setMsg(m, (res && res.error) || 'The email was not sent.', 'err');
+  } catch(e){ setMsg(m, 'The email was not sent. Check the internet and try again.', 'err'); }
+  $('sendGo').disabled = false;
+}
+
+/* =========================================================
+   PRINTABLE CARDS (School Head only)
+   ========================================================= */
+function letterCardHtml(){
+  return `<div class="card"><h4>Read the letters.</h4><div class="lcard">${letterOrder().map(L => `<div>${L} ${L.toLowerCase()}</div>`).join('')}</div></div>`;
+}
+function wordCardHtml(ks){
+  const wb = S.wordBank || [];
+  if (!wb.length) return `<div class="card"><p class="card-empty">The word list is not on this device yet. Sign in with internet to load it.</p></div>`;
+  const rows = wb.map((p, k) => ({ k, words: wordsFor(p, ks) })).filter(r => r.words.length);
+  const cols = Math.max(...rows.map(r => r.words.length), 1);
+  return `<div class="card ks${ks}"><h4><span>Read the words.</span><small>Key Stage ${ks}</small></h4>
+    <table class="wtable">${rows.map(r => `<tr><td class="n">${r.k + 1}</td>${r.words.map(w => `<td>${esc(w)}</td>`).join('')}${'<td></td>'.repeat(cols - r.words.length)}</tr>`).join('')}</table></div>`;
+}
+function cardHtml(kind){
+  if (kind === 'letters') return letterCardHtml();
+  if (kind === 'ks1') return wordCardHtml(1);
+  if (kind === 'ks2') return wordCardHtml(2);
+  return letterCardHtml() + wordCardHtml(1) + wordCardHtml(2);
+}
+function renderPreview(){
+  $('pOrder').value = S.letterOrder === 'mixed' ? 'mixed' : 'az';
+  $('printPreview').innerHTML = cardHtml($('pPreview').value);
+}
+
+/* =========================================================
+   TEACHER, PARENT, LEARNER VIEW (never shows the words)
+   ========================================================= */
+function sanitize(a){
+  const c = JSON.parse(JSON.stringify(a));
+  delete c.ticks; delete c.orders;
+  if (c.t3 && c.t3.patterns) c.t3.patterns.forEach(p => { delete p.missed; });
+  return c;
+}
+
+let TV = null, pad = null, padRole = '';
+
+async function teacherLogin(raw){
+  const m = $('teacherMsg');
+  const lrn = String(raw || '').replace(/\D/g, '');
+  if (lrn.length !== 12){ setMsg(m, 'Enter the 12 digit LRN.', 'err'); return; }
+  setMsg(m, 'Looking up the learner');
+  try {
+    const res = await callApi({ action: 'teacherView', lrn });
+    if (!res || !res.ok){ setMsg(m, (res && res.error) || 'No learner found.', 'err'); return; }
+    setMsg(m, ''); showTeacher(res.learner, res.assessments || []);
+  } catch(e){
+    const l = Object.values(S.learners).find(x => x.lrn === lrn);
+    if (l){
+      setMsg(m, '');
+      showTeacher(l, Object.values(S.assessments).filter(a => a.learnerId === l.id).map(a => Object.assign(sanitize(a), { signatures: S.signatures[a.id] || {} }))
+        .sort((x, y) => String(y.date || '').localeCompare(String(x.date || ''))));
+    } else {
+      // No internet on this device: the letter tasks can still run from the code.
+      setMsg(m, '');
+      showTeacher({ lrn, last: 'Learner', first: 'LRN ' + lrn, grade: '' }, []);
+    }
+  }
+}
+
+function showTeacher(learner, list){
+  TV = { learner, list, idx: 0, tab: 'practice' };
+  $('teacherLrn').value = '';
+  show('viewTeacher');
+  loadPractice();
+  loadRewards();
+}
+
+function tasksPanel(){
+  const k = String(TV.learner.grade) === 'K';
+  const ses = LSess && LSess.lrn === TV.learner.lrn ? LSess : null;
+  return `<div class="panel">
+    <h2>Reading Tasks</h2>
+    ${ses ? `<p class="hint">Code ${esc(ses.code)} is ready. Tap a task to begin. Use Next and Back to move between cards.</p>
+      <div class="task-btns">
+        <button type="button" class="task-btn" data-task="t1">Task 1: Letter Names<small>Say the name of each letter.</small></button>
+        <button type="button" class="task-btn" data-task="t2">Task 2: Letter Sounds<small>Say the sound of each letter.</small></button>
+        ${k ? '' : `<button type="button" class="task-btn" data-task="t3"${ses.patterns ? '' : ' disabled'}>Task 3: Reading Words<small>${ses.patterns ? 'Read each word.' : 'Needs the internet to load. Connect, then enter the code again.'}</small></button>`}
+      </div>
+      <p style="margin-top:10px"><button type="button" class="btn small" id="endSession">Use Another Code</button></p>`
+    : `<p class="hint">Ask the School Head for today's Learner Screen Code, then enter it here.</p>
+      <div class="toolbar"><label>Learner Screen Code<input id="sesCode" inputmode="numeric" maxlength="6" autocomplete="off"></label>
+      <button type="button" class="btn primary" id="sesStart">Start</button></div>
+      <p class="msg" id="sesMsg"></p>`}
+  </div>`;
+}
+
+function bindTasksPanel(){
+  if ($('sesStart')) $('sesStart').onclick = startSession;
+  if ($('sesCode')) $('sesCode').onkeydown = e => { if (e.key === 'Enter') startSession(); };
+  if ($('endSession')) $('endSession').onclick = () => { LSess = null; renderTeacher(); };
+  document.querySelectorAll('[data-task]').forEach(b => b.onclick = () => openReader(b.dataset.task));
+}
+
+function resultsHtml(){
+  const { list } = TV;
+  if (!list.length) return '<div class="panel"><h2>Results</h2><p>No result is available for this learner yet. Please check again after the School Head records the assessment.</p></div>';
+  const a = list[TV.idx];
+  const sg = sigsFor(a.id, a.signatures);
+  return (list.length > 1 ? `<div class="toolbar"><label>Result<select id="tPick">${list.map((x, i) => `<option value="${i}"${i === TV.idx ? ' selected' : ''}>${esc(fmtDay(x.date))}</option>`).join('')}</select></label></div>` : '') +
+    `<div class="panel">${resultHtml(a, false)}
+      <div class="actions"><span></span><button type="button" class="btn" id="tPrint">Print Result Sheet</button></div></div>
+    <div class="panel">
+      <h2>Signatures</h2>
+      <p class="hint">Sign to show that you have seen this result.</p>
+      <div class="sig-grid">${ROLES.map(r => { const s = sg[r]; return `
+        <div class="sig-box"><div class="role">${ROLE_LABEL[r]}</div>
+          ${s ? `<img src="${s.image}" alt="Signature of ${esc(s.name)}"><div>${esc(s.name)}</div><div class="sub">Signed ${esc(fmtDay(s.signedAt))}</div>` : '<p class="sub">Not signed yet</p>'}
+          <button type="button" class="btn small" data-sign="${r}" style="margin-top:6px">${s ? 'Sign Again' : 'Sign as ' + ROLE_LABEL[r]}</button></div>`; }).join('')}</div>
+      <div id="padWrap" class="panel inset hidden" style="margin-top:12px">
+        <h3 id="padTitle" style="margin-top:0"></h3>
+        <label>Full Name<input id="padName" autocomplete="off"></label>
+        <div class="pad-box"><canvas id="pad"></canvas></div>
+        <p class="hint">Sign inside the box with your finger or a mouse.</p>
+        <div class="actions">
+          <button type="button" class="btn" id="padClear">Clear</button>
+          <button type="button" class="btn" id="padCancel">Cancel</button>
+          <button type="button" class="btn primary" id="padSave">Save Signature</button>
+        </div>
+        <p class="msg" id="padMsg"></p>
+      </div>
+    </div>`;
+}
+
+function bindResults(){
+  const a = TV.list[TV.idx]; if (!a) return;
+  if ($('tPick')) $('tPick').onchange = e => { TV.idx = +e.target.value; renderTeacher(); };
+  $('tPrint').onclick = () => printResults([a]);
+  $('teacherBody').querySelectorAll('[data-sign]').forEach(b => b.onclick = () => openPad(b.dataset.sign));
+  $('padClear').onclick = () => pad && pad.clear();
+  $('padCancel').onclick = () => $('padWrap').classList.add('hidden');
+  $('padSave').onclick = saveSignature;
+}
+
+const LTABS = [['practice','Practice Words'],['games','Games'],['notebook','My Notebook'],['tasks','Reading Tasks'],['results','Results']];
+function renderTeacher(){
+  const body = $('teacherBody'); const { learner } = TV;
+  const stars = myRewards().total;
+  const head = `<h1>${esc(learner.last)}, ${esc(learner.first)}</h1>
+    <p class="sub">${[gradeLabel(learner.grade), learner.lrn ? 'LRN ' + esc(learner.lrn) : ''].filter(Boolean).join(', ')}${stars != null ? ` <span class="star">\u2605 ${stars}</span>` : ''}</p>
+    <div class="ltabs" role="tablist">${LTABS.map(t => `<button type="button" class="ltab" role="tab" data-ltab="${t[0]}" aria-selected="${TV.tab === t[0]}">${t[1]}</button>`).join('')}</div>`;
+  let main = '';
+  if (TV.tab === 'practice') main = practiceHtml();
+  else if (TV.tab === 'games') main = gamesHtml();
+  else if (TV.tab === 'notebook') main = notebookHtml();
+  else if (TV.tab === 'tasks') main = tasksPanel();
+  else main = resultsHtml();
+  body.innerHTML = head + main;
+  body.querySelectorAll('[data-ltab]').forEach(b => b.onclick = () => { recCancel(); TV.tab = b.dataset.ltab; renderTeacher(); });
+  if (TV.tab === 'practice') bindPractice();
+  else if (TV.tab === 'games') bindGames();
+  else if (TV.tab === 'tasks') bindTasksPanel();
+  else if (TV.tab === 'results') bindResults();
+}
+
+/* =========================================================
+   PRACTICE WORDS (learner side) AND VOCABULARY NOTEBOOK
+   ========================================================= */
+let PR = null, REC = null;
+const MIC_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0"/><path d="M12 17v4"/><path d="M8 21h8"/></svg>';
+const STOP_SVG = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>';
+
+async function loadPractice(){
+  const lrn = TV.learner.lrn;
+  PR = { lrn, items: null, idx: 0, drafts: {}, msg: 'Loading your practice words.' };
+  renderTeacher();
+  try {
+    const res = await callApi({ action: 'learnerPractice', lrn });
+    if (!PR || PR.lrn !== lrn) return;
+    if (res && res.ok){
+      S.practiceCache[lrn] = { items: res.items, week: res.week }; persist();
+      PR.items = res.items; PR.week = res.week; PR.msg = '';
+    } else PR.msg = (res && res.error) || 'The practice words could not be loaded.';
+  } catch(e){
+    const c = S.practiceCache[lrn];
+    if (c){ PR.items = c.items; PR.week = c.week; PR.msg = ''; }
+    else PR.msg = 'No internet. Connect once to load the practice words, then they will also work without internet.';
+  }
+  if (PR.items){
+    Object.values(S.queue.recs).forEach(rc => { if (rc.lrn === lrn) PR.items = PR.items.map(x => x.id === rc.id ? Object.assign({}, x, { status: 'submitted', pendingUpload: true }) : x); });
+  }
+  if (TV && TV.learner.lrn === lrn) renderTeacher();
+}
+
+function practiceList(){
+  if (!PR || !PR.items) return [];
+  const rank = { redo: 0, new: 1, submitted: 2 };
+  return PR.items.filter(x => x.status !== 'correct').sort((a, b) => (rank[a.status] - rank[b.status]) || String(a.week).localeCompare(String(b.week)));
+}
+
+function practiceHtml(){
+  if (!PR || !PR.items) return `<div class="panel"><p class="${PR && PR.msg && !/Loading/.test(PR.msg) ? 'msg err' : 'hint'}">${esc(PR ? PR.msg : '')}</p></div>`;
+  const list = practiceList();
+  if (!list.length){
+    const stars = PR.items.reduce((s, x) => s + (x.stars || 0), 0);
+    return `<div class="panel pcard"><div class="pword">\u2605 ${stars}</div><p>Great job! You finished all your practice words. New words come every Monday.</p></div>`;
+  }
+  if (PR.idx >= list.length) PR.idx = list.length - 1;
+  const x = list[PR.idx]; const d = PR.drafts[x.id];
+  const recording = REC && REC.id === x.id;
+  let status = '';
+  if (x.status === 'redo') status = `<div class="redo-note"><b>Please record again.</b>${x.remark ? ' Teacher says: ' + esc(x.remark) : ''}</div>`;
+  else if (x.status === 'submitted') status = `<p class="pnote hint">${x.pendingUpload ? 'Saved on this device. It will be sent when the internet is back.' : 'Sent. Waiting for your teacher to check it.'} You can still record again.</p>`;
+  return `<div class="panel pcard">
+    <p class="sub">Word ${PR.idx + 1} of ${list.length}</p>
+    ${status}
+    <div class="pword">${esc(x.word)}</div>
+    <button type="button" class="mic${recording ? ' rec' : ''}" id="micBtn" aria-label="${recording ? 'Stop recording' : 'Record your voice'}">${recording ? STOP_SVG : MIC_SVG}</button>
+    <p class="pnote">${recording ? 'Recording. Say the word, then tap to stop.' : d ? 'Listen to your answer. Submit it, or record again.' : 'Tap the microphone, then read the word out loud.'}</p>
+    ${d ? `<audio controls src="${d.url}"></audio>
+      <div class="print-btns" style="justify-content:center">
+        <button type="button" class="btn" id="recAgain">Record Again</button>
+        <button type="button" class="btn primary" id="recSubmit">Submit</button>
+      </div>` : ''}
+    <p class="msg" id="pracMsg"></p>
+    <div class="pnav">
+      <button type="button" class="btn" id="pBack"${PR.idx === 0 ? ' disabled' : ''}>Back</button>
+      <button type="button" class="btn" id="pNext"${PR.idx >= list.length - 1 ? ' disabled' : ''}>Next</button>
+    </div>
+  </div>`;
+}
+
+function bindPractice(){
+  if (!$('micBtn') && !$('pBack')) return;
+  const list = practiceList(); const x = list[PR.idx];
+  if ($('micBtn')) $('micBtn').onclick = () => (REC && REC.id === x.id) ? recStop() : recStart(x);
+  if ($('recAgain')) $('recAgain').onclick = () => { dropDraft(x.id); recStart(x); };
+  if ($('recSubmit')) $('recSubmit').onclick = () => submitDraft(x);
+  if ($('pBack')) $('pBack').onclick = () => { recCancel(); PR.idx--; renderTeacher(); };
+  if ($('pNext')) $('pNext').onclick = () => { recCancel(); PR.idx++; renderTeacher(); };
+}
+
+function micHelp(){
+  return 'Recording does not work on this page.' + (PRACTICE_URL ? ' Please open the practice link: ' + PRACTICE_URL : ' Ask the School Head for the practice link.');
+}
+
+async function recStart(x){
+  const m = () => $('pracMsg');
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia || !window.MediaRecorder){ setMsg(m(), micHelp(), 'err'); return; }
+  let stream;
+  try { stream = await navigator.mediaDevices.getUserMedia({ audio: true }); }
+  catch(e){
+    setMsg(m(), e && e.name === 'NotAllowedError' && window.top === window ? 'Please allow the microphone, then tap it again.' : micHelp(), 'err');
+    return;
+  }
+  const types = ['audio/webm;codecs=opus', 'audio/webm', 'audio/mp4', 'audio/ogg'];
+  const mime = types.find(t => MediaRecorder.isTypeSupported && MediaRecorder.isTypeSupported(t)) || '';
+  const media = mime ? new MediaRecorder(stream, { mimeType: mime, audioBitsPerSecond: 32000 }) : new MediaRecorder(stream);
+  const chunks = [];
+  REC = { id: x.id, media, stream, chunks, cancelled: false };
+  media.ondataavailable = e => { if (e.data && e.data.size) chunks.push(e.data); };
+  media.onstop = () => {
+    stream.getTracks().forEach(t => t.stop());
+    const r = REC; REC = null; clearTimeout(r && r.timer);
+    if (r && !r.cancelled && chunks.length){
+      const blob = new Blob(chunks, { type: media.mimeType || mime || 'audio/webm' });
+      dropDraft(x.id);
+      PR.drafts[x.id] = { blob, url: URL.createObjectURL(blob), mime: blob.type };
+    }
+    if (TV && TV.tab === 'practice') renderTeacher();
+  };
+  media.start();
+  REC.timer = setTimeout(() => { if (REC && REC.media === media) recStop(); }, 8000);
+  renderTeacher();
+}
+function recStop(){ if (REC && REC.media.state !== 'inactive') REC.media.stop(); }
+function recCancel(){ if (REC){ REC.cancelled = true; recStop(); } }
+function dropDraft(id){ const d = PR && PR.drafts[id]; if (d){ try { URL.revokeObjectURL(d.url); } catch(e){} delete PR.drafts[id]; } }
+
+function blobToBase64(blob){
+  return new Promise((ok, bad) => { const r = new FileReader(); r.onload = () => ok(String(r.result).split(',')[1] || ''); r.onerror = bad; r.readAsDataURL(blob); });
+}
+
+async function submitDraft(x){
+  const d = PR.drafts[x.id]; if (!d) return;
+  const m = $('pracMsg'); setMsg(m, 'Sending your answer');
+  $('recSubmit').disabled = true;
+  const rc = { lrn: PR.lrn, id: x.id, audio: await blobToBase64(d.blob), mime: d.mime, recordedAt: nowIso() };
+  const setItem = patch => { PR.items = PR.items.map(i => i.id === x.id ? Object.assign({}, i, patch) : i); const c = S.practiceCache[PR.lrn]; if (c) c.items = PR.items; persist(); };
+  try {
+    const res = await callApi(Object.assign({ action: 'submitRecording' }, rc));
+    if (res && res.ok){ dropDraft(x.id); setItem(Object.assign({}, res.item, { pendingUpload: false })); renderTeacher(); return; }
+    setMsg(m, (res && res.error) || 'The answer was not sent.', 'err'); $('recSubmit').disabled = false;
+  } catch(e){
+    S.queue.recs[rc.lrn + '|' + rc.id] = rc;
+    dropDraft(x.id); setItem({ status: 'submitted', pendingUpload: true }); renderSync(); renderTeacher();
+  }
+}
+
+function notebookHtml(){
+  if (!PR || !PR.items) return `<div class="panel"><p class="hint">${esc(PR ? PR.msg : '')}</p></div>`;
+  const stars = PR.items.reduce((s, x) => s + (x.stars || 0), 0);
+  const weeks = {};
+  PR.items.forEach(x => (weeks[x.week] = weeks[x.week] || []).push(x));
+  const keys = Object.keys(weeks).sort().reverse();
+  const tag = x => x.status === 'correct' ? '\u2605 ' : '';
+  const note = x => x.status === 'redo' ? ' (Redo)' : x.status === 'submitted' ? ' (Waiting)' : '';
+  return `<div class="panel">
+    <h2>My Vocabulary Notebook</h2>
+    <div class="stats">
+      <div class="stat"><b class="star">\u2605 ${myRewards().total}</b><span>Total Stars</span></div>
+      <div class="stat"><b>${myRewards().practice}</b><span>Stars From Practice</span></div>
+      <div class="stat"><b>${myRewards().tasks}</b><span>Stars From Reading Tasks</span></div>
+      <div class="stat"><b>${myRewards().games}</b><span>Stars From Games</span></div>
+      <div class="stat"><b>${PR.items.filter(x => x.status === 'correct').length}</b><span>Words Learned</span></div>
+      <div class="stat"><b>${PR.items.filter(x => x.status !== 'new').length}</b><span>Words Practiced</span></div>
+    </div>
+    ${keys.length ? keys.map(k => { const w = weeks[k]; return `
+      <div class="nb-week"><b>Week of ${esc(fmtDay(k))}</b>
+        <div class="sub">${w.length} words, ${w.filter(x => x.status !== 'new').length} practiced, ${w.filter(x => x.status === 'correct').length} correct</div>
+        <div class="nb-words">${w.map(x => `<span class="nb-w ${esc(x.status)}">${tag(x)}${esc(x.word)}${note(x)}</span>`).join('')}</div>
+      </div>`; }).join('') : '<p class="hint">No practice words yet.</p>'}
+  </div>`;
+}
+
+/* =========================================================
+   STARS FROM PRACTICE, READING TASKS, AND GAMES
+   ========================================================= */
+const FROG_ORDER = 'satipnckehrmdgolfbqujzwvyx'.split('');   // Preschool letter order, by group
+const FROG_GROUPS = [6, 5, 4, 5, 3, 3];                        // s a t i p n | c k e h r | m d g o | l f b q u | j z w | v y x
+
+async function loadRewards(){
+  const lrn = TV && TV.learner.lrn; if (!lrn) return;
+  try {
+    const res = await callApi({ action: 'learnerRewards', lrn });
+    if (res && res.ok){ S.rewards[lrn] = { practice: res.practice, tasks: res.tasks, games: res.games, frog: res.frog || [], progress: res.progress || { frog: res.frog || [] } }; persist(); }
+  } catch(e){}
+  if (TV && TV.learner.lrn === lrn && $('viewGame').classList.contains('hidden')) renderTeacher();
+}
+
+/* Sounds, made in the browser so they also work offline */
+let AC = null;
+function actx(){ try { if (!AC){ const C = window.AudioContext || window.webkitAudioContext; if (C) AC = new C(); } if (AC && AC.state === 'suspended') AC.resume(); } catch(e){} return AC; }
+function tone(freq, dur, type, vol, when, slideTo){
+  const a = actx(); if (!a) return;
+  const o = a.createOscillator(), g = a.createGain(); const t = a.currentTime + (when || 0);
+  o.type = type || 'sine'; o.frequency.setValueAtTime(freq, t);
+  if (slideTo) o.frequency.exponentialRampToValueAtTime(slideTo, t + dur);
+  g.gain.setValueAtTime(vol || 0.2, t); g.gain.exponentialRampToValueAtTime(0.001, t + dur);
+  o.connect(g); g.connect(a.destination); o.start(t); o.stop(t + dur + 0.03);
+}
+const SFX = {
+  gulp(){ tone(460, 0.2, 'sine', 0.3, 0, 110); },
+  yes(){ tone(660, 0.12, 'triangle', 0.2); tone(990, 0.18, 'triangle', 0.2, 0.1); },
+  no(){ tone(190, 0.2, 'square', 0.05); },
+  win(){ [523, 659, 784, 1047].forEach((f, i) => tone(f, 0.25, 'triangle', 0.2, i * 0.13)); }
+};
+/* A soft, friendly voice. Uses the most natural voice the device has. */
+let VOICE = null;
+function pickVoice(){
+  try {
+    const vs = (window.speechSynthesis && speechSynthesis.getVoices()) || [];
+    const en = vs.filter(v => /^en/i.test(v.lang));
+    const prefer = [/Rosa.*Natural/i, /en-PH/i, /Jenny.*Natural/i, /Aria.*Natural/i, /Natural/i, /Google US English/i, /Samantha/i, /Karen/i, /Moira/i, /Tessa/i, /Zira/i, /female/i];
+    for (const re of prefer){ const v = en.find(x => re.test(x.name) || re.test(x.lang)); if (v){ VOICE = v; return; } }
+    VOICE = en[0] || null;
+  } catch(e){}
+}
+if (window.speechSynthesis){ pickVoice(); try { speechSynthesis.onvoiceschanged = pickVoice; } catch(e){} }
+function say(text){
+  try {
+    if (!window.speechSynthesis) return;
+    speechSynthesis.cancel();
+    if (!VOICE) pickVoice();
+    // Short phrases with small pauses sound gentler than one long sentence.
+    String(text).split(/(?<=[.!?])\s+/).forEach(part => {
+      const u = new SpeechSynthesisUtterance(part);
+      if (VOICE){ u.voice = VOICE; u.lang = VOICE.lang; } else u.lang = 'en-US';
+      u.rate = 0.8; u.pitch = 1.15; u.volume = 0.9;
+      speechSynthesis.speak(u);
+    });
+  } catch(e){}
+}
+
+function confetti(){
+  if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const box = document.createElement('div'); box.className = 'confetti';
+  const colors = ['#FFD447', '#E8547A', '#5CC27A', '#4F8EF7', '#FF8A3D', '#A66CFF'];
+  for (let i = 0; i < 90; i++){
+    const p = document.createElement('i');
+    p.style.left = (Math.random() * 100) + '%';
+    p.style.background = colors[i % colors.length];
+    p.style.setProperty('--dx', (Math.random() * 180 - 90) + 'px');
+    p.style.setProperty('--r', (Math.random() * 900 - 450) + 'deg');
+    p.style.animationDuration = (1.8 + Math.random() * 1.6) + 's';
+    p.style.animationDelay = (Math.random() * 0.5) + 's';
+    if (i % 3 === 0){ p.style.borderRadius = '50%'; p.style.width = p.style.height = '10px'; }
+    box.appendChild(p);
+  }
+  $('gStage').appendChild(box);
+  setTimeout(() => box.remove(), 4200);
+}
+
+/* ---------- Rewards and progress for every game ---------- */
+function myRewards(){
+  const lrn = TV ? TV.learner.lrn : '';
+  const base = S.rewards[lrn] || {};
+  const prog = {};
+  GAMES.forEach(g => { prog[g.id] = (((base.progress && base.progress[g.id]) || (g.id === 'frog' ? base.frog : null)) || []).slice(); });
+  const r = { practice: base.practice || 0, tasks: base.tasks || 0, games: base.games || 0, progress: prog };
+  if (PR && PR.items && PR.lrn === lrn) r.practice = PR.items.reduce((t, x) => t + (x.stars || 0), 0);
+  Object.values(S.queue.stars).forEach(q => {
+    if (q.lrn !== lrn) return;
+    const m = q.key.match(/^([a-z]+)\|(\d+)$/);
+    if (m && prog[m[1]]){ const n = +m[2]; if (prog[m[1]].indexOf(n) < 0){ prog[m[1]].push(n); r.games++; } }
+    else if (q.key.indexOf('task|') === 0) r.tasks++;
+  });
+  r.frog = prog.frog;
+  r.total = r.practice + r.tasks + r.games;
+  return r;
+}
+
+function earnStar(key){
+  const lrn = TV && TV.learner.lrn; if (!lrn) return false;
+  const m = key.match(/^([a-z]+)\|(\d+)$/);
+  if (m){ const p = myRewards().progress[m[1]] || []; if (p.indexOf(+m[2]) >= 0) return false; }
+  else {
+    const done = S.earnedKeys[lrn] = S.earnedKeys[lrn] || [];
+    if (done.indexOf(key) >= 0) return false;
+    done.push(key);
+  }
+  S.queue.stars[lrn + '|' + key] = { lrn, key, earnedAt: nowIso() };
+  persist(); renderSync(); flush();
+  return true;
+}
+
+/* ---------- The games ---------- */
+const MEMORY_SETS = [['s','a','t'],['i','p','n'],['c','k','e','h'],['r','m','d','g'],['o','l','f','b'],['q','u','j','z'],['w','v','y','x']];
+const MIRROR_SETS = [['b','d'],['p','q'],['b','d','p','q'],['m','w'],['n','u'],['b','d','p','q','m','w','n','u']];
+const PICS = {
+  s: [['sun','\u2600\uFE0F'],['sock','\uD83E\uDDE6']], a: [['apple','\uD83C\uDF4E'],['ant','\uD83D\uDC1C']], t: [['tiger','\uD83D\uDC2F'],['tree','\uD83C\uDF33']],
+  i: [['insect','\uD83D\uDC1B'],['iguana','\uD83E\uDD8E']], p: [['pig','\uD83D\uDC37'],['pencil','\u270F\uFE0F']], n: [['nose','\uD83D\uDC43'],['nut','\uD83E\uDD5C']],
+  c: [['cat','\uD83D\uDC31'],['cup','\uD83E\uDD64']], k: [['key','\uD83D\uDD11'],['kangaroo','\uD83E\uDD98']], e: [['egg','\uD83E\uDD5A'],['elephant','\uD83D\uDC18']],
+  h: [['hat','\uD83C\uDFA9'],['horse','\uD83D\uDC34']], r: [['rabbit','\uD83D\uDC30'],['ring','\uD83D\uDC8D']], m: [['moon','\uD83C\uDF19'],['monkey','\uD83D\uDC12']],
+  d: [['dog','\uD83D\uDC36'],['duck','\uD83E\uDD86']], g: [['goat','\uD83D\uDC10'],['gift','\uD83C\uDF81']], o: [['octopus','\uD83D\uDC19'],['ox','\uD83D\uDC02']],
+  l: [['lion','\uD83E\uDD81'],['leaf','\uD83C\uDF43']], f: [['fish','\uD83D\uDC1F'],['frog','\uD83D\uDC38']], b: [['banana','\uD83C\uDF4C'],['bus','\uD83D\uDE8C']],
+  q: [['queen','\uD83D\uDC78'],['quiet','\uD83E\uDD2B']], u: [['umbrella','\u2602\uFE0F'],['up','\u2B06\uFE0F']], j: [['juice','\uD83E\uDDC3'],['jeans','\uD83D\uDC56']],
+  z: [['zebra','\uD83E\uDD93'],['zero','0\uFE0F\u20E3']], w: [['watermelon','\uD83C\uDF49'],['web','\uD83D\uDD78\uFE0F']], v: [['van','\uD83D\uDE90'],['violin','\uD83C\uDFBB']],
+  y: [['yarn','\uD83E\uDDF6'],['yo yo','\uD83E\uDE80']], x: [['fox','\uD83E\uDD8A'],['box','\uD83D\uDCE6']]
+};
+
+const FROG_SVG = `<svg viewBox="0 0 200 170" aria-hidden="true">
+  <ellipse cx="38" cy="140" rx="30" ry="16" fill="#4CAF6A"/><ellipse cx="162" cy="140" rx="30" ry="16" fill="#4CAF6A"/>
+  <ellipse cx="100" cy="112" rx="72" ry="50" fill="#5CC27A"/>
+  <ellipse cx="100" cy="130" rx="44" ry="27" fill="#B9EBC6"/>
+  <circle cx="66" cy="56" r="26" fill="#5CC27A"/><circle cx="134" cy="56" r="26" fill="#5CC27A"/>
+  <circle cx="66" cy="54" r="17" fill="#fff"/><circle cx="134" cy="54" r="17" fill="#fff"/>
+  <circle cx="69" cy="57" r="8" fill="#1d2b36"/><circle cx="131" cy="57" r="8" fill="#1d2b36"/>
+  <circle cx="72" cy="53" r="3" fill="#fff"/><circle cx="134" cy="53" r="3" fill="#fff"/>
+  <ellipse cx="50" cy="98" rx="11" ry="6" fill="#F59BB0" opacity=".85"/><ellipse cx="150" cy="98" rx="11" ry="6" fill="#F59BB0" opacity=".85"/>
+  <path class="m-closed" d="M72 92 Q100 114 128 92" stroke="#1d2b36" stroke-width="5" fill="none" stroke-linecap="round"/>
+  <g class="m-open"><ellipse cx="100" cy="96" rx="24" ry="15" fill="#7A1C38"/><ellipse cx="100" cy="103" rx="13" ry="6" fill="#E8547A"/></g>
+  <ellipse cx="66" cy="157" rx="18" ry="8" fill="#4CAF6A"/><ellipse cx="134" cy="157" rx="18" ry="8" fill="#4CAF6A"/>
+</svg>`;
+function duckSvg(){
+  return `<svg viewBox="0 0 120 100" aria-hidden="true">
+    <ellipse cx="62" cy="68" rx="46" ry="28" fill="#FFD447"/>
+    <path d="M22 66 Q10 52 24 50" fill="#FFD447"/>
+    <ellipse cx="66" cy="66" rx="20" ry="12" fill="#F2BE2E"/>
+    <circle cx="86" cy="36" r="22" fill="#FFD447"/>
+    <circle cx="92" cy="31" r="4" fill="#1d2b36"/><circle cx="93" cy="30" r="1.4" fill="#fff"/>
+    <ellipse cx="80" cy="42" rx="5" ry="3" fill="#F59BB0" opacity=".8"/>
+    <path d="M104 38 L118 42 L104 46 Z" fill="#FF8A3D"/>
+  </svg>`;
+}
+const FISH_SVG = `<svg viewBox="0 0 120 80" aria-hidden="true"><path d="M20 40 L0 18 L0 62 Z" fill="#FF8A3D"/><ellipse cx="66" cy="40" rx="48" ry="30" fill="#FFB84D"/><circle cx="92" cy="32" r="6" fill="#1d2b36"/><circle cx="94" cy="30" r="2" fill="#fff"/><path d="M60 22 Q70 40 60 58" stroke="#E0902A" stroke-width="4" fill="none"/></svg>`;
+
+const GAMES = [
+  { id: 'frog', title: "Froggy's Letters", blurb: 'Help Froggy find the letters!', levels: 26, letters: true, icon: FROG_SVG },
+  { id: 'mama', title: 'Mama and Baby', blurb: 'Help each baby duck find its mama.', levels: 26, letters: true, icon: duckSvg() },
+  { id: 'listen', title: 'Listen and Catch', blurb: 'Listen, then catch the right fish.', levels: 26, letters: true, icon: FISH_SVG },
+  { id: 'safari', title: 'Sound Safari', blurb: 'Which letter does the picture start with?', levels: 26, letters: true, icon: '<span class="emo">\uD83E\uDD81</span>' },
+  { id: 'memory', title: 'Letter Memory', blurb: 'Flip the cards and find the pairs.', levels: MEMORY_SETS.length, icon: '<span class="emo">\uD83C\uDCCF</span>' },
+  { id: 'mirror', title: 'Mirror Letters', blurb: 'Look closely at letters that look alike.', levels: MIRROR_SETS.length, unlock: 'frog', icon: '<span class="emo mir">b d</span>' },
+  { id: 'trace', title: 'Trace with Froggy', blurb: 'Trace the letter with your finger.', levels: 26, letters: true, icon: '<span class="emo">\u270F\uFE0F</span>' }
+];
+const GAME = id => GAMES.find(g => g.id === id);
+function passedOf(id){ return myRewards().progress[id] || []; }
+function nextOf(id){ const g = GAME(id), p = passedOf(id); for (let n = 1; n <= g.levels; n++) if (p.indexOf(n) < 0) return n; return g.levels + 1; }
+function isUnlocked(g){ return !g.unlock || passedOf(g.unlock).length >= GAME(g.unlock).levels; }
+function levelLabel(g, n){
+  if (g.letters){ const L = FROG_ORDER[n - 1]; return L.toUpperCase() + L; }
+  if (g.id === 'memory') return MEMORY_SETS[n - 1].join(' ');
+  if (g.id === 'mirror') return MIRROR_SETS[n - 1].length > 4 ? 'All' : MIRROR_SETS[n - 1].join(' ');
+  return String(n);
+}
+function shuffle(a){ a = a.slice(); for (let i = a.length - 1; i > 0; i--){ const j = Math.floor(Math.random() * (i + 1)); const t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+function otherLetters(not, n, pool){
+  const src = shuffle((pool && pool.length > n ? pool : LETTERS.map(x => x.toLowerCase())).filter(x => not.indexOf(x) < 0));
+  return src.slice(0, n);
+}
+function learned(level){ return FROG_ORDER.slice(0, level); }
+
+/* ---------- Games tab ---------- */
+function gamesHtml(){
+  const r = myRewards();
+  return `<div class="panel">
+      <div class="stats">
+        <div class="stat"><b class="star">\u2605 ${r.total}</b><span>My Stars</span></div>
+        <div class="stat"><b>${r.games}</b><span>Stars From Games</span></div>
+      </div>
+    </div>` + GAMES.map(g => {
+      const p = passedOf(g.id), next = nextOf(g.id), open = isUnlocked(g), done = next > g.levels;
+      const pct = Math.round(100 * p.length / g.levels);
+      let grid = '';
+      if (TV.openLv === g.id){
+        const btn = n => { const isDone = p.indexOf(n) >= 0, isNow = n === next;
+          return `<button type="button" class="lv${isDone ? ' done' : ''}${isNow ? ' now' : ''}" data-game="${g.id}" data-level="${n}"${(!isDone && !isNow) || !open ? ' disabled' : ''} aria-label="Level ${n}">${levelLabel(g, n)}<small>${isDone ? '\u2605' : 'Level ' + n}</small></button>`; };
+        if (g.letters){
+          let start = 0;
+          grid = FROG_GROUPS.map((size, gi) => { const h = `<div class="lv-group">Group ${gi + 1}</div><div class="lv-grid">${Array.from({ length: size }, (_, j) => btn(start + j + 1)).join('')}</div>`; start += size; return h; }).join('');
+        } else grid = `<div class="lv-grid">${Array.from({ length: g.levels }, (_, i) => btn(i + 1)).join('')}</div>`;
+      }
+      return `<div class="panel game-card">
+        <div class="gc-head"><div class="gc-frog">${g.icon}</div>
+          <div style="flex:1"><h2>${esc(g.title)}</h2><p>${esc(g.blurb)}</p>
+            <p class="sub">${!open ? "Finish all levels of Froggy's Letters to open this game." : done ? 'You finished all ' + g.levels + ' levels!' : 'Level ' + next + ' of ' + g.levels}</p>
+            <div class="bar"><i style="width:${pct}%"></i></div></div></div>
+        <div class="print-btns" style="margin-top:10px">
+          <button type="button" class="btn primary" data-game="${g.id}" data-level="${done ? 1 : next}"${open ? '' : ' disabled'}>${done ? 'Play Again' : p.length ? 'Continue' : 'Play'}</button>
+          <button type="button" class="btn" data-lvtoggle="${g.id}"${open ? '' : ' disabled'}>${TV.openLv === g.id ? 'Hide Levels' : 'Choose a Level'}</button>
+        </div>${grid}
+      </div>`;
+    }).join('');
+}
+function bindGames(){
+  const body = $('teacherBody');
+  body.querySelectorAll('[data-game][data-level]').forEach(b => b.onclick = () => openGame(b.dataset.game, +b.dataset.level));
+  body.querySelectorAll('[data-lvtoggle]').forEach(b => b.onclick = () => { TV.openLv = TV.openLv === b.dataset.lvtoggle ? '' : b.dataset.lvtoggle; renderTeacher(); });
+}
+
+/* ---------- Shared game shell ---------- */
+let FG = null;
+const GI = {};
+function openGame(gid, level){
+  const g = GAME(gid); if (!g || !isUnlocked(g)) return;
+  stopGame();
+  FG = { gid, g, level, L: g.letters ? FROG_ORDER[level - 1] : '', raf: 0, timers: [], busy: false };
+  $('gBubbles').innerHTML = ''; $('gTongue').innerHTML = '';
+  $('gFrog').innerHTML = FROG_SVG; $('gFrog').className = 'g-frog';
+  $('gFrog').style.display = gid === 'frog' ? '' : 'none';
+  $('gStage').dataset.game = gid;
+  show('viewGame');
+  const impl = GI[gid];
+  $('gAsk').innerHTML = `${esc(g.title)}, Level ${level}`;
+  gOverlay(`<div class="g-card"><div class="frog-mini">${g.icon}</div><h2>${esc(g.title)}</h2><p class="sub">Level ${level}</p>
+    ${impl.big ? `<div class="big">${impl.big()}</div>` : ''}<p>${impl.intro()}</p>
+    <button type="button" class="btn primary" id="gGo">Play</button></div>`);
+  $('gGo').onclick = () => { actx(); gOverlay(''); impl.start(); };
+}
+function later(fn, ms){ if (!FG) return; const f = FG; const t = setTimeout(() => { if (FG === f) fn(); }, ms); f.timers.push(t); }
+function stopGame(){ if (!FG) return; cancelAnimationFrame(FG.raf); FG.timers.forEach(clearTimeout); }
+function gOverlay(html){ const o = $('gOverlay'); if (html){ o.innerHTML = html; o.classList.remove('hidden'); } else { o.classList.add('hidden'); o.innerHTML = ''; } }
+function stageSize(){ const r = $('gStage').getBoundingClientRect(); return { w: r.width, h: r.height }; }
+function dots(total, got){ return `<span class="g-dots">${Array.from({ length: total }, (_, i) => `<i class="${i < got ? 'on' : ''}"></i>`).join('')}</span>`; }
+function setAsk(html, total, got){ $('gAsk').innerHTML = `<span class="lvl">Level ${FG.level}</span> ${html}${total ? dots(total, got) : ''}`; }
+function gWrong(el, line){
+  SFX.no();
+  if (el){ el.classList.remove('no'); void el.offsetWidth; el.classList.add('no'); }
+  if (line) say(line);
+}
+function sayAgain(){ if (FG && GI[FG.gid].line) say(GI[FG.gid].line()); }
+
+function gWin(){
+  if (!FG) return;
+  stopGame();
+  SFX.win();
+  const g = FG.g, n = FG.level, first = earnStar(g.id + '|' + n), last = n >= g.levels;
+  say(last ? `Yehey! You finished ${g.title}! Great job.` : 'Yehey! Great job!');
+  gOverlay(`<div class="g-card"><div class="yehey">Yehey!</div><div class="frog-mini">${g.icon}</div>
+    <h2>${last ? 'You finished every level!' : 'Great job!'}</h2>
+    <div class="big star">\u2605</div>
+    <p>${first ? 'You earned 1 star!' : 'You played this level again.'}</p>
+    ${last ? '' : `<button type="button" class="btn primary" id="gNext">Next Level</button>`}
+    <button type="button" class="btn" id="gHome">Back to Games</button></div>`);
+  confetti();
+  if ($('gNext')) $('gNext').onclick = () => openGame(g.id, n + 1);
+  $('gHome').onclick = exitGame;
+}
+
+function exitGame(){
+  stopGame(); FG = null;
+  try { speechSynthesis.cancel(); } catch(e){}
+  show('viewTeacher'); TV.tab = 'games'; renderTeacher();
+}
+
+/* Floating letters, used by Froggy's Letters and Listen and Catch */
+function floatStart(list, makeEl, onTap, floor){
+  const { w, h } = stageSize();
+  const size = Math.max(56, Math.min(96, Math.min(w, h) * 0.14));
+  FG.size = size; FG.floor = floor; FG.items = [];
+  FG.maxY = Math.max(40, h - size - Math.min(w, h) * floor);
+  list.forEach(it => {
+    const el = makeEl(it, size);
+    const speed = (26 + Math.random() * 30) * (size / 70), ang = Math.random() * Math.PI * 2;
+    const b = Object.assign({}, it, { el, x: Math.random() * Math.max(1, w - el.offsetWidthGuess), y: Math.random() * FG.maxY, vx: Math.cos(ang) * speed, vy: Math.sin(ang) * speed, caught: false, w: el.offsetWidthGuess });
+    el.onpointerdown = e => { e.preventDefault(); onTap(b); };
+    $('gBubbles').appendChild(el); FG.items.push(b);
+  });
+  FG.last = performance.now();
+  FG.raf = requestAnimationFrame(floatLoop);
+}
+function floatLoop(ts){
+  if (!FG || !FG.items) return;
+  const dt = Math.min(0.05, (ts - FG.last) / 1000); FG.last = ts;
+  const { w } = stageSize();
+  FG.items.forEach(b => {
+    if (b.caught) return;
+    b.x += b.vx * dt; b.y += b.vy * dt;
+    if (b.x < 0){ b.x = 0; b.vx = Math.abs(b.vx); } if (b.x > w - b.w){ b.x = w - b.w; b.vx = -Math.abs(b.vx); }
+    if (b.y < 0){ b.y = 0; b.vy = Math.abs(b.vy); } if (b.y > FG.maxY){ b.y = FG.maxY; b.vy = -Math.abs(b.vy); }
+    b.el.style.transform = `translate(${b.x}px,${b.y}px)`;
+  });
+  FG.raf = requestAnimationFrame(floatLoop);
+}
+function bubbleEl(it, size){
+  const el = document.createElement('button');
+  el.type = 'button'; el.className = 'bub'; el.textContent = it.ch;
+  el.style.width = el.style.height = size + 'px'; el.style.fontSize = (size * 0.52) + 'px';
+  el.setAttribute('aria-label', 'Letter ' + it.ch); el.offsetWidthGuess = size;
+  return el;
+}
+function mixList(targets, extra){
+  const L = FG.L, list = targets.map(ch => ({ ch, target: true }));
+  otherLetters([L], extra).forEach(x => list.push({ ch: Math.random() < 0.5 ? x.toUpperCase() : x, target: false }));
+  return shuffle(list);
+}
+
+/* 1. Froggy's Letters */
+function askLine(){ const U = FG.L.toUpperCase(); return `Can you help Froggy find the letter ${U}? Tap every big ${U}, and every small ${FG.L}.`; }
+GI.frog = {
+  big: () => FG.L.toUpperCase() + ' ' + FG.L,
+  intro: () => `Help Froggy find every ${FG.L.toUpperCase()} and ${FG.L}.`,
+  line: askLine,
+  start(){
+    const U = FG.L.toUpperCase();
+    FG.total = 4; FG.left = 4;
+    setAsk(`Tap <b>${U} ${FG.L}</b>`, 4, 0);
+    floatStart(mixList([U, U, FG.L, FG.L], 6), bubbleEl, frogTap, 0.34);
+    say(askLine());
+  }
+};
+function mouthPoint(){
+  const st = $('gStage').getBoundingClientRect(), f = $('gFrog').getBoundingClientRect();
+  return { x: f.left - st.left + f.width * 0.5, y: f.top - st.top + f.height * (96 / 170) };
+}
+function frogTap(b){
+  if (!FG || FG.busy || b.caught) return;
+  if (!b.target){ gWrong(b.el, `Oops, not that one. Let's look for ${FG.L.toUpperCase()}.`); return; }
+  FG.busy = true; b.caught = true; SFX.yes();
+  const frog = $('gFrog'); frog.classList.add('open');
+  const m = mouthPoint(), t = { x: b.x + FG.size / 2, y: b.y + FG.size / 2 };
+  const svg = $('gTongue'); const t0 = performance.now(), OUT = 190, BACK = 260; const f = FG;
+  const draw = (x, y) => { svg.innerHTML = `<line x1="${m.x}" y1="${m.y}" x2="${x}" y2="${y}" stroke="#E8547A" stroke-width="12" stroke-linecap="round"/><circle cx="${x}" cy="${y}" r="10" fill="#E8547A"/>`; };
+  const step = now => {
+    if (FG !== f) return;
+    const e = now - t0;
+    if (e < OUT){ const p = e / OUT; draw(m.x + (t.x - m.x) * p, m.y + (t.y - m.y) * p); requestAnimationFrame(step); return; }
+    if (e < OUT + BACK){
+      const p = (e - OUT) / BACK; const x = t.x + (m.x - t.x) * p, y = t.y + (m.y - t.y) * p;
+      draw(x, y); b.el.style.transform = `translate(${x - FG.size / 2}px,${y - FG.size / 2}px) scale(${1 - 0.7 * p})`;
+      requestAnimationFrame(step); return;
+    }
+    svg.innerHTML = ''; b.el.remove();
+    frog.classList.remove('open'); frog.classList.remove('chomp'); void frog.offsetWidth; frog.classList.add('chomp');
+    SFX.gulp();
+    FG.left--; FG.busy = false;
+    setAsk(`Tap <b>${FG.L.toUpperCase()} ${FG.L}</b>`, FG.total, FG.total - FG.left);
+    if (FG.left <= 0) later(gWin, 450);
+  };
+  requestAnimationFrame(step);
+}
+
+/* 2. Mama and Baby */
+GI.mama = {
+  big: () => FG.L.toUpperCase() + ' ' + FG.L,
+  intro: () => `Mama ducks have big letters. Baby ducks have small letters. Bring each baby to its mama.`,
+  line: () => `This is Mama ${FG.cur.toUpperCase()}. Can you find her baby, small ${FG.cur}?`,
+  start(){
+    const prev = learned(FG.level - 1);
+    FG.rounds = [FG.L, FG.L, prev.length ? prev[Math.floor(Math.random() * prev.length)] : FG.L];
+    FG.round = 0; mamaRound();
+  }
+};
+function mamaRound(){
+  const cur = FG.cur = FG.rounds[FG.round];
+  const opts = shuffle([cur].concat(otherLetters([cur], 2, learned(Math.max(FG.level, 3)))));
+  $('gBubbles').innerHTML = `<div class="mama" id="mama">${duckSvg()}<span class="tag">${cur.toUpperCase()}</span></div>
+    <div class="babies">${opts.map(o => `<button type="button" class="baby" data-ch="${o}" aria-label="Baby duck ${o}">${duckSvg()}<span class="tag">${o}</span></button>`).join('')}</div>`;
+  setAsk(`Find baby <b>${cur}</b> for Mama <b>${cur.toUpperCase()}</b>`, 3, FG.round);
+  FG.busy = false;
+  $('gBubbles').querySelectorAll('.baby').forEach(el => el.onclick = () => {
+    if (FG.busy) return;
+    if (el.dataset.ch !== cur){ gWrong(el, `That baby is ${el.dataset.ch}. Find baby ${cur}.`); return; }
+    FG.busy = true; SFX.yes();
+    const a = el.getBoundingClientRect(), m = $('mama').getBoundingClientRect();
+    el.style.transition = 'transform .8s ease'; el.style.zIndex = 5;
+    el.style.transform = `translate(${m.left + m.width * 0.25 - a.left}px,${m.top + m.height * 0.45 - a.top}px) scale(.7)`;
+    say('You found her!');
+    later(() => { FG.round++; if (FG.round >= FG.rounds.length) gWin(); else mamaRound(); }, 1300);
+  });
+  say(GI.mama.line());
+}
+
+/* 3. Listen and Catch */
+GI.listen = {
+  big: () => '\uD83D\uDC42',
+  intro: () => 'Listen to the letter. Then catch the fish that has it. Tap the speaker to hear it again.',
+  line: () => `Listen carefully. Catch the letter ${FG.L.toUpperCase()}.`,
+  start(){
+    const U = FG.L.toUpperCase();
+    FG.total = 3; FG.left = 3;
+    setAsk('Listen, then catch the fish', 3, 0);
+    floatStart(mixList([U, FG.L, Math.random() < 0.5 ? U : FG.L], 6), fishEl, listenTap, 0.05);
+    say(GI.listen.line());
+  }
+};
+function fishEl(it, size){
+  const el = document.createElement('button');
+  el.type = 'button'; el.className = 'bub fish';
+  el.innerHTML = `${FISH_SVG}<span>${esc(it.ch)}</span>`;
+  el.style.width = (size * 1.4) + 'px'; el.style.height = size + 'px'; el.style.fontSize = (size * 0.46) + 'px';
+  el.setAttribute('aria-label', 'Fish with letter ' + it.ch); el.offsetWidthGuess = size * 1.4;
+  return el;
+}
+function listenTap(b){
+  if (!FG || b.caught) return;
+  if (!b.target){ gWrong(b.el, `Oops. Listen again. Catch the letter ${FG.L.toUpperCase()}.`); return; }
+  b.caught = true; SFX.yes();
+  b.el.style.transition = 'transform .6s ease, opacity .6s ease';
+  b.el.style.transform = `translate(${b.x}px,${b.y - 80}px) scale(1.3)`; b.el.style.opacity = '0';
+  later(() => b.el.remove(), 650);
+  FG.left--;
+  setAsk('Listen, then catch the fish', FG.total, FG.total - FG.left);
+  say(FG.left > 0 ? `Yes! ${FG.L.toUpperCase()}. Catch one more.` : `Yes! ${FG.L.toUpperCase()}.`);
+  if (FG.left <= 0) later(gWin, 900);
+}
+
+/* 4. Sound Safari */
+GI.safari = {
+  big: () => PICS[FG.L][0][1],
+  intro: () => 'Look at the picture and listen to the word. Tap the letter it starts with.',
+  line: () => FG.cur === 'x' ? `${FG.word}. What letter do you hear at the end of ${FG.word}?` : `${FG.word}. What letter does ${FG.word} start with?`,
+  start(){
+    const prev = learned(FG.level - 1);
+    FG.rounds = [[FG.L, 0], [FG.L, 1], prev.length ? [prev[Math.floor(Math.random() * prev.length)], 0] : [FG.L, 0]];
+    FG.round = 0; safariRound();
+  }
+};
+function safariRound(){
+  const [ch, i] = FG.rounds[FG.round]; const [word, pic] = PICS[ch][i];
+  FG.cur = ch; FG.word = word; FG.busy = false;
+  const opts = shuffle([ch].concat(otherLetters([ch], 2, learned(Math.max(FG.level, 4)))));
+  $('gBubbles').innerHTML = `<div class="safari"><button type="button" class="pic" id="pic" aria-label="Hear the word again">${pic}</button>
+    <div class="choices">${opts.map(o => `<button type="button" class="choice" data-ch="${o}">${o}</button>`).join('')}</div></div>`;
+  setAsk(ch === 'x' ? 'Which letter is at the end?' : 'Which letter does it start with?', 3, FG.round);
+  $('pic').onclick = sayAgain;
+  $('gBubbles').querySelectorAll('.choice').forEach(el => el.onclick = () => {
+    if (FG.busy) return;
+    if (el.dataset.ch !== ch){ gWrong(el, `Not quite. Listen again. ${word}.`); return; }
+    FG.busy = true; SFX.yes(); el.classList.add('right'); $('pic').classList.add('happy');
+    say(ch === 'x' ? `Yes! ${word} ends with ${ch}.` : `Yes! ${word} starts with ${ch}.`);
+    later(() => { FG.round++; if (FG.round >= FG.rounds.length) gWin(); else safariRound(); }, 1600);
+  });
+  say(GI.safari.line());
+}
+
+/* 5. Letter Memory */
+GI.memory = {
+  big: () => MEMORY_SETS[FG.level - 1].map(x => x.toUpperCase() + x).join(' '),
+  intro: () => 'Flip two cards at a time. Find the big letter and the small letter that go together.',
+  line: () => 'Flip two cards. Find the big letter and the small letter that go together.',
+  start(){
+    const set = MEMORY_SETS[FG.level - 1];
+    const cards = shuffle(set.flatMap(x => [{ ch: x.toUpperCase(), k: x }, { ch: x, k: x }]));
+    FG.open = []; FG.pairs = set.length; FG.matched = 0; FG.lock = false;
+    $('gBubbles').innerHTML = `<div class="mgrid" style="grid-template-columns:repeat(${cards.length <= 6 ? 3 : 4},1fr)">${cards.map((c, i) => `<button type="button" class="mcard" data-i="${i}" data-k="${c.k}" aria-label="Card"><span>${esc(c.ch)}</span></button>`).join('')}</div>`;
+    setAsk('Find the pairs', FG.pairs, 0);
+    $('gBubbles').querySelectorAll('.mcard').forEach(el => el.onclick = () => memoryFlip(el));
+    say(GI.memory.line());
+  }
+};
+function memoryFlip(el){
+  if (!FG || FG.lock || el.classList.contains('up')) return;
+  el.classList.add('up'); FG.open.push(el); tone(520, 0.08, 'triangle', 0.12);
+  if (FG.open.length < 2) return;
+  const [a, b] = FG.open; FG.open = [];
+  if (a.dataset.k === b.dataset.k){
+    a.classList.add('done'); b.classList.add('done'); SFX.yes();
+    FG.matched++; setAsk('Find the pairs', FG.pairs, FG.matched);
+    say(`${a.dataset.k.toUpperCase()} and ${a.dataset.k}!`);
+    if (FG.matched >= FG.pairs) later(gWin, 900);
+  } else {
+    FG.lock = true;
+    later(() => { a.classList.remove('up'); b.classList.remove('up'); FG.lock = false; }, 1000);
+  }
+}
+
+/* 6. Mirror Letters */
+GI.mirror = {
+  big: () => MIRROR_SETS[FG.level - 1].join(' '),
+  intro: () => 'These letters look alike. Look closely, then tap every letter you are asked to find.',
+  line: () => `Look closely. Tap every small ${FG.cur}.`,
+  start(){
+    const set = MIRROR_SETS[FG.level - 1];
+    FG.rounds = shuffle(set).concat(shuffle(set)).slice(0, 3); FG.round = 0; mirrorRound();
+  }
+};
+function mirrorRound(){
+  const set = MIRROR_SETS[FG.level - 1], cur = FG.cur = FG.rounds[FG.round];
+  const others = set.filter(x => x !== cur);
+  const tiles = shuffle([cur, cur, cur].concat(Array.from({ length: 5 }, () => others[Math.floor(Math.random() * others.length)])));
+  FG.left = 3;
+  $('gBubbles').innerHTML = `<div class="mgrid tiles" style="grid-template-columns:repeat(4,1fr)">${tiles.map(t => `<button type="button" class="tile" data-ch="${t}">${t}</button>`).join('')}</div>`;
+  setAsk(`Tap every <b>${cur}</b>`, 3, 0);
+  $('gBubbles').querySelectorAll('.tile').forEach(el => el.onclick = () => {
+    if (el.classList.contains('right')) return;
+    if (el.dataset.ch !== cur){ gWrong(el, `Look closely. That is ${el.dataset.ch}. Find ${cur}.`); return; }
+    el.classList.add('right'); SFX.yes(); FG.left--;
+    setAsk(`Tap every <b>${cur}</b>`, 3, 3 - FG.left);
+    if (FG.left <= 0){
+      FG.round++;
+      if (FG.round >= FG.rounds.length) later(gWin, 700);
+      else later(mirrorRound, 900);
+    }
+  });
+  say(GI.mirror.line());
+}
+
+/* 7. Trace with Froggy */
+GI.trace = {
+  big: () => FG.L.toUpperCase() + ' ' + FG.L,
+  intro: () => `Trace ${FG.L.toUpperCase()} and ${FG.L} with your finger. Froggy will follow you.`,
+  line: () => `Trace the ${FG.cur === FG.L ? 'small' : 'big'} letter ${FG.L.toUpperCase()}. Stay on the dots.`,
+  start(){ FG.parts = [FG.L.toUpperCase(), FG.L]; FG.part = 0; traceRound(); }
+};
+function traceRound(){
+  const ch = FG.cur = FG.parts[FG.part];
+  $('gBubbles').innerHTML = `<canvas id="tGuide" class="tcanvas"></canvas><canvas id="tInk" class="tcanvas ink"></canvas>
+    <div class="tfrog" id="tFrog">${FROG_SVG}</div>
+    <div class="tbar"><button type="button" class="btn" id="tClear">Clear</button></div>`;
+  setAsk(`Trace <b>${ch}</b>`, 2, FG.part);
+  const { w, h } = stageSize();
+  const guide = $('tGuide'), ink = $('tInk');
+  [guide, ink].forEach(c => { c.width = Math.max(1, Math.floor(w)); c.height = Math.max(1, Math.floor(h)); });
+  const fs = Math.min(h * 0.72, w * 0.75), brush = Math.max(14, fs * 0.09);
+  const font = `700 ${fs}px 'Century Gothic','CenturyGothic','Didact Gothic',sans-serif`;
+  const cx = w / 2, cy = h * 0.47;
+  const g = guide.getContext('2d');
+  g.font = font; g.textAlign = 'center'; g.textBaseline = 'middle';
+  g.fillStyle = '#E6EDF8'; g.fillText(ch, cx, cy);
+  g.setLineDash([6, 10]); g.lineWidth = 4; g.strokeStyle = '#8FA6CF'; g.strokeText(ch, cx, cy);
+  const mk = extra => { const c = document.createElement('canvas'); c.width = guide.width; c.height = guide.height; const x = c.getContext('2d');
+    x.font = font; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillStyle = '#000'; x.fillText(ch, cx, cy);
+    if (extra){ x.lineWidth = extra; x.strokeStyle = '#000'; x.lineJoin = 'round'; x.strokeText(ch, cx, cy); }
+    try { return x.getImageData(0, 0, c.width, c.height).data; } catch(e){ return null; } };
+  const mask = mk(0), near = mk(brush * 1.8);
+  const ctx = ink.getContext('2d'); ctx.lineWidth = brush; ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.strokeStyle = '#5CC27A';
+  const tf = $('tFrog'); let drawing = false, last = null, warned = false;
+  const pos = e => { const r = ink.getBoundingClientRect(); return { x: e.clientX - r.left, y: e.clientY - r.top }; };
+  const moveFrog = p => { tf.style.transform = `translate(${p.x - 30}px,${p.y - 70}px)`; };
+  ink.onpointerdown = e => { e.preventDefault(); drawing = true; last = pos(e); try { ink.setPointerCapture(e.pointerId); } catch(x){} ctx.beginPath(); ctx.arc(last.x, last.y, brush / 2, 0, Math.PI * 2); ctx.fillStyle = '#5CC27A'; ctx.fill(); moveFrog(last); };
+  ink.onpointermove = e => { if (!drawing) return; const p = pos(e); ctx.beginPath(); ctx.moveTo(last.x, last.y); ctx.lineTo(p.x, p.y); ctx.stroke(); last = p; moveFrog(p); };
+  ink.onpointerup = ink.onpointercancel = () => {
+    if (!drawing) return; drawing = false;
+    if (!mask) { passTrace(); return; }
+    let data; try { data = ctx.getImageData(0, 0, ink.width, ink.height).data; } catch(e){ passTrace(); return; }
+    let m = 0, cov = 0, inkN = 0, out = 0;
+    for (let y = 0; y < ink.height; y += 3) for (let x = 0; x < ink.width; x += 3){
+      const i = (y * ink.width + x) * 4 + 3; const isM = mask[i] > 0, isInk = data[i] > 0;
+      if (isM){ m++; if (isInk) cov++; }
+      if (isInk){ inkN++; if (!near[i]) out++; }
+    }
+    const coverage = m ? cov / m : 0, outside = inkN ? out / inkN : 0;
+    if (coverage >= 0.6 && outside <= 0.3) passTrace();
+    else if (outside > 0.45 && !warned){ warned = true; say('Try to stay on the dots. You can tap Clear to start again.'); }
+  };
+  $('tClear').onclick = () => { ctx.clearRect(0, 0, ink.width, ink.height); };
+  moveFrog({ x: w * 0.12, y: h * 0.9 });
+  say(GI.trace.line());
+}
+function passTrace(){
+  if (!FG || FG.busy) return;
+  FG.busy = true; SFX.yes(); say('Good tracing!');
+  later(() => { FG.busy = false; FG.part++; if (FG.part >= FG.parts.length) gWin(); else traceRound(); }, 1100);
+}
+
+/* =========================================================
+   PRACTICE REVIEW (School Head and advisers)
+   ========================================================= */
+let REV = null;
+async function loadReview(auth, el){
+  const keep = REV && REV.el === el ? REV : null;
+  REV = { auth, el, data: keep ? keep.data : null, status: keep ? keep.status : 'submitted', grade: keep ? keep.grade : '' };
+  if (!REV.data) el.innerHTML = '<div class="panel"><p class="hint">Loading the practice recordings.</p></div>';
+  try {
+    const res = await callApi(Object.assign({ action: 'reviewList' }, auth));
+    if (!res || !res.ok){ el.innerHTML = `<div class="panel"><p class="msg err">${esc((res && res.error) || 'Could not load the recordings.')}</p></div>`; return false; }
+    REV.data = res; renderReview(); return true;
+  } catch(e){
+    el.innerHTML = '<div class="panel"><p class="msg err">Reviewing recordings needs the internet. Connect, then open this tab again.</p></div>';
+    return false;
+  }
+}
+
+const REV_STATUS = [['submitted','Waiting for Review'],['redo','Sent Back for Redo'],['correct','Correct'],['all','All Words']];
+function renderReview(){
+  const d = REV.data, el = REV.el;
+  const grades = [...new Set(d.learners.map(l => String(l.grade)))].sort((a, b) => gradeOrder(a) - gradeOrder(b));
+  const items = d.items
+    .filter(x => REV.status === 'all' || x.status === REV.status)
+    .filter(x => !REV.grade || String(x.grade) === REV.grade)
+    .sort((a, b) => String(b.submittedAt || b.week).localeCompare(String(a.submittedAt || a.week)));
+  const waiting = d.items.filter(x => x.status === 'submitted').length;
+  const summary = d.summary.filter(x => !REV.grade || String(x.grade) === REV.grade).sort((a, b) => b.stars - a.stars || a.learnerName.localeCompare(b.learnerName));
+  el.innerHTML = `
+  <div class="panel">
+    <h2>Practice Review</h2>
+    <p class="sub">Signed in as ${esc(d.reviewer)}. ${waiting} recording(s) waiting for review.</p>
+    <div class="toolbar">
+      <label>Show<select id="rvStatus">${REV_STATUS.map(s => `<option value="${s[0]}"${s[0] === REV.status ? ' selected' : ''}>${s[1]}</option>`).join('')}</select></label>
+      <label>Grade<select id="rvGrade"><option value="">All grades</option>${grades.map(g => `<option value="${g}"${g === REV.grade ? ' selected' : ''}>${gradeLabel(g)}</option>`).join('')}</select></label>
+      <button type="button" class="btn" id="rvReload">Refresh</button>
+    </div>
+    <div id="rvList">${items.length ? items.map(x => `
+      <div class="rv-item" data-id="${esc(x.id)}">
+        <div><div class="rv-word">${esc(x.word)}</div>
+          <div class="sub">${esc(x.learnerName)}, ${gradeLabel(x.grade)}. ${x.submittedAt ? 'Sent ' + esc(fmtDay(x.submittedAt)) : 'Not recorded yet'}${x.reviewedBy ? '. Checked by ' + esc(x.reviewedBy) : ''}</div></div>
+        <div>${x.status === 'correct' ? '<span class="star">\u2605 Correct</span>' : x.status === 'redo' ? '<span class="tag">Redo</span>' : x.status === 'submitted' ? '<span class="tag">Waiting</span>' : '<span class="tag">Not yet</span>'}</div>
+        <div class="rv-actions">
+          ${x.hasAudio ? `<button type="button" class="btn small" data-play="${esc(x.id)}">Play</button><span data-audio="${esc(x.id)}"></span>` : ''}
+          <input data-remark="${esc(x.id)}" placeholder="Remark (optional)" value="${esc(x.remark || '')}">
+          ${x.hasAudio ? `<button type="button" class="btn small primary" data-ok="${esc(x.id)}">\u2605 Correct</button><button type="button" class="btn small" data-redo="${esc(x.id)}">Redo</button>` : ''}
+        </div>
+      </div>`).join('') : '<p class="hint">Nothing here right now.</p>'}</div>
+    <p class="msg" id="rvMsg"></p>
+  </div>
+  <div class="panel">
+    <h2>Stars Summary</h2>
+    <p class="sub">Week of ${esc(fmtDay(d.week))}</p>
+    <div class="tablewrap"><table class="stable">
+      <thead><tr><th>Learner</th><th>Grade</th><th>Words This Week</th><th>Practiced</th><th>Correct</th><th>Practice \u2605</th><th>Reading Tasks \u2605</th><th>Games \u2605</th><th>Total \u2605</th></tr></thead>
+      <tbody>${summary.map(x => `<tr><td>${esc(x.learnerName)}</td><td>${gradeLabel(x.grade)}</td><td>${x.weekWords}</td><td>${x.weekDone}</td><td>${x.weekCorrect}</td><td>${x.practiceStars != null ? x.practiceStars : x.stars}</td><td>${x.taskStars || 0}</td><td>${x.gameStars || 0}</td><td class="star">\u2605 ${x.stars}</td></tr>`).join('') || '<tr><td colspan="9">No learners yet.</td></tr>'}</tbody>
+    </table></div>
+    <p class="hint">Learners earn one star for each practice word read correctly, each reading task finished, and each game level passed. Each learner gets 8 new words every Monday, chosen from the letter sounds and word patterns they missed in the assessment. Words sent back for redo stay on their list.</p>
+  </div>
+  <div class="panel">
+    <h2>Add a Practice Word</h2>
+    <div class="fields">
+      <label>Learner<select id="rvLearner"><option value="">Choose a learner</option>${d.learners.filter(l => !REV.grade || String(l.grade) === REV.grade).map(l => `<option value="${esc(l.id)}">${esc(l.name)} (${gradeLabel(l.grade)})</option>`).join('')}</select></label>
+      <label>Word<input id="rvWord" autocomplete="off"></label>
+    </div>
+    <button type="button" class="btn primary" id="rvAdd">Add Word</button>
+    <p class="msg" id="rvAddMsg"></p>
+  </div>`;
+  $('rvStatus').onchange = e => { REV.status = e.target.value; renderReview(); };
+  $('rvGrade').onchange = e => { REV.grade = e.target.value; renderReview(); };
+  $('rvReload').onclick = () => loadReview(REV.auth, REV.el);
+  $('rvAdd').onclick = addWord;
+  el.querySelector('#rvList').onclick = e => {
+    const b = e.target.closest('button'); if (!b) return;
+    if (b.dataset.play) playAudio(b.dataset.play, b);
+    if (b.dataset.ok) judge(b.dataset.ok, 'correct');
+    if (b.dataset.redo) judge(b.dataset.redo, 'redo');
+  };
+}
+
+async function playAudio(id, btn){
+  const slot = REV.el.querySelector(`[data-audio="${id}"]`);
+  btn.disabled = true; btn.textContent = 'Loading';
+  try {
+    const res = await callApi(Object.assign({ action: 'getAudio', id }, REV.auth));
+    if (!res || !res.ok){ setMsg($('rvMsg'), (res && res.error) || 'Could not play the recording.', 'err'); btn.disabled = false; btn.textContent = 'Play'; return; }
+    slot.innerHTML = `<audio controls autoplay src="data:${esc(res.mime)};base64,${res.audio}"></audio>`;
+    btn.remove();
+  } catch(e){ setMsg($('rvMsg'), 'No internet. Try again when you are online.', 'err'); btn.disabled = false; btn.textContent = 'Play'; }
+}
+
+async function judge(id, verdict){
+  const remarkEl = REV.el.querySelector(`[data-remark="${id}"]`);
+  const remark = remarkEl ? remarkEl.value.trim() : '';
+  if (verdict === 'redo' && !remark && !ask('Send this word back for redo without a remark?')) return;
+  setMsg($('rvMsg'), 'Saving');
+  try {
+    const res = await callApi(Object.assign({ action: 'reviewItem', id, verdict, remark }, REV.auth));
+    if (!res || !res.ok){ setMsg($('rvMsg'), (res && res.error) || 'Not saved.', 'err'); return; }
+    REV.data.items = REV.data.items.map(x => x.id === id ? res.item : x);
+    const s = REV.data.summary.find(x => x.learnerId === res.item.learnerId);
+    if (s){ const mine = REV.data.items.filter(x => x.learnerId === s.learnerId); s.stars = mine.reduce((t, x) => t + (x.stars || 0), 0); s.weekCorrect = mine.filter(x => x.week === REV.data.week && x.status === 'correct').length; }
+    renderReview();
+    setMsg($('rvMsg'), verdict === 'correct' ? 'Marked correct. The learner earned a star.' : 'Sent back for redo.', 'good');
+  } catch(e){ setMsg($('rvMsg'), 'No internet. Try again when you are online.', 'err'); }
+}
+
+async function addWord(){
+  const m = $('rvAddMsg');
+  const learnerId = $('rvLearner').value, word = $('rvWord').value.trim();
+  if (!learnerId || !word){ setMsg(m, 'Choose a learner and type the word.', 'err'); return; }
+  try {
+    const res = await callApi(Object.assign({ action: 'addPracticeWord', learnerId, word }, REV.auth));
+    if (!res || !res.ok){ setMsg(m, (res && res.error) || 'Not added.', 'err'); return; }
+    $('rvWord').value = '';
+    await loadReview(REV.auth, REV.el);
+    setMsg($('rvAddMsg'), `Added "${word}".`, 'good');
+  } catch(e){ setMsg(m, 'No internet. Try again when you are online.', 'err'); }
+}
+
+async function adviserLogin(){
+  const m = $('advLoginMsg');
+  const email = $('advEmail').value.trim(), pin = $('advPin').value.trim();
+  if (!email || !pin){ setMsg(m, 'Enter your email and PIN.', 'err'); return; }
+  setMsg(m, 'Checking');
+  REV = null;
+  show('viewAdviser');
+  const ok = await loadReview({ email, pin }, $('revAdviser'));
+  if (!ok && REV && !REV.data){
+    const text = $('revAdviser').textContent.trim();
+    show('viewLogin'); setMsg(m, text || 'Sign in failed.', 'err'); return;
+  }
+  setMsg(m, ''); $('advPin').value = '';
+}
+
+/* =========================================================
+   SIGN IN PAGE DASHBOARD
+   ========================================================= */
+async function loadBoard(){
+  renderBoard();
+  if (!serverAvailable() || navigator.onLine === false) return;
+  try {
+    const res = await callApi({ action: 'leaderboard' });
+    if (res && res.ok){ S.board = res; persist(); renderBoard(); }
+    else if (!S.board) $('boardNote').textContent = 'The dashboard is not ready. Deploy the newest version of the web app, then refresh this page.';
+  } catch(e){ if (!S.board) $('boardNote').textContent = 'Could not load the dashboard. Check the internet, then refresh this page.'; }
+}
+function pieSvg(parts){
+  const total = parts.reduce((t, p) => t + p.value, 0);
+  const r = 100, c = 110;
+  if (!total) return `<svg viewBox="0 0 220 220" role="img" aria-label="No learners yet"><circle cx="${c}" cy="${c}" r="${r}" fill="#E8EEFA"/></svg>`;
+  let angle = -Math.PI / 2, paths = '';
+  parts.forEach(p => {
+    if (!p.value) return;
+    const frac = p.value / total;
+    if (frac >= 0.9999){ paths += `<circle cx="${c}" cy="${c}" r="${r}" fill="${p.color}"/>`; return; }
+    const a2 = angle + frac * 2 * Math.PI;
+    const x1 = c + r * Math.cos(angle), y1 = c + r * Math.sin(angle);
+    const x2 = c + r * Math.cos(a2), y2 = c + r * Math.sin(a2);
+    paths += `<path d="M${c},${c} L${x1.toFixed(2)},${y1.toFixed(2)} A${r},${r} 0 ${frac > 0.5 ? 1 : 0} 1 ${x2.toFixed(2)},${y2.toFixed(2)} Z" fill="${p.color}" stroke="#fff" stroke-width="2"/>`;
+    const mid = angle + frac * Math.PI;
+    if (frac >= 0.06) paths += `<text x="${(c + r * 0.6 * Math.cos(mid)).toFixed(1)}" y="${(c + r * 0.6 * Math.sin(mid)).toFixed(1)}" text-anchor="middle" dominant-baseline="middle" font-family="Atkinson Hyperlegible, Arial, sans-serif" font-weight="700" font-size="18" fill="${p.text}">${Math.round(frac * 100)}%</text>`;
+    angle = a2;
+  });
+  return `<svg viewBox="0 0 220 220" role="img" aria-label="${parts.map(p => p.label + ' ' + p.value).join(', ')}">${paths}</svg>`;
+}
+
+function renderBoard(){
+  const b = S.board;
+  const note = $('boardNote');
+  if (!b){
+    note.textContent = !serverAvailable() ? 'The dashboard needs the server link.' : navigator.onLine === false ? 'Connect to the internet to see the dashboard.' : 'Loading the dashboard.';
+    $('pieChart').innerHTML = pieSvg([]); $('pieLegend').innerHTML = ''; $('gradeBars').innerHTML = ''; $('boardList').innerHTML = '';
+    return;
+  }
+  const notYet = Math.max(0, b.totalLearners - b.assessed);
+  note.textContent = b.totalLearners ? `${b.assessed} of ${b.totalLearners} learners have been assessed.` : 'No learners on the list yet.';
+  const parts = [
+    { label: 'Assessed', value: b.assessed, color: '#1F3A93', text: '#fff' },
+    { label: 'Not yet assessed', value: notYet, color: '#CFDCEF', text: '#1F3A93' }
+  ];
+  $('pieChart').innerHTML = pieSvg(parts);
+  $('pieLegend').innerHTML = parts.map(p => `<div><span style="background:${p.color}"></span>${p.label}: <b>${p.value}</b></div>`).join('');
+  $('bAssessed').textContent = b.assessed;
+  $('bTotal').textContent = b.totalLearners;
+  $('bStars').textContent = (b.top || []).reduce((s, x) => s + x.stars, 0);
+  $('gradeBars').innerHTML = (b.byGrade || []).map(g => {
+    const pct = g.total ? Math.round(100 * g.assessed / g.total) : 0;
+    return `<div class="gbar"><span>${gradeLabel(g.grade)}</span><div class="bar"><i style="width:${pct}%"></i></div><span class="num">${g.assessed} of ${g.total}</span></div>`;
+  }).join('') || '<p class="hint">No learners yet.</p>';
+  $('boardList').innerHTML = (b.top || []).length ? b.top.map((x, i) => `
+    <li><span class="rank">${i + 1}</span><span class="who">${esc(x.name)}<small>${gradeLabel(x.grade)}</small></span><span class="star">\u2605 ${x.stars}</span></li>`).join('')
+    : '<li><span class="who sub">No stars yet. Practice words to be the first on the list!</span></li>';
+}
+
+/* Learner reading session */
+let LSess = null, RD = null;
+async function startSession(){
+  const m = $('sesMsg');
+  const code = ($('sesCode').value || '').replace(/\D/g, '');
+  if (code.length !== 6){ setMsg(m, 'Enter the 6 digit code.', 'err'); return; }
+  setMsg(m, 'Checking the code');
+  const lrn = TV.learner.lrn;
+  try {
+    const res = await callApi({ action: 'learnerSession', lrn, code });
+    if (!res || !res.ok){ setMsg(m, (res && res.error) || 'The code did not work.', 'err'); return; }
+    if (res.grade && !TV.learner.grade) TV.learner.grade = res.grade;
+    LSess = { lrn, code, patterns: res.patterns || [] };
+  } catch(e){
+    // No internet: the letter tasks still work, because the order comes from the code itself.
+    LSess = { lrn, code, patterns: null };
+  }
+  renderTeacher();
+}
+
+function openReader(task){
+  if (!LSess) return;
+  let items, kind, title;
+  if (task === 't3'){
+    if (!LSess.patterns) return;
+    items = []; LSess.patterns.forEach(p => wordSeq(LSess.code, p.pattern, p.words.length).forEach(i => items.push(p.words[i])));
+    kind = 'word'; title = 'Task 3: Reading Words';
+  } else {
+    items = letterSeq(LSess.code, task).map(L => L + ' ' + L.toLowerCase());
+    kind = 'letter'; title = task === 't1' ? 'Task 1: Letter Names' : 'Task 2: Letter Sounds';
+  }
+  RD = { items, kind, title, idx: 0, done: false, task };
+  show('viewReader'); paintReader();
+}
+
+function paintReader(){
+  const g = $('rGlyph');
+  $('rTitle').textContent = RD.title;
+  $('rCode').textContent = 'Code ' + LSess.code;
+  $('rBack').disabled = false;
+  if (RD.done){
+    g.className = 'r-glyph done'; g.textContent = 'You finished! Please give the device back to your teacher.';
+    $('rCount').textContent = '';
+    $('rNext').textContent = 'Back to Tasks';
+    return;
+  }
+  g.className = 'r-glyph ' + RD.kind; g.textContent = RD.items[RD.idx];
+  $('rCount').textContent = (RD.idx + 1) + ' of ' + RD.items.length;
+  $('rBack').disabled = RD.idx === 0;
+  $('rNext').textContent = RD.idx === RD.items.length - 1 ? 'Finish' : 'Next';
+}
+function readerNext(){
+  if (!RD) return;
+  if (RD.done){ RD = null; show('viewTeacher'); TV.tab = 'tasks'; renderTeacher(); return; }
+  if (RD.idx < RD.items.length - 1) RD.idx++;
+  else { RD.done = true; if (LSess && TV && TV.learner.lrn) earnStar('task|' + LSess.code + '|' + RD.task); }
+  paintReader();
+}
+function readerBack(){
+  if (!RD) return;
+  if (RD.done){ RD.done = false; paintReader(); return; }
+  if (RD.idx > 0) RD.idx--;
+  paintReader();
+}
+
+function makePad(canvas){
+  const ctx = canvas.getContext('2d'); let drawing = false, last = null, dirty = false;
+  const r = canvas.getBoundingClientRect(); const dpr = window.devicePixelRatio || 1;
+  canvas.width = Math.max(1, r.width * dpr); canvas.height = Math.max(1, r.height * dpr);
+  ctx.scale(dpr, dpr); ctx.lineWidth = 2.6; ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.strokeStyle = '#111';
+  const pos = e => { const b = canvas.getBoundingClientRect(); return { x: e.clientX - b.left, y: e.clientY - b.top }; };
+  canvas.onpointerdown = e => { drawing = true; last = pos(e); try { canvas.setPointerCapture(e.pointerId); } catch(x){} e.preventDefault(); };
+  canvas.onpointermove = e => { if (!drawing) return; const p = pos(e); ctx.beginPath(); ctx.moveTo(last.x, last.y); ctx.lineTo(p.x, p.y); ctx.stroke(); last = p; dirty = true; e.preventDefault(); };
+  canvas.onpointerup = canvas.onpointercancel = canvas.onpointerleave = () => { drawing = false; };
+  return {
+    clear(){ ctx.clearRect(0, 0, canvas.width, canvas.height); dirty = false; },
+    isEmpty(){ return !dirty; },
+    toData(){ const o = document.createElement('canvas'); o.width = 360; o.height = 120; o.getContext('2d').drawImage(canvas, 0, 0, 360, 120); return o.toDataURL('image/png'); }
+  };
+}
+
+function openPad(role){
+  padRole = role;
+  $('padTitle').textContent = 'Sign as ' + ROLE_LABEL[role];
+  $('padName').value = role === 'learner' ? TV.learner.first + ' ' + TV.learner.last : '';
+  setMsg($('padMsg'), '');
+  $('padWrap').classList.remove('hidden');
+  pad = makePad($('pad'));
+  $('padWrap').scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+async function saveSignature(){
+  const m = $('padMsg');
+  const name = $('padName').value.trim();
+  if (!name){ setMsg(m, 'Type the full name of the person signing.', 'err'); return; }
+  if (!pad || pad.isEmpty()){ setMsg(m, 'Sign inside the box first.', 'err'); return; }
+  const a = TV.list[TV.idx];
+  const sg = { lrn: TV.learner.lrn, recordId: a.id, role: padRole, name, image: pad.toData(), signedAt: nowIso() };
+  const keep = () => { a.signatures = a.signatures || {}; a.signatures[padRole] = { name, image: sg.image, signedAt: sg.signedAt }; };
+  setMsg(m, 'Saving the signature');
+  try {
+    const res = await callApi(Object.assign({ action: 'sign' }, sg));
+    if (res && res.ok){ keep(); (S.signatures[a.id] = S.signatures[a.id] || {})[padRole] = res.signature; persist(); renderTeacher(); return; }
+    setMsg(m, (res && res.error) || 'The signature was not saved.', 'err');
+  } catch(e){
+    keep(); S.queue.signs[a.id + '|' + padRole] = sg; persist(); renderSync();
+    renderTeacher();
+    tell('Saved on this device. The signature will be sent when the internet is back.');
+  }
+}
+
+/* =========================================================
+   EVENTS AND START
+   ========================================================= */
+function bind(){
+  $('adminForm').addEventListener('submit', e => { e.preventDefault(); adminLogin($('adminPin').value.trim()); });
+  $('teacherForm').addEventListener('submit', e => { e.preventDefault(); teacherLogin($('teacherLrn').value); });
+  $('adviserForm').addEventListener('submit', e => { e.preventDefault(); adviserLogin(); });
+  $('logoutBtn').addEventListener('click', logout);
+  $('syncPill').addEventListener('click', () => { syncError = ''; flush(); });
+
+  document.querySelectorAll('.tab[data-tab]').forEach(b => b.addEventListener('click', () => selectTab(b.dataset.tab)));
+
+  $('aGrade').addEventListener('change', () => { renderLearnerSelect(); renderLearnerNote(); update(); });
+  $('aLearner').addEventListener('change', e => {
+    F.learnerId = e.target.value; const l = S.learners[F.learnerId]; F.grade = l ? l.grade : '';
+    renderLevelSelect(); renderLearnerNote(); update();
+  });
+  $('aDate').addEventListener('change', e => { F.date = e.target.value; buildLetterGrid(); renderWords(); update(); });
+  $('aSource').addEventListener('change', e => { F.source = e.target.value; buildLetterGrid(); renderWords(); update(); });
+  $('rNext').addEventListener('click', readerNext);
+  $('gExit').addEventListener('click', exitGame);
+  $('gSpeak').addEventListener('click', sayAgain);
+  window.addEventListener('resize', () => { if (FG && FG.size && FG.floor != null){ const { w, h } = stageSize(); FG.maxY = Math.max(40, h - FG.size - Math.min(w, h) * FG.floor); } });
+  $('rBack').addEventListener('click', readerBack);
+  $('rExit').addEventListener('click', () => { RD = null; show('viewTeacher'); renderTeacher(); });
+  document.addEventListener('keydown', e => {
+    if ($('viewReader').classList.contains('hidden')) return;
+    if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'Enter'){ e.preventDefault(); readerNext(); }
+    if (e.key === 'ArrowLeft'){ e.preventDefault(); readerBack(); }
+  });
+  $('aAssessor').addEventListener('input', e => { F.assessor = e.target.value; saveDraft(); });
+  $('aLevel').addEventListener('change', e => { F.readingLevel = e.target.value; update(); });
+  $('aRemarks').addEventListener('input', e => { F.remarks = e.target.value; F.remarksEdited = true; saveDraft(); });
+  $('aMaterials').addEventListener('input', e => { F.materials = e.target.value; F.materialsEdited = true; saveDraft(); });
+  $('refreshAuto').addEventListener('click', () => { F.remarksEdited = false; F.materialsEdited = false; F.remarks = ''; F.materials = ''; update(); });
+
+  ['grid1','grid2'].forEach(id => $(id).addEventListener('click', e => {
+    const b = e.target.closest('.tick'); if (!b) return;
+    const t = b.dataset.t, arr = F[t], i = +b.dataset.i; arr[i] = !arr[i];
+    b.setAttribute('aria-pressed', arr[i] ? 'true' : 'false');
+    if (arr[i]) autoStart(t);
+    update();
+  }));
+  document.querySelectorAll('[data-all],[data-none]').forEach(b => b.addEventListener('click', () => {
+    const t = b.dataset.all || b.dataset.none; F[t] = Array(26).fill(!!b.dataset.all); paintLetters(); update();
+  }));
+  $('wordArea').addEventListener('click', e => {
+    const b = e.target.closest('.word'); if (!b) return;
+    const p = S.wordBank[+b.dataset.k]; if (!p) return;
+    const arr = F.t3[p.pattern] || (F.t3[p.pattern] = Array(p.words.length).fill(false));
+    const i = +b.dataset.i; arr[i] = !arr[i];
+    b.setAttribute('aria-pressed', arr[i] ? 'true' : 'false');
+    if (arr[i]) autoStart('t3');
+    update();
+  });
+
+  $('recordBtn').addEventListener('click', recordAssessment);
+  $('newBtn').addEventListener('click', e => twoTap(e.currentTarget, 'Tap Again to Clear the Form', newForm));
+
+  $('addLearnerForm').addEventListener('submit', addLearner);
+  $('saveAdvisers').addEventListener('click', saveAdvisers);
+  $('addAdviser').addEventListener('click', () => { advDraft.push({ id: uid(), grade: $('lFilter').value || '1', name: '', email: '' }); renderAdvisers(); });
+  $('adviserList').addEventListener('input', e => { const t = e.target; if (t.dataset.i == null) return; advDraft[+t.dataset.i][t.dataset.f] = t.value; });
+  $('adviserList').addEventListener('change', e => { const t = e.target; if (t.dataset.i == null) return; advDraft[+t.dataset.i][t.dataset.f] = t.value; });
+  $('adviserList').addEventListener('click', e => { const b = e.target.closest('[data-rm]'); if (!b) return; advDraft.splice(+b.dataset.rm, 1); renderAdvisers(); });
+  $('nGrade').addEventListener('change', renderAdviserSelect);
+  $('learnerList').addEventListener('click', e => { const b = e.target.closest('[data-del]'); if (b) deleteLearner(b.dataset.del); });
+  $('rAdviser').addEventListener('change', () => { $('sendPanel').classList.add('hidden'); renderRecords(); });
+  $('lrnImportBtn').addEventListener('click', importLrns);
+  $('lrnFile').addEventListener('change', e => {
+    const file = e.target.files[0]; if (!file) return;
+    const r = new FileReader(); r.onload = () => { $('lrnPaste').value = r.result; setMsg($('lrnMsg'), 'File loaded. Check the list, then tap Upload LRNs.', 'good'); };
+    r.readAsText(file);
+  });
+  $('lFilter').addEventListener('change', renderLearners);
+  $('learnerList').addEventListener('change', e => {
+    const sel = e.target.closest('select[data-adv]');
+    if (sel){ const l = S.learners[sel.dataset.adv]; l.adviserId = sel.value; l.updatedAt = nowIso(); S.queue.learners[l.id] = true; persist(); setMsg($('listMsg'), 'Adviser saved.', 'good'); flush(); return; }
+    const inp = e.target.closest('input[data-id]'); if (!inp) return;
+    const err = setLrn(inp.dataset.id, inp.value);
+    if (err){ setMsg($('listMsg'), err, 'err'); tell(err); inp.value = S.learners[inp.dataset.id].lrn || ''; return; }
+    setMsg($('listMsg'), 'LRN saved.', 'good'); persist(); renderLearners(); flush();
+  });
+
+  $('rFilter').addEventListener('change', () => { $('sendPanel').classList.add('hidden'); renderRecords(); });
+  $('recordList').addEventListener('click', e => {
+    const b = e.target.closest('button'); if (!b) return;
+    if (b.dataset.view) viewRecord(b.dataset.view);
+    if (b.dataset.edit) openInForm(b.dataset.edit);
+    if (b.dataset.print1) printResults([S.assessments[b.dataset.print1]].filter(Boolean));
+    if (b.dataset.send1) openSend([b.dataset.send1]);
+    if (b.dataset.delrec) deleteRecord(b.dataset.delrec);
+  });
+  $('bulkPrint').addEventListener('click', () => printResults(filteredRecords()));
+  $('bulkSend').addEventListener('click', () => openSend(filteredRecords().map(a => a.id)));
+  $('sendCancel').addEventListener('click', () => $('sendPanel').classList.add('hidden'));
+  $('sendGo').addEventListener('click', doSend);
+
+  $('pOrder').addEventListener('change', e => {
+    S.letterOrder = e.target.value; persist();
+    buildLetterGrid(); renderPreview();
+    setMsg($('printMsg'), e.target.value === 'mixed' ? 'Letters are now mixed on the card and on the tick sheet.' : 'Letters are now A to Z on the card and on the tick sheet.', 'good');
+  });
+  $('pPreview').addEventListener('change', renderPreview);
+  document.querySelectorAll('[data-print]').forEach(b => b.addEventListener('click', () => { if (S.session === 'admin') printHtml(cardHtml(b.dataset.print)); }));
+
+  window.addEventListener('online', () => { renderSync(); flush(); silentRefresh(); });
+  window.addEventListener('offline', renderSync);
+  setInterval(flush, 30000);
+}
+
+function init(){
+  const st = document.createElement('style'); st.textContent = RESULT_CSS; document.head.appendChild(st);
+  fillGradeSelects();
+  timers.t1 = new Timer('t1', $('timer1'), 'Task 1');
+  timers.t2 = new Timer('t2', $('timer2'), 'Task 2');
+  timers.t3 = new Timer('t3', $('timer3'), 'Task 3');
+  bind();
+  if (S.session === 'admin' && S.pin){ enterAdmin(); flush(); silentRefresh(); }
+  else show('viewLogin');
+  renderSync();
+}
+init();
+</script>
+</body>
+</html>
