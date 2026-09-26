@@ -45,6 +45,15 @@
   .busy-msg{font-size:1.25rem;font-weight:700;color:var(--ink);margin:4px 0}
   .busy-sub{color:var(--muted);min-height:1.5em;margin:4px 0 12px}
   .mini-load{text-align:center;color:var(--muted)}
+  /* Sound and microphone check */
+  .sc-body{max-width:460px}
+  .sc-body h2{font-size:1.5rem;margin:6px 0}
+  .sc-frog{width:140px;margin:0 auto}
+  .sc-frog svg{width:100%;height:auto;display:block}
+  .sc-frog.talk svg{animation:byejump .6s ease-in-out infinite alternate}
+  .sc-row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:12px 0}
+  .sc-go{font-size:1.3rem;padding:18px 26px;margin-top:10px}
+  .sc-tips{text-align:left;line-height:1.6;margin:8px auto;max-width:380px}
   /* Goodbye animation */
   .bye-stage{position:relative;width:200px;height:190px;margin:0 auto 10px}
   .bye-frog{position:absolute;left:25px;bottom:0;width:150px;animation:byejump .7s ease-in-out infinite alternate}
@@ -857,6 +866,10 @@
 
 <div id="printArea" aria-hidden="true"></div>
 
+<div id="soundCheck" class="busy hidden" role="dialog" aria-modal="true" aria-label="Sound and microphone check">
+  <div class="busy-card sc-body"></div>
+</div>
+
 <div id="bye" class="busy bye hidden" role="status" aria-live="polite">
   <div class="busy-card">
     <div class="bye-stage"><div class="bye-pop"></div><div class="bye-frog"></div><div class="bye-wave">&#x1F44B;</div></div>
@@ -891,7 +904,7 @@ const PRACTICE_URL = 'https://markjumilpadillausa.github.io/sbra/';
 
 const SBRA = 'School-based Reading Assessment';
 const APP_CREATED = 'September 25, 2026';
-const APP_VERSION = '3.1';
+const APP_VERSION = '3.2';
 const APP_UPDATED = 'September 26, 2026';
 const STORE_KEY = 'baluyanAssess_v1';
 const DRAFT_KEY = 'baluyanAssess_draft_v2';
@@ -2193,6 +2206,102 @@ function showTeacher(learner, list){
   loadPractice();
   loadRewards();
   loadWordLists();
+  let checked = false; try { checked = sessionStorage.getItem('soundChecked') === '1'; } catch(e){}
+  if (!checked) soundCheck();
+}
+
+/* ---------- Sound and microphone check ----------
+   Phones only give sound and the microphone after the learner taps and allows them.
+   This friendly screen asks once, tests the voice, and asks for the microphone. */
+function inAppBrowser(){ return /FBAN|FBAV|FB_IAB|Messenger|Instagram|Line\/|MicroMessenger/i.test(navigator.userAgent || ''); }
+function soundCheck(){
+  const box = $('soundCheck');
+  const name = TV && TV.learner && !/^LRN/.test(TV.learner.first) ? TV.learner.first : 'reader';
+  const step1 = () => {
+    box.querySelector('.sc-body').innerHTML = `
+      <div class="sc-frog">${FROG_SVG}</div>
+      <h2>Let's turn on the sound!</h2>
+      <p>Froggy will talk and read words for you.</p>
+      ${inAppBrowser() ? '<p class="notice">For sound and the microphone, please open this link in <b>Chrome</b> or <b>Safari</b>, not inside Messenger or Facebook.</p>' : ''}
+      <button type="button" class="btn primary big sc-go" id="scOn">\uD83D\uDD0A Tap to Turn On Sound</button>`;
+    $('scOn').onclick = () => {
+      unlockAudio(); playSound('hello');
+      setTimeout(() => say(`Hello, ${name}! Can you hear me?`), 350);
+      step2();
+    };
+  };
+  const step2 = () => {
+    box.querySelector('.sc-body').innerHTML = `
+      <div class="sc-frog talk">${FROG_SVG}</div>
+      <h2>Did you hear Froggy?</h2>
+      <div class="sc-row">
+        <button type="button" class="btn primary big" id="scYes">\uD83D\uDC4D Yes, I heard it</button>
+        <button type="button" class="btn big" id="scNo">\uD83D\uDE41 No</button>
+      </div>
+      <button type="button" class="btn small" id="scAgain">\uD83D\uDD01 Play Again</button>`;
+    $('scAgain').onclick = () => { unlockAudio(); playSound('hello'); setTimeout(() => say(`Hello, ${name}! Can you hear me?`), 350); };
+    $('scYes').onclick = () => { if (S.voiceMode !== 'server'){ S.voiceMode = 'device'; persist(); } step3(); };
+    $('scNo').onclick = () => {
+      // try the other voice: real audio files from the server
+      S.voiceMode = 'server'; persist(); unlockAudio(); playSound('hello');
+      setTimeout(() => serverSay(`Hello, ${name}! Can you hear me now?`), 350);
+      box.querySelector('.sc-body').innerHTML = `
+        <div class="sc-frog talk">${FROG_SVG}</div>
+        <h2>Let's try another voice.</h2>
+        <p>Listen again. Did you hear Froggy this time?</p>
+        <div class="sc-row">
+          <button type="button" class="btn primary big" id="scYes2">\uD83D\uDC4D Yes</button>
+          <button type="button" class="btn big" id="scNo2">\uD83D\uDE41 Still no</button>
+        </div>`;
+      $('scYes2').onclick = step3;
+      $('scNo2').onclick = () => {
+        box.querySelector('.sc-body').innerHTML = `
+          <h2>Let's check the phone.</h2>
+          <ol class="sc-tips">
+            <li>Press the <b>volume up</b> button on the side of the phone while this page is open.</li>
+            <li>On iPhone, turn off <b>silent mode</b> (the small switch on the side).</li>
+            <li>Take off earphones or Bluetooth speakers that are not being used.</li>
+            <li>Open the link in <b>Chrome</b> or <b>Safari</b>, not inside Messenger or Facebook.</li>
+            <li>Make sure the internet is on. The reading voice needs it.</li>
+          </ol>
+          <div class="sc-row">
+            <button type="button" class="btn primary" id="scRetry">\uD83D\uDD01 Try Again</button>
+            <button type="button" class="btn" id="scSkip">Continue Without Sound</button>
+          </div>`;
+        $('scRetry').onclick = () => { unlockAudio(); playSound('hello'); setTimeout(() => serverSay(`Hello, ${name}! Can you hear me now?`), 350); step2(); };
+        $('scSkip').onclick = step3;
+      };
+    };
+  };
+  const step3 = () => {
+    const micOk = !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia && window.MediaRecorder);
+    box.querySelector('.sc-body').innerHTML = `
+      <div class="sc-frog">${FROG_SVG}</div>
+      <h2>Now the microphone \uD83C\uDFA4</h2>
+      <p>You will record yourself reading words. When the phone asks, tap <b>Allow</b>.</p>
+      <div class="sc-row">
+        ${micOk ? '<button type="button" class="btn primary big" id="scMic">\uD83C\uDFA4 Allow Microphone</button>' : ''}
+        <button type="button" class="btn big" id="scDone">${micOk ? 'Later' : "Let's Go!"}</button>
+      </div>
+      <p class="msg" id="scMsg">${micOk ? '' : 'Recording does not work on this page. ' + (PRACTICE_URL ? 'Please use this link to record: ' + PRACTICE_URL : '')}</p>`;
+    $('scDone').onclick = finish;
+    if ($('scMic')) $('scMic').onclick = async () => {
+      try {
+        const st = await navigator.mediaDevices.getUserMedia({ audio: true });
+        st.getTracks().forEach(t => t.stop());
+        playSound('yes');
+        box.querySelector('.sc-body').innerHTML = `<div class="sc-frog">${FROG_SVG}</div><h2>All set! \uD83C\uDF89</h2><p>Sound and microphone are ready.</p>
+          <button type="button" class="btn primary big" id="scGo">Let's Go!</button>`;
+        $('scGo').onclick = finish;
+        say(`All set, ${name}! Let's read!`);
+      } catch(e){
+        setMsg($('scMsg'), window.top !== window ? micHelp() : 'The microphone is blocked. Tap the lock icon near the web address, choose Permissions, and allow the Microphone. Then tap Allow Microphone again.', 'err');
+      }
+    };
+  };
+  const finish = () => { try { sessionStorage.setItem('soundChecked', '1'); } catch(e){} box.classList.add('hidden'); };
+  box.classList.remove('hidden');
+  step1();
 }
 
 function tasksPanel(){
@@ -2267,7 +2376,7 @@ function renderTeacher(){
   const stars = myRewards().total;
   const head = `<h1>${esc(learner.last)}, ${esc(learner.first)}</h1>
     <p class="sub">${[learner.grade ? classLabel(learner.grade, learner.section || secOf(learner)) : '', learner.lrn ? 'LRN ' + esc(learner.lrn) : ''].filter(Boolean).join(', ')}${stars != null ? ` <span class="star">\u2605 ${stars}</span>` : ''}</p>
-    <div class="ltabs" role="tablist">${LTABS.map(t => `<button type="button" class="ltab" role="tab" data-ltab="${t[0]}" aria-selected="${TV.tab === t[0]}">${t[1]}</button>`).join('')}</div>`;
+    <div class="ltabs" role="tablist"><button type="button" class="ltab" id="soundBtn" title="Sound and microphone check">\uD83D\uDD0A Sound Check</button>${LTABS.map(t => `<button type="button" class="ltab" role="tab" data-ltab="${t[0]}" aria-selected="${TV.tab === t[0]}">${t[1]}</button>`).join('')}</div>`;
   let main = '';
   if (TV.tab === 'practice') main = practiceHtml();
   else if (TV.tab === 'games') main = gamesHtml();
@@ -2276,6 +2385,7 @@ function renderTeacher(){
   else main = resultsHtml();
   body.innerHTML = head + main;
   body.querySelectorAll('[data-ltab]').forEach(b => b.onclick = () => { recCancel(); TV.tab = b.dataset.ltab; renderTeacher(); });
+  if ($('soundBtn')) $('soundBtn').onclick = soundCheck;
   if (TV.tab === 'practice') bindPractice();
   else if (TV.tab === 'games') bindGames();
   else if (TV.tab === 'tasks') bindTasksPanel();
@@ -2370,6 +2480,7 @@ function bindPractice(){
   if ($('recSubmit')) $('recSubmit').onclick = () => submitDraft(x);
   if ($('modelPlay')){
     ensureModel(x.word);
+    ttsSrc(/^[A-Z][a-z]$/.test(x.word) ? x.word[0] : x.word);
     $('modelPlay').onclick = () => { actx(); const m = PR.models && PR.models[x.word.toLowerCase()]; playWord($('teacherBody').querySelector('.pcol.listen .wstage'), m && m.src, x.word); };
   }
   if ($('pBack')) $('pBack').onclick = () => { recCancel(); PR.idx--; renderTeacher(); };
@@ -2479,19 +2590,63 @@ async function loadRewards(){
 /* Sounds, made in the browser so they also work offline */
 let AC = null;
 function actx(){ try { if (!AC){ const C = window.AudioContext || window.webkitAudioContext; if (C) AC = new C(); } if (AC && AC.state === 'suspended') AC.resume(); } catch(e){} return AC; }
-function tone(freq, dur, type, vol, when, slideTo){
-  const a = actx(); if (!a) return;
-  const o = a.createOscillator(), g = a.createGain(); const t = a.currentTime + (when || 0);
-  o.type = type || 'sine'; o.frequency.setValueAtTime(freq, t);
-  if (slideTo) o.frequency.exponentialRampToValueAtTime(slideTo, t + dur);
-  g.gain.setValueAtTime(vol || 0.2, t); g.gain.exponentialRampToValueAtTime(0.001, t + dur);
-  o.connect(g); g.connect(a.destination); o.start(t); o.stop(t + dur + 0.03);
+/* ---------- Game sounds ----------
+   Phones often mute sounds made by code, so each sound is made once as a small WAV audio file
+   and played like music. This works on phones, tablets, and computers. */
+function wavURI(samples, rate){
+  const n = samples.length, buf = new ArrayBuffer(44 + n * 2), v = new DataView(buf);
+  const w = (o, str) => { for (let i = 0; i < str.length; i++) v.setUint8(o + i, str.charCodeAt(i)); };
+  w(0, 'RIFF'); v.setUint32(4, 36 + n * 2, true); w(8, 'WAVE'); w(12, 'fmt '); v.setUint32(16, 16, true);
+  v.setUint16(20, 1, true); v.setUint16(22, 1, true); v.setUint32(24, rate, true); v.setUint32(28, rate * 2, true);
+  v.setUint16(32, 2, true); v.setUint16(34, 16, true); w(36, 'data'); v.setUint32(40, n * 2, true);
+  for (let i = 0; i < n; i++) v.setInt16(44 + i * 2, Math.max(-1, Math.min(1, samples[i])) * 32767 * 0.7, true);
+  const bytes = new Uint8Array(buf); let bin = '';
+  for (let i = 0; i < bytes.length; i += 0x8000) bin += String.fromCharCode.apply(null, bytes.subarray(i, i + 0x8000));
+  return 'data:audio/wav;base64,' + btoa(bin);
+}
+function synth(parts, total){
+  // parts: [{f, f2, start, dur, wave, vol}] mixed into one sound
+  const rate = 22050, n = Math.floor(total * rate), out = new Float32Array(n);
+  parts.forEach(p => {
+    let ph = 0; const s0 = Math.floor(p.start * rate), len = Math.floor(p.dur * rate);
+    for (let i = 0; i < len && s0 + i < n; i++){
+      const t = i / rate, f = p.f2 ? p.f * Math.pow(p.f2 / p.f, t / p.dur) : p.f;
+      ph += 2 * Math.PI * f / rate;
+      const osc = p.wave === 'square' ? (Math.sin(ph) >= 0 ? 1 : -1) : p.wave === 'sine' ? Math.sin(ph) : (2 / Math.PI) * Math.asin(Math.sin(ph));
+      const env = Math.min(1, t / 0.008) * Math.exp(-3.5 * t / p.dur);
+      out[s0 + i] += osc * env * (p.vol || 0.5);
+    }
+  });
+  return wavURI(out, rate);
+}
+const NOTES = [440, 520, 580, 640, 700, 760, 820, 880, 990];
+const SND = {}, SND_URI = {};
+function soundURIs(){
+  if (SND_URI.yes) return SND_URI;
+  NOTES.forEach(f => { SND_URI['n' + f] = synth([{ f, start: 0, dur: 0.14, wave: 'tri', vol: 0.45 }], 0.16); });
+  SND_URI.yes = synth([{ f: 660, start: 0, dur: 0.12, wave: 'tri' }, { f: 990, start: 0.1, dur: 0.2, wave: 'tri' }], 0.32);
+  SND_URI.no = synth([{ f: 190, start: 0, dur: 0.2, wave: 'square', vol: 0.12 }], 0.22);
+  SND_URI.gulp = synth([{ f: 460, f2: 110, start: 0, dur: 0.22, wave: 'sine', vol: 0.7 }], 0.24);
+  SND_URI.win = synth([523, 659, 784, 1047].map((f, i) => ({ f, start: i * 0.13, dur: 0.28, wave: 'tri' })), 0.72);
+  SND_URI.hello = synth([{ f: 784, start: 0, dur: 0.15, wave: 'tri' }, { f: 1047, start: 0.12, dur: 0.3, wave: 'tri' }], 0.45);
+  return SND_URI;
+}
+function playSound(name){
+  const uri = soundURIs()[name]; if (!uri) return;
+  const pool = SND[name] = SND[name] || [new Audio(uri), new Audio(uri)];
+  const el = pool.find(x => x.paused || x.ended) || pool[0];
+  try { el.currentTime = 0; } catch(e){}
+  safePlay(el);
+}
+function tone(freq, dur, type, vol, when){
+  const f = NOTES.reduce((a, b) => Math.abs(b - freq) < Math.abs(a - freq) ? b : a);
+  if (when) setTimeout(() => playSound('n' + f), when * 1000); else playSound('n' + f);
 }
 const SFX = {
-  gulp(){ tone(460, 0.2, 'sine', 0.3, 0, 110); },
-  yes(){ tone(660, 0.12, 'triangle', 0.2); tone(990, 0.18, 'triangle', 0.2, 0.1); },
-  no(){ tone(190, 0.2, 'square', 0.05); },
-  win(){ [523, 659, 784, 1047].forEach((f, i) => tone(f, 0.25, 'triangle', 0.2, i * 0.13)); }
+  gulp(){ playSound('gulp'); },
+  yes(){ playSound('yes'); },
+  no(){ playSound('no'); },
+  win(){ playSound('win'); }
 };
 /* A soft, friendly voice. Uses the most natural voice the device has. */
 let VOICE = null;
@@ -2520,24 +2675,85 @@ function makeUtter(text, rate){
   u.rate = rate || 0.88; u.pitch = 1.05; u.volume = 1;
   return u;
 }
-function speakParts(parts, rate){
-  if (!speechOk() || !parts.length) return;
+function speakParts(parts, rate, onFail){
+  if (!speechOk() || !parts.length){ if (onFail) onFail(); return; }
   const ss = window.speechSynthesis;
   const go = () => {
     try { ss.resume(); } catch(e){}
     SPEECH.q = parts.map(p => makeUtter(p, rate));
+    let started = false;
+    SPEECH.q[0].onstart = () => { started = true; SPEECH.works = true; };
     SPEECH.q.forEach(u => { try { ss.speak(u); } catch(e){} });
+    // If nothing starts within 1.8 seconds, this device's voice is not working
+    if (onFail && SPEECH.works !== true) setTimeout(() => {
+      let speaking = false; try { speaking = ss.speaking; } catch(e){}
+      if (!started && !speaking && SPEECH.works !== true){ SPEECH.works = false; onFail(); }
+    }, 1800);
   };
   let busy = false;
   try { busy = ss.speaking || ss.pending; } catch(e){}
   if (busy){ try { ss.cancel(); } catch(e){} setTimeout(go, 90); } else go();
 }
+/* The shared player for spoken audio files (the server voice) */
+let VOICE_EL = null;
+function voiceEl(){ if (!VOICE_EL){ VOICE_EL = new Audio(); VOICE_EL.preload = 'auto'; } return VOICE_EL; }
+const TTS = {};
+let SAY_TOKEN = 0;
+/* Gets the spoken text as an audio file. Short ones are also saved on the device for next time. */
+async function ttsSrc(text){
+  const k = String(text).toLowerCase().trim(); if (!k) return '';
+  if (TTS[k]) return TTS[k];
+  if (S.ttsCache && S.ttsCache[k]) return (TTS[k] = S.ttsCache[k]);
+  if (!serverAvailable() || navigator.onLine === false) return '';
+  if (TTS_PENDING[k]) return TTS_PENDING[k];   // the same words are only asked for once
+  return (TTS_PENDING[k] = ttsFetch(text, k).then(v => { delete TTS_PENDING[k]; return v; }));
+}
+const TTS_PENDING = {};
+async function ttsFetch(text, k){
+  try {
+    const r = await callApi({ action: 'tts', text: String(text).trim() });
+    if (r && r.ok && r.audio){
+      const src = 'data:' + (r.mime || 'audio/mpeg') + ';base64,' + r.audio;
+      TTS[k] = src;
+      if (k.length <= 30){
+        S.ttsCache = S.ttsCache || {};
+        const keys = Object.keys(S.ttsCache); if (keys.length > 120) delete S.ttsCache[keys[0]];
+        S.ttsCache[k] = src; persist();
+      }
+      return src;
+    }
+  } catch(e){}
+  return '';
+}
+async function serverSay(text){
+  const my = ++SAY_TOKEN;
+  const src = await ttsSrc(text);
+  if (!src || my !== SAY_TOKEN) return;
+  const el = voiceEl(); el.src = src; safePlay(el);
+}
 function say(text){
+  const t = String(text || '').trim(); if (!t) return;
+  SAY_TOKEN++;
+  try { if (VOICE_EL) VOICE_EL.pause(); } catch(e){}
+  // This device's voice does not work (or was switched off in the sound check): use audio files
+  if (S.voiceMode === 'server' || !speechOk()){ serverSay(t); return; }
   // Short phrases with small pauses sound gentler than one long sentence.
-  const parts = (String(text).match(/[^.!?]+[.!?]*/g) || [String(text)]).map(x => x.trim()).filter(Boolean);
-  speakParts(parts, 0.88);
+  const parts = (t.match(/[^.!?]+[.!?]*/g) || [t]).map(x => x.trim()).filter(Boolean);
+  speakParts(parts, 0.88, () => {
+    // the device voice never started: switch this device to audio files from now on
+    if (S.voiceMode !== 'device'){ S.voiceMode = 'server'; persist(); serverSay(t); }
+  });
 }
 function unlockAudio(){
+  if (!SPEECH.primed){
+    SPEECH.primed = true;
+    // play every sound player once, silently, during this tap, so the phone allows them later
+    const silent = synth([{ f: 440, start: 0, dur: 0.02, wave: 'sine', vol: 0 }], 0.03);
+    const els = [voiceEl()];
+    Object.keys(soundURIs()).forEach(k => { SND[k] = SND[k] || [new Audio(SND_URI[k]), new Audio(SND_URI[k])]; els.push(SND[k][0], SND[k][1]); });
+    els.forEach(el => { try { const keep = el.src; if (!keep) el.src = silent; el.muted = true; const pr = el.play(); const done = () => { try { el.pause(); el.currentTime = 0; } catch(x){} el.muted = false; };
+      if (pr && pr.then) pr.then(done).catch(() => { el.muted = false; }); else done(); } catch(e){ el.muted = false; } });
+  }
   try { const a = actx(); if (a){ const b = a.createBuffer(1, 1, 22050), src = a.createBufferSource(); src.buffer = b; src.connect(a.destination); src.start(0); } } catch(e){}
   try { if (navigator.audioSession) navigator.audioSession.type = 'playback'; } catch(e){}   // iPhone: play even when the ring switch is on silent
   if (!SPEECH.unlocked && speechOk()){
@@ -3643,11 +3859,15 @@ function playWord(stage, src, word){
   chunks.forEach((c, i) => T(() => { light(i); tone(520 + i * 60, 0.07, 'sine', 0.05); }, 300 + i * per));
   T(() => {
     blend();
+    const spoken = letter ? word[0] : word;
     if (primed){
       primed.muted = false; try { primed.currentTime = 0; } catch(e){}
-      safePlay(primed, () => speakParts([letter ? word[0] : word], 0.8));
+      safePlay(primed, () => say(spoken));
+    } else if (TTS[spoken.toLowerCase()] || (S.ttsCache && S.ttsCache[spoken.toLowerCase()])){
+      // the natural voice was fetched while the card opened, so it plays right away
+      const el = voiceEl(); el.src = TTS[spoken.toLowerCase()] || S.ttsCache[spoken.toLowerCase()]; safePlay(el, () => say(spoken));
     } else {
-      speakParts([letter ? word[0] : word], 0.8);
+      say(spoken);
     }
   }, 300 + chunks.length * per + 150);
 }
@@ -3667,7 +3887,7 @@ function safePlay(el, onFail){ try { const pr = el.play(); if (pr && pr.catch) p
 /* A word said aloud: approved teacher voice if this device has it, or the device voice */
 function speakWord(w){
   const m = S.modelCache && S.modelCache[String(w).toLowerCase()];
-  if (m && m.src){ try { safePlay(new Audio(m.src), () => say(w)); return; } catch(e){} }
+  if (m && m.src){ const el = voiceEl(); el.src = m.src; safePlay(el, () => say(w)); return; }
   say(w);
 }
 
