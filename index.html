@@ -10,8 +10,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Andika:wght@400;700&family=Atkinson+Hyperlegible:wght@400;700&family=Didact+Gothic&display=swap" rel="stylesheet">
 <style>
   :root{
-    --paper:#FBFCF8; --surface:#FFFFFF; --ink:#1F3A93; --ink-soft:#E8EEFA; --margin:#C8323B;
-    --graphite:#2B2D33; --muted:#5E6376; --rule:#CFDCEF; --check:#1E7F4F; --check-soft:#E3F3EA;
+    --paper:#FAFCF7; --gold:#F5A623; --gold-soft:#FFF4D6; --surface:#FFFFFF; --ink:#0B6B3A; --ink-soft:#E4F3E8; --margin:#C8323B;
+    --graphite:#2B2D33; --muted:#5E6376; --rule:#CDE5D4; --check:#1E7F4F; --check-soft:#E3F3EA;
     --read:'Andika','Atkinson Hyperlegible',system-ui,sans-serif;
     --card:'Century Gothic','CenturyGothic','Didact Gothic','URW Gothic','Avenir Next','Futura',sans-serif;
     --ui:'Atkinson Hyperlegible',system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;
@@ -22,7 +22,64 @@
   .hidden{display:none!important}
   :focus-visible{outline:3px solid #F2B705;outline-offset:2px}
 
-  .top{position:sticky;top:0;z-index:5;display:flex;justify-content:space-between;align-items:center;gap:12px;padding:10px 16px;background:var(--ink);color:#fff}
+  .top{position:sticky;top:0;z-index:5;display:flex;justify-content:space-between;align-items:center;gap:10px 12px;flex-wrap:wrap;padding:8px 16px;background:var(--ink);color:#fff;border-bottom:4px solid var(--gold)}
+  .brand{display:flex;align-items:center;gap:10px;color:#fff;text-decoration:none;cursor:pointer}
+  .brand .logo{width:46px;height:46px;border-radius:50%;background:#fff;padding:2px;flex:none}
+  .brand:hover .school{text-decoration:underline}
+  .clock{font-size:.82rem;font-variant-numeric:tabular-nums;background:rgba(255,255,255,.14);padding:4px 10px;border-radius:999px;white-space:nowrap}
+  .foot{max-width:1040px;margin:10px auto 0;padding:18px 16px 28px;text-align:center;color:var(--muted);font-size:.85rem;border-top:3px solid var(--gold)}
+  .foot b{color:var(--ink)}
+  body.reading .foot{display:none}
+  .home-note{background:var(--gold-soft);border:1px solid var(--gold);border-radius:10px;padding:10px 14px;margin-bottom:14px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+  .rtabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+  .tag.red{background:#FCE8EA;color:#8E1C24}
+  .btn.danger{background:var(--margin);border-color:var(--margin);color:#fff}
+  /* Phonics colors */
+  .wstage{display:inline-block;text-align:center}
+  .wword{font-family:var(--card);font-size:1.5rem;line-height:1.25;white-space:nowrap}
+  .wstage.big{display:block;margin:6px auto}
+  .wstage.big .wword{font-size:clamp(3rem,11vw,5.6rem);font-weight:700;letter-spacing:.02em;padding-top:.3em}
+  .ch{display:inline-block;color:#1d2b36;transition:transform .2s ease,background .2s ease;border-radius:8px;padding:0 .02em}
+  .ch.vow{color:#D62828}
+  .ch.team{color:#E07A00;text-decoration:underline;text-decoration-thickness:.07em;text-underline-offset:.12em}
+  .ch.dig,.ch.dbl{color:#1E63D6;text-decoration:underline;text-decoration-thickness:.07em;text-underline-offset:.12em}
+  .ch.magic{color:#7B2CBF}
+  .ch.sil{color:#A0A7B4}
+  .ch.magic.sil{color:#B99AE0}
+  .ch.soft{color:#0E9F9A}
+  .ch.end{color:#0B6B3A}
+  .ch.on{transform:translateY(-.12em) scale(1.22);background:#FFF1B8}
+  .wstage.blend .wword{animation:blendGlow 1.4s ease}
+  @keyframes blendGlow{0%{transform:scale(1)}30%{transform:scale(1.08);text-shadow:0 0 18px #FFD447}100%{transform:scale(1)}}
+  .road{display:none;position:relative;height:30px;margin:4px auto 0;border-bottom:4px dashed #C9D3C0;max-width:100%}
+  .wstage.big .road{display:block}
+  .car{position:absolute;left:0;bottom:-2px;font-size:26px;line-height:1;transition:transform .45s ease}
+  .wlegend{margin-top:10px;font-size:.85rem;color:var(--muted);line-height:1.8}
+  .wlegend .ch{font-size:1rem}
+  .wlegend .gap{display:inline-block;width:12px}
+  @media (prefers-reduced-motion:reduce){.ch,.car{transition:none}.wstage.blend .wword{animation:none}}
+  /* Word Bank rows */
+  .bk-cat{margin:18px 0 4px;padding-bottom:4px;border-bottom:2px solid var(--gold)}
+  .bw-row{display:grid;grid-template-columns:minmax(110px,180px) 1fr auto;gap:8px 14px;align-items:center;padding:10px 0;border-bottom:1px solid var(--rule)}
+  .bw-word{border:0;background:transparent;cursor:pointer;text-align:left;padding:0}
+  .bw-actions{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+  .bw-draft,.bw-judge{grid-column:1 / -1;display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+  .bw-draft audio{height:36px}
+  .bw-judge input{flex:1;min-width:200px;margin:0;padding:8px}
+  .fb{margin-top:4px;background:var(--gold-soft);border-radius:6px;padding:4px 8px;font-size:.88rem}
+  @media (max-width:640px){.bw-row{grid-template-columns:1fr}.bw-actions{justify-content:flex-start}}
+  /* Practice card: two columns */
+  .pgrid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:6px}
+  .pcol{border:2px solid var(--rule);border-radius:14px;padding:12px;text-align:center}
+  .pcol h3{margin:0 0 6px;color:var(--ink)}
+  .pcol.listen{background:#FFFBEA;border-color:#F5D27A}
+  .pcol.turn{background:#F1FAF3}
+  @media (max-width:700px){.pgrid{grid-template-columns:1fr}}
+  .nb-tip{margin-top:14px;text-align:left;background:var(--gold-soft);border:1px solid var(--gold);border-radius:10px;padding:10px 14px}
+  .nb-tip b{color:#6B4A00}
+  .fb-learner{margin:8px auto;max-width:560px;text-align:left;background:#E4F3E8;border:1px solid #9CCBAE;border-radius:10px;padding:8px 12px}
+  .nb-row{display:flex;flex-wrap:wrap;gap:4px 10px;align-items:baseline;padding:6px 0;border-bottom:1px dashed var(--rule)}
+  .nb-row .sub{font-size:.82rem}
   .school{font-weight:700;font-size:1.05rem;line-height:1.2}
   .app{font-size:.85rem;opacity:.85}
   .top-right{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end}
@@ -36,13 +93,13 @@
   h2{font-size:1.15rem;margin:0 0 .5rem;color:var(--ink)}
   h3{font-size:1rem;margin:1rem 0 .4rem}
   .panel{background:var(--surface);border:1px solid var(--rule);border-radius:10px;padding:16px;margin-bottom:16px}
-  .inset{background:var(--ink-soft);border-color:#B9C6DD}
+  .inset{background:var(--ink-soft);border-color:#B3D3BE}
   label{display:block;font-size:.9rem;font-weight:700;margin-bottom:10px}
-  input,select,textarea{display:block;width:100%;margin-top:4px;padding:10px;border:1px solid #B9C6DD;border-radius:8px;font:inherit;font-weight:400;background:#fff;color:var(--graphite)}
+  input,select,textarea{display:block;width:100%;margin-top:4px;padding:10px;border:1px solid #B3D3BE;border-radius:8px;font:inherit;font-weight:400;background:#fff;color:var(--graphite)}
   textarea{resize:vertical;line-height:1.45}
   .fields{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:0 14px}
   .btn{font:inherit;font-weight:700;padding:10px 16px;border-radius:8px;border:1.5px solid var(--ink);background:#fff;color:var(--ink);cursor:pointer}
-  .btn.primary{background:var(--ink);color:#fff}
+  .btn.primary{background:var(--ink);color:#fff;border-color:var(--ink)}
   .btn.big{padding:14px 22px;font-size:1.05rem}
   .btn.small{padding:6px 10px;font-size:.85rem}
   .btn.ghost{background:transparent;color:#fff;border-color:rgba(255,255,255,.7)}
@@ -60,12 +117,12 @@
 
   .tabs{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:14px;border-bottom:2px solid var(--rule)}
   .tab{font:inherit;font-weight:700;background:none;border:0;padding:10px 12px;color:var(--muted);border-bottom:3px solid transparent;margin-bottom:-2px;cursor:pointer}
-  .tab[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--margin)}
+  .tab[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--gold)}
   .tab:disabled{cursor:not-allowed;opacity:.6}
   .tab small{font-weight:400}
 
   /* Floating timer dock */
-  .dock{position:fixed;z-index:8;background:#fff;border:1.5px solid var(--ink);border-radius:12px;box-shadow:0 6px 20px rgba(31,58,147,.2);padding:8px;display:grid;gap:8px}
+  .dock{position:fixed;z-index:8;background:#fff;border:1.5px solid var(--ink);border-radius:12px;box-shadow:0 6px 20px rgba(11,107,58,.2);padding:8px;display:grid;gap:8px}
   .timer{border:1.5px solid var(--rule);border-radius:8px;padding:6px 8px;background:#fff}
   .timer.running{border-color:var(--check);background:var(--check-soft)}
   .timer.paused{border-color:#E0A526;background:#FFF6E0}
@@ -114,7 +171,7 @@
   .g-stage{position:relative;flex:1;overflow:hidden;background:linear-gradient(#DDF1FF 0%,#EAF7F0 62%,#BFE3CC 100%);touch-action:manipulation}
   .g-stage::after{content:"";position:absolute;left:50%;bottom:-6px;width:min(60vw,300px);height:42px;transform:translateX(-50%);background:#6BBF7F;border-radius:50%;opacity:.55}
   .g-tongue{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:3}
-  .bub{position:absolute;left:0;top:0;border-radius:50%;background:#fff;border:3px solid #9FB2D6;color:var(--ink);display:flex;align-items:center;justify-content:center;font-family:var(--card);font-weight:700;cursor:pointer;box-shadow:0 4px 10px rgba(31,58,147,.15);will-change:transform;z-index:2;padding:0}
+  .bub{position:absolute;left:0;top:0;border-radius:50%;background:#fff;border:3px solid #9CCBAE;color:var(--ink);display:flex;align-items:center;justify-content:center;font-family:var(--card);font-weight:700;cursor:pointer;box-shadow:0 4px 10px rgba(11,107,58,.15);will-change:transform;z-index:2;padding:0}
   .bub.no{animation:shake .4s}
   @keyframes shake{0%,100%{margin-left:0}25%{margin-left:-8px}75%{margin-left:8px}}
   .g-frog{position:absolute;left:50%;bottom:4px;width:clamp(120px,28vmin,200px);transform:translateX(-50%);z-index:4;pointer-events:none}
@@ -157,23 +214,23 @@
   .bub.fish span{position:relative;margin-left:12%}
   .mama{position:absolute;left:50%;top:6%;width:min(46vw,260px);transform:translateX(-50%)}
   .mama svg,.baby svg{display:block;width:100%;height:auto}
-  .tag{position:absolute;left:34%;top:48%;transform:translate(-50%,-50%);font-family:var(--card);font-weight:700;color:var(--ink);background:#fff;border-radius:12px;padding:0 .3em;line-height:1.2;box-shadow:0 2px 6px rgba(0,0,0,.12)}
-  .mama .tag{font-size:clamp(2.6rem,11vw,4.6rem)}
+  .dtag{position:absolute;left:34%;top:48%;transform:translate(-50%,-50%);font-family:var(--card);font-weight:700;color:var(--ink);background:#fff;border-radius:12px;padding:0 .3em;line-height:1.2;box-shadow:0 2px 6px rgba(0,0,0,.12)}
+  .mama .dtag{font-size:clamp(2.6rem,11vw,4.6rem)}
   .babies{position:absolute;left:0;right:0;bottom:6%;display:flex;justify-content:center;gap:4vw;padding:0 10px}
   .baby{position:relative;width:min(26vw,150px);border:0;background:transparent;cursor:pointer;padding:0}
-  .baby .tag{font-size:clamp(1.8rem,7vw,3rem)}
+  .baby .dtag{font-size:clamp(1.8rem,7vw,3rem)}
   .safari{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5vh;padding:16px}
   .pic{width:min(52vw,260px);height:min(52vw,260px);border-radius:50%;background:#fff;border:4px solid #F2D27A;font-size:min(30vw,150px);line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 18px rgba(0,0,0,.08)}
   .pic.happy{animation:chomp .5s}
   .choices{display:flex;gap:4vw;justify-content:center}
-  .choice,.tile{font-family:var(--card);font-weight:700;color:var(--ink);background:#fff;border:3px solid #9FB2D6;border-radius:18px;cursor:pointer}
+  .choice,.tile{font-family:var(--card);font-weight:700;color:var(--ink);background:#fff;border:3px solid #9CCBAE;border-radius:18px;cursor:pointer}
   .choice{font-size:clamp(2.6rem,11vw,4.4rem);width:min(24vw,130px);height:min(24vw,130px)}
   .choice.right,.tile.right{background:var(--check);border-color:var(--check);color:#fff}
   .choice.no,.tile.no,.baby.no,.mcard.no{animation:shake .4s}
   .mgrid{position:absolute;inset:0;margin:auto;display:grid;gap:12px;padding:16px;max-width:620px;align-content:center}
   .mcard{aspect-ratio:3/4;border-radius:14px;border:0;cursor:pointer;background:repeating-linear-gradient(45deg,#5CC27A 0 12px,#4CAF6A 12px 24px);box-shadow:0 4px 10px rgba(0,0,0,.12);font-family:var(--card);font-weight:700;font-size:clamp(2rem,8vw,3.4rem);color:var(--ink);transition:background .25s}
   .mcard span{visibility:hidden}
-  .mcard.up{background:#fff;border:3px solid #9FB2D6}
+  .mcard.up{background:#fff;border:3px solid #9CCBAE}
   .mcard.up span{visibility:visible}
   .mcard.done{background:#D8F0E2;border-color:#8FD0A5}
   .tiles .tile{aspect-ratio:1;font-size:clamp(2.4rem,10vw,4rem)}
@@ -211,7 +268,7 @@
   .lhead span:first-child{text-align:left;padding-left:6px}
   .lrow{border-bottom:1px solid var(--rule);min-height:54px}
   .glyph{font-family:var(--read);font-size:1.9rem;line-height:1;padding:6px 10px 6px 6px;border-right:2px solid var(--margin);align-self:stretch;display:flex;align-items:center;letter-spacing:.04em}
-  .tick{justify-self:center;width:44px;height:44px;border:2px solid #9FB2D6;border-radius:8px;background:#fff;cursor:pointer;font-size:1.4rem;line-height:1;color:#fff;padding:0}
+  .tick{justify-self:center;width:44px;height:44px;border:2px solid #9CCBAE;border-radius:8px;background:#fff;cursor:pointer;font-size:1.4rem;line-height:1;color:#fff;padding:0}
   .tick[aria-pressed="true"]{background:var(--check);border-color:var(--check)}
   .tick[aria-pressed="true"]::after{content:"\2713"}
   .scoreline{margin-top:14px;display:grid;gap:8px;font-size:.95rem}
@@ -229,7 +286,7 @@
   .pscore{color:var(--check);white-space:nowrap}
   .pscore.low{color:var(--margin)}
   .words{display:flex;flex-wrap:wrap;gap:8px}
-  .word{font-family:var(--read);font-size:1.4rem;padding:6px 14px;border-radius:8px;border:2px solid #9FB2D6;background:#fff;cursor:pointer;color:var(--graphite);min-height:46px}
+  .word{font-family:var(--read);font-size:1.4rem;padding:6px 14px;border-radius:8px;border:2px solid #9CCBAE;background:#fff;cursor:pointer;color:var(--graphite);min-height:46px}
   .word[aria-pressed="true"]{background:var(--check);border-color:var(--check);color:#fff}
 
   /* Results on screen */
@@ -267,7 +324,14 @@
   .print-btns{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0 4px}
   .adv-row{display:grid;grid-template-columns:120px 1fr 1fr;gap:10px;align-items:center;padding:6px 0;border-bottom:1px solid var(--rule)}
   .adv-row input{margin:0}
-  .adv-row.adv4{grid-template-columns:130px 1fr 1fr 100px auto}
+  .adv-row.adv4{grid-template-columns:130px 1fr 1fr 190px auto}
+  .pin-cell{display:flex;gap:6px;align-items:center}
+  .pin-cell input{min-width:0}
+  .signin-row{padding:10px 0;border-bottom:1px solid var(--rule)}
+  .inline-check{display:flex;gap:8px;align-items:center;font-weight:400}
+  .inline-check input{width:auto;margin:0}
+  .signin-row .pinv{font-variant-numeric:tabular-nums;letter-spacing:.12em;font-weight:700}
+  .signin-row textarea{margin-top:8px;font-size:.9rem}
 
   /* Sign in page dashboard */
   .dash-grid{display:grid;grid-template-columns:minmax(220px,300px) 1fr;gap:20px;align-items:start;margin-bottom:6px}
@@ -280,7 +344,7 @@
   .gbar .bar{margin:0;height:12px}
   .gbar .num{text-align:right;color:var(--muted);font-variant-numeric:tabular-nums}
   .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:12px}
-  .stat{background:var(--ink-soft);border-radius:10px;padding:12px 14px}
+  .stat{background:var(--ink-soft);border-radius:10px;padding:12px 14px;border-left:5px solid var(--gold)}
   .stat b{display:block;font-size:2rem;line-height:1.1;color:var(--ink)}
   .stat span{font-size:.88rem;color:var(--muted)}
   .board{list-style:none;margin:0;padding:0;columns:2 280px;column-gap:24px}
@@ -324,7 +388,7 @@
   .sig-box{border:1px solid var(--rule);border-radius:8px;padding:10px}
   .sig-box .role{font-weight:700;color:var(--ink)}
   .sig-box img{display:block;max-width:100%;height:60px;object-fit:contain;margin:6px 0}
-  .pad-box{border:2px dashed #9FB2D6;border-radius:8px;background:#fff}
+  .pad-box{border:2px dashed #9CCBAE;border-radius:8px;background:#fff}
   #pad{display:block;width:100%;height:170px;touch-action:none;cursor:crosshair}
 
   /* Printable cards for the learner */
@@ -365,11 +429,12 @@
 <body>
 
 <header class="top">
-  <div>
-    <div class="school">Baluyan Elementary School</div>
-    <div class="app">School-based Reading Assessment</div>
-  </div>
+  <a href="#" class="brand" id="homeLink" title="Go to the main page" aria-label="Baluyan Elementary School, go to the main page">
+    <img class="logo" alt="Baluyan Elementary School logo" src="data:image/png;base64,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">
+    <span><span class="school" style="display:block">Baluyan Elementary School</span><span class="app" style="display:block">School-based Reading Assessment</span></span>
+  </a>
   <div class="top-right">
+    <span class="clock" id="clock" aria-live="off"></span>
     <button id="syncPill" class="pill" type="button" title="Tap to sync now">Starting</button>
     <button id="logoutBtn" class="btn small ghost hidden" type="button">Log out</button>
   </div>
@@ -381,28 +446,32 @@
   <section id="viewLogin" class="hidden">
     <h1>Who Is Signing In?</h1>
     <p class="hint">School-based Reading Assessment</p>
+    <div class="home-note hidden" id="adminBackNote">
+      <span>You are still signed in as School Head.</span>
+      <button type="button" class="btn small primary" id="adminBack">Open School Head Page</button>
+    </div>
     <div class="login-grid">
+      <form id="teacherForm" class="panel" autocomplete="off">
+        <h2>Parent or Learner</h2>
+        <p>See practice words, games, reading assessment tasks, and results, then sign to confirm.</p>
+        <label>Learner LRN (12 Digits)<input id="teacherLrn" inputmode="numeric" maxlength="12"></label>
+        <button class="btn primary" type="submit">Sign In</button>
+        <p class="msg" id="teacherMsg"></p>
+      </form>
+      <form id="adviserForm" class="panel" autocomplete="off">
+        <h2>Adviser</h2>
+        <p>See your learners' reading assessment results, listen to their practice recordings, and give stars or a redo.</p>
+        <label>Email<input id="advEmail" type="email"></label>
+        <label>PIN<input id="advPin" type="password" inputmode="numeric"></label>
+        <button class="btn primary" type="submit">Sign In</button>
+        <p class="msg" id="advLoginMsg"></p>
+      </form>
       <form id="adminForm" class="panel" autocomplete="off">
         <h2>School Head</h2>
         <p>Assess learners, manage the learner list, print, record, and send results.</p>
         <label>PIN<input type="password" id="adminPin" inputmode="numeric"></label>
         <button class="btn primary" type="submit">Sign In</button>
         <p class="msg" id="adminMsg"></p>
-      </form>
-      <form id="teacherForm" class="panel" autocomplete="off">
-        <h2>Teacher, Parent, or Learner</h2>
-        <p>See the result, remarks, and reading materials, then sign to confirm.</p>
-        <label>Learner LRN (12 Digits)<input id="teacherLrn" inputmode="numeric" maxlength="12"></label>
-        <button class="btn primary" type="submit">View Results</button>
-        <p class="msg" id="teacherMsg"></p>
-      </form>
-      <form id="adviserForm" class="panel" autocomplete="off">
-        <h2>Adviser</h2>
-        <p>Listen to your learners' practice recordings and give stars or a redo.</p>
-        <label>Email<input id="advEmail" type="email"></label>
-        <label>PIN<input id="advPin" type="password" inputmode="numeric"></label>
-        <button class="btn primary" type="submit">Sign In</button>
-        <p class="msg" id="advLoginMsg"></p>
       </form>
     </div>
 
@@ -418,14 +487,14 @@
           <div class="stats">
             <div class="stat"><b id="bTotal">0</b><span>School Population</span></div>
             <div class="stat"><b id="bAssessed">0</b><span>Learners Assessed</span></div>
-            <div class="stat"><b id="bStars">0</b><span>Stars Earned in Practice</span></div>
+            <div class="stat"><b id="bStars">0</b><span>Stars Earned</span></div>
           </div>
           <h3>Assessed per Grade</h3>
           <div id="gradeBars"></div>
         </div>
       </div>
       <h3>Top Readers</h3>
-      <p class="hint">Learners earn one star for every practice word read correctly.</p>
+      <p class="hint">Learners earn one star for every practice word read correctly, every reading assessment task finished, and every game level passed.</p>
       <ol class="board" id="boardList"></ol>
     </div>
   </section>
@@ -438,6 +507,7 @@
       <button class="tab" role="tab" type="button" data-tab="records" aria-selected="false">Records</button>
       <button class="tab" role="tab" type="button" data-tab="print" aria-selected="false">Printables</button>
       <button class="tab" role="tab" type="button" data-tab="practice" aria-selected="false">Practice Review</button>
+      <button class="tab" role="tab" type="button" data-tab="bank" aria-selected="false">Word Bank</button>
       <button class="tab" role="tab" type="button" disabled>Numeracy <small>(Coming Soon)</small></button>
     </nav>
 
@@ -536,6 +606,13 @@
       </div>
 
       <div class="panel">
+        <h2>Adviser Sign In Details</h2>
+        <p class="hint">Only you can see this. Use it when an adviser forgets their email or PIN. Tap Show Message to get a ready message you can copy and send to the adviser.</p>
+        <button id="togglePins" class="btn small" type="button">Show PINs</button>
+        <div id="signinList" style="margin-top:8px"></div>
+      </div>
+
+      <div class="panel">
         <h2>Upload LRNs</h2>
         <p class="hint">Copy from Excel or Google Sheets and paste below, one learner per line in this order: LRN, Last name, First name, Grade. Names already on the list get their LRN. New names are added. In Excel, set the LRN column to Text first so the numbers stay complete.</p>
         <textarea id="lrnPaste" rows="6" placeholder="LRN	Last name	First name	Grade"></textarea>
@@ -545,6 +622,17 @@
         </div>
         <button id="lrnImportBtn" class="btn primary" type="button">Upload LRNs</button>
         <p class="msg" id="lrnMsg"></p>
+      </div>
+
+      <div class="panel">
+        <h2>Start Fresh</h2>
+        <p class="hint">Use this after testing, before you give the system to the school community. It removes stars and progress. Learners, LRNs, advisers, and reading assessment results stay.</p>
+        <label class="inline-check"><input type="checkbox" id="rsGames" checked> Game levels and game stars</label>
+        <label class="inline-check"><input type="checkbox" id="rsTasks" checked> Reading assessment task stars</label>
+        <label class="inline-check"><input type="checkbox" id="rsPractice" checked> Practice words, their stars, and the learners' recordings</label>
+        <label style="max-width:260px">Type RESET to confirm<input id="rsWord" autocomplete="off"></label>
+        <button type="button" class="btn primary" id="rsAll">Reset All Learners</button>
+        <p class="msg" id="rsMsg"></p>
       </div>
 
       <div class="panel">
@@ -584,6 +672,9 @@
 
     <!-- Practice Review -->
     <div id="tab-practice" class="hidden"><div id="revAdmin"></div></div>
+
+    <!-- Word Bank -->
+    <div id="tab-bank" class="hidden"><div id="bankAdmin"></div></div>
 
     <!-- Printables -->
     <div id="tab-print" class="hidden">
@@ -640,7 +731,7 @@
 
   <!-- Learner reading screen -->
   <section id="viewReader" class="reader hidden">
-    <div class="r-top"><span id="rTitle"></span><span><span id="rCount"></span> <span class="sub" id="rCode"></span> <button type="button" class="btn small" id="rExit">Exit</button></span></div>
+    <div class="r-top"><span id="rTitle"></span><span><span id="rCount"></span> <span class="sub" id="rCode"></span> <span class="sub clock-mini" data-clock></span> <button type="button" class="btn small" id="rExit">Exit</button></span></div>
     <div class="r-card"><div id="rGlyph" class="r-glyph"></div></div>
     <div class="r-nav">
       <button type="button" class="btn big" id="rBack">Back</button>
@@ -657,6 +748,8 @@
     <div id="teacherBody"></div>
   </section>
 </main>
+
+<footer class="foot" id="siteFoot"></footer>
 
 <aside id="timerDock" class="dock hidden" aria-label="Timers">
   <div id="timer1"></div><div id="timer2"></div><div id="timer3"></div>
@@ -675,9 +768,12 @@ const API_URL = 'https://script.google.com/macros/s/AKfycbxow520bER1W7qn2FW__VQU
 
 // The link of the copy that allows the microphone (for example, your GitHub Pages link).
 // Learners are sent there when recording does not work on the page they opened.
-const PRACTICE_URL = '';
+const PRACTICE_URL = 'https://markjumilpadillausa.github.io/sbra/';
 
 const SBRA = 'School-based Reading Assessment';
+const APP_CREATED = 'September 25, 2026';
+const APP_VERSION = '2.1';
+const APP_UPDATED = 'September 26, 2026';
 const STORE_KEY = 'baluyanAssess_v1';
 const DRAFT_KEY = 'baluyanAssess_draft_v2';
 const LETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
@@ -705,17 +801,17 @@ const RESULT_CSS = `
 .rpage{font-family:Arial,Helvetica,sans-serif;font-size:9.5pt;color:#000;line-height:1.3;page-break-after:always;break-after:page}
 .rpage:last-child{page-break-after:auto;break-after:auto}
 .rpage table{width:100%;border-collapse:collapse}
-.rp-head td{vertical-align:top;padding-bottom:4pt;border-bottom:1.5pt solid #1F3A93}
-.rp-title{text-align:right;font-weight:bold;font-size:12pt;color:#1F3A93}
+.rp-head td{vertical-align:top;padding-bottom:4pt;border-bottom:1.5pt solid #0B6B3A}
+.rp-title{text-align:right;font-weight:bold;font-size:12pt;color:#0B6B3A}
 .rp-title span{font-size:9.5pt;color:#000;font-weight:normal}
 .rp-info{margin:5pt 0}
 .rp-info td{padding:1.5pt 0;width:50%;vertical-align:top}
 .rp-index td{padding:2pt 8pt 4pt 0;vertical-align:middle}
-.rp-index .big{font-size:24pt;font-weight:bold;color:#1F3A93;width:1%;white-space:nowrap}
+.rp-index .big{font-size:24pt;font-weight:bold;color:#0B6B3A;width:1%;white-space:nowrap}
 .rp-tasks th,.rp-tasks td{border:0.75pt solid #999;padding:2.5pt 4pt;text-align:left}
-.rp-tasks th{background:#E8EEFA;font-size:8.5pt}
+.rp-tasks th{background:#E4F3E8;font-size:8.5pt}
 .rpage p{margin:3pt 0}
-.rp-h{font-weight:bold;margin-top:6pt!important;color:#1F3A93}
+.rp-h{font-weight:bold;margin-top:6pt!important;color:#0B6B3A}
 .rp-pats td{padding:1.5pt 4pt;border-bottom:0.5pt solid #ccc;font-size:9pt}
 .rp-pats .ps{text-align:right;white-space:nowrap;width:12%}
 .rp-pats .low{color:#C8323B;font-weight:bold}
@@ -806,6 +902,7 @@ function loadState(){
   s.queue.stars = s.queue.stars || {};
   s.rewards = s.rewards || {};
   s.earnedKeys = s.earnedKeys || {};
+  s.modelCache = s.modelCache || {};
   s.queue.advisers = !!s.queue.advisers;
   s.wordBank = s.wordBank || [];
   // Advisers: a list, so one grade can have more than one adviser
@@ -956,8 +1053,9 @@ function show(view){
   ['viewLogin','viewAdmin','viewTeacher','viewReader','viewAdviser','viewGame'].forEach(v => $(v).classList.toggle('hidden', v !== view));
   document.body.classList.toggle('reading', view === 'viewReader' || view === 'viewGame');
   $('logoutBtn').classList.toggle('hidden', view === 'viewLogin');
+  if (view === 'viewLogin' && S.session === 'admin' && S.pin){ $('logoutBtn').classList.remove('hidden'); $('logoutBtn').textContent = 'Log Out'; }
   $('logoutBtn').textContent = view === 'viewTeacher' ? 'Back' : 'Log Out';
-  if (view === 'viewLogin') loadBoard();
+  if (view === 'viewLogin'){ loadBoard(); $('adminBackNote').classList.toggle('hidden', !(S.session === 'admin' && S.pin)); }
   setDock();
   window.scrollTo(0, 0);
 }
@@ -998,6 +1096,7 @@ function logout(){
   if (!$('viewAdviser').classList.contains('hidden')){ REV = null; show('viewLogin'); return; }
   const n = pendingCount();
   S.session = null; S.pin = null; persist();
+  $('adminBackNote').classList.add('hidden');
   $('printArea').innerHTML = ''; $('printPreview').innerHTML = '';
   show('viewLogin');
   if (n) setMsg($('adminMsg'), n + ' item(s) are still waiting to sync. They will sync the next time you sign in with internet.', 'err');
@@ -1018,7 +1117,8 @@ function enterAdmin(){
 function selectTab(name){
   currentTab = name;
   document.querySelectorAll('.tab[data-tab]').forEach(b => b.setAttribute('aria-selected', b.dataset.tab === name ? 'true' : 'false'));
-  ['assess','learners','records','print','practice'].forEach(t => $('tab-' + t).classList.toggle('hidden', t !== name));
+  ['assess','learners','records','print','practice','bank'].forEach(t => $('tab-' + t).classList.toggle('hidden', t !== name));
+  if (name === 'bank') loadBank({ pin: S.pin }, $('bankAdmin'));
   if (name === 'practice') loadReview({ pin: S.pin }, $('revAdmin'));
   if (name === 'records') renderRecords();
   if (name === 'learners'){ renderLearners(); renderAdvisers(); }
@@ -1326,7 +1426,7 @@ function taskRow(name, t, unit){
 }
 function taskRows(r){
   const k = String(r.grade) === 'K';
-  return taskRow('Task 1: Letter names', r.t1, 'letters') + taskRow('Task 2: Letter sounds', r.t2, 'sounds') + (k ? '' : taskRow('Task 3: Pattern words', r.t3, 'words'));
+  return taskRow('Task 1: Letter Names', r.t1, 'letters') + taskRow('Task 2: Letter Sounds', r.t2, 'sounds') + (k ? '' : taskRow('Task 3: Pattern Words', r.t3, 'words'));
 }
 function scoreTable(r){
   return `<div class="tablewrap"><table class="stable">
@@ -1437,6 +1537,7 @@ function renderLearners(){
       <div class="rec-btns" style="align-items:flex-end">
         ${advisersOf(l.grade).length > 1 ? `<label class="lrn-in">Adviser<select data-adv="${esc(l.id)}"><option value="">Choose</option>${advisersOf(l.grade).map(a => `<option value="${esc(a.id)}"${a.id === l.adviserId ? ' selected' : ''}>${esc(a.name || a.email)}</option>`).join('')}</select></label>` : ''}
         <label class="lrn-in">LRN<input data-id="${esc(l.id)}" value="${esc(l.lrn || '')}" inputmode="numeric" maxlength="12" placeholder="12 digits"></label>
+        <button type="button" class="btn small" data-reset="${esc(l.id)}">Reset Stars</button>
         <button type="button" class="btn small" data-del="${esc(l.id)}">Delete</button>
       </div>
     </div>`).join('') : '<p class="hint">No learners yet. Add a learner above or paste a class list with LRNs.</p>';
@@ -1507,10 +1608,41 @@ function renderAdvisers(){
       <select data-i="${i}" data-f="grade" aria-label="Grade">${opts(a.grade)}</select>
       <input data-i="${i}" data-f="name" placeholder="Adviser name" value="${esc(a.name || '')}" aria-label="Adviser name">
       <input data-i="${i}" data-f="email" type="email" placeholder="Email" value="${esc(a.email || '')}" aria-label="Adviser email">
-      <input data-i="${i}" data-f="pin" inputmode="numeric" placeholder="PIN" value="${esc(a.pin || '')}" aria-label="Adviser PIN">
+      <div class="pin-cell"><input data-i="${i}" data-f="pin" inputmode="numeric" maxlength="8" placeholder="PIN" value="${esc(a.pin || '')}" aria-label="Adviser PIN">
+        <button type="button" class="btn small" data-gen="${i}" title="Make a new random PIN">New PIN</button></div>
       <button type="button" class="btn small" data-rm="${i}">Remove</button>
     </div>`).join('') : '<p class="hint">No advisers yet. Tap Add Adviser.</p>';
   renderAdviserSelect();
+  renderSigninList();
+}
+
+let showPins = false;
+function signinMessage(a){
+  const link = PRACTICE_URL || 'the School-based Reading Assessment link';
+  return `Good day${a.name ? ', ' + a.name : ''}.\n\nHere is your sign in for the School-based Reading Assessment.\n\nLink: ${link}\nChoose: Adviser\nEmail: ${a.email}\nPIN: ${a.pin}\n\nPlease keep your PIN private and log out when you finish, especially on a shared device.\n\nSchool Head\nBaluyan Elementary School`;
+}
+function renderSigninList(){
+  const el = $('signinList'); if (!el) return;
+  const list = S.adviserList.filter(a => a.email);
+  $('togglePins').textContent = showPins ? 'Hide PINs' : 'Show PINs';
+  el.innerHTML = list.length ? list.map((a, i) => `
+    <div class="signin-row">
+      <div><b>${esc(a.name || 'No name')}</b>, ${gradeLabel(a.grade)}</div>
+      <div class="sub">Email: ${esc(a.email)}</div>
+      <div class="sub">PIN: <span class="pinv">${a.pin ? (showPins ? esc(a.pin) : '\u2022'.repeat(a.pin.length)) : '<span style="color:var(--margin)">No PIN yet</span>'}</span></div>
+      ${a.pin ? `<button type="button" class="btn small" data-msg="${i}" style="margin-top:6px">Show Message</button><textarea class="hidden" rows="11" readonly data-msgbox="${i}">${esc(signinMessage(a))}</textarea>` : ''}
+    </div>`).join('') : '<p class="hint">No advisers with an email yet. Add them above, then tap Save Advisers.</p>';
+}
+function weakPin(p){
+  return /^(\d)\1+$/.test(p) || '0123456789'.indexOf(p) >= 0 || '9876543210'.indexOf(p) >= 0;
+}
+function randomPin(){
+  let p;
+  do {
+    const a = new Uint32Array(1); (window.crypto || window.msCrypto).getRandomValues(a);
+    p = String(a[0] % 1000000).padStart(6, '0');
+  } while (weakPin(p) || p === S.pin || S.adviserList.some(x => x.pin === p) || (advDraft || []).some(x => x.pin === p));
+  return p;
 }
 
 function renderAdviserSelect(){
@@ -1523,8 +1655,20 @@ function saveAdvisers(){
   let bad = '';
   const list = advDraft.map(a => ({ id: a.id || uid(), grade: String(a.grade || ''), name: (a.name || '').trim(), email: (a.email || '').trim(), pin: String(a.pin || '').trim() }))
     .filter(a => a.grade && (a.name || a.email));
-  list.forEach(a => { if (a.email && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(a.email)) bad = a.name || gradeLabel(a.grade); });
-  if (bad){ setMsg($('advMsg'), 'Check the email for ' + bad + '.', 'err'); return; }
+  list.forEach(a => { if (a.email && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(a.email)) bad = 'Check the email for ' + (a.name || gradeLabel(a.grade)) + '.'; });
+  // PIN rules: numbers only, 4 to 8 digits, not easy to guess, not the School Head PIN
+  list.forEach(a => {
+    if (bad || !a.email) return;
+    const who = a.name || a.email;
+    if (!a.pin) bad = who + ' needs a PIN to sign in. Tap New PIN.';
+    else if (!/^\d{4,8}$/.test(a.pin)) bad = 'The PIN of ' + who + ' must be 4 to 8 numbers.';
+    else if (weakPin(a.pin)) bad = 'The PIN of ' + who + ' is too easy to guess. Tap New PIN.';
+    else if (S.pin && a.pin === String(S.pin)) bad = 'The PIN of ' + who + ' is the same as your School Head PIN. Tap New PIN.';
+  });
+  // One adviser handling two grades must use the same PIN for both
+  const byEmail = {};
+  list.forEach(a => { if (!a.email) return; const k = a.email.toLowerCase(); if (byEmail[k] && byEmail[k] !== a.pin) bad = bad || a.email + ' appears more than once with different PINs. Use one PIN for this adviser.'; byEmail[k] = byEmail[k] || a.pin; });
+  if (bad){ setMsg($('advMsg'), bad, 'err'); return; }
   S.adviserList = list; advDraft = null; S.advisersUpdated = nowIso(); S.queue.advisers = true; persist();
   renderAdvisers(); renderLearners(); renderRecords();
   setMsg($('advMsg'), 'Advisers saved.', 'good'); flush();
@@ -1655,7 +1799,7 @@ function resultPrintHtml(a, sigs){
     </table>
     <table class="rp-index"><tr><td class="big">${a.literacyIndex}</td><td><b>${esc(a.level)}</b><br>Literacy Index out of 100</td></tr></table>
     <table class="rp-tasks"><tr><th>Task</th><th>Score</th><th>Time</th><th>Speed</th><th>Index</th></tr>
-      ${tr('Task 1: Letter names', a.t1, 'letters')}${tr('Task 2: Letter sounds', a.t2, 'sounds')}${k ? '' : tr('Task 3: Pattern words', a.t3, 'words')}</table>
+      ${tr('Task 1: Letter Names', a.t1, 'letters')}${tr('Task 2: Letter Sounds', a.t2, 'sounds')}${k ? '' : tr('Task 3: Pattern Words', a.t3, 'words')}</table>
     <p class="rp-h">Letters to Focus On</p>
     <p><b>Names:</b> ${esc((t1.missing || []).join(', ') || 'None')}</p>
     <p><b>Sounds:</b> ${esc((t2.missing || []).join(', ') || 'None')}</p>
@@ -1739,7 +1883,7 @@ function emailBody(list, adviserName, note){
     <p>Attached ${one ? 'is the ' + SBRA + ' result of ' + esc(list[0].learnerName) : 'are the ' + SBRA + ' results for ' + gradeLabel(list[0].grade)}. Each learner has a one page result sheet in the PDF.</p>
     ${note ? `<p>${esc(note)}</p>` : ''}
     <table style="border-collapse:collapse;margin:8px 0">
-      <tr><th style="${td};background:#E8EEFA">Learner</th><th style="${td};background:#E8EEFA">LRN</th><th style="${td};background:#E8EEFA">Literacy Index</th><th style="${td};background:#E8EEFA">Level</th><th style="${td};background:#E8EEFA">BOSY Reading Profile</th></tr>
+      <tr><th style="${td};background:#E4F3E8">Learner</th><th style="${td};background:#E4F3E8">LRN</th><th style="${td};background:#E4F3E8">Literacy Index</th><th style="${td};background:#E4F3E8">Level</th><th style="${td};background:#E4F3E8">BOSY Reading Profile</th></tr>
       ${rows}
     </table>
     <p>To view a result and sign it, open the link below and sign in with the learner's LRN. Parents and learners can sign the same way.</p>
@@ -1846,7 +1990,7 @@ function tasksPanel(){
   const k = String(TV.learner.grade) === 'K';
   const ses = LSess && LSess.lrn === TV.learner.lrn ? LSess : null;
   return `<div class="panel">
-    <h2>Reading Tasks</h2>
+    <h2>Reading Assessment Tasks</h2>
     ${ses ? `<p class="hint">Code ${esc(ses.code)} is ready. Tap a task to begin. Use Next and Back to move between cards.</p>
       <div class="task-btns">
         <button type="button" class="task-btn" data-task="t1">Task 1: Letter Names<small>Say the name of each letter.</small></button>
@@ -1908,7 +2052,7 @@ function bindResults(){
   $('padSave').onclick = saveSignature;
 }
 
-const LTABS = [['practice','Practice Words'],['games','Games'],['notebook','My Notebook'],['tasks','Reading Tasks'],['results','Results']];
+const LTABS = [['practice','Practice Words'],['games','Games'],['notebook','My Notebook'],['tasks','Reading Assessment Tasks'],['results','Results']];
 function renderTeacher(){
   const body = $('teacherBody'); const { learner } = TV;
   const stars = myRewards().total;
@@ -1977,18 +2121,30 @@ function practiceHtml(){
   let status = '';
   if (x.status === 'redo') status = `<div class="redo-note"><b>Please record again.</b>${x.remark ? ' Teacher says: ' + esc(x.remark) : ''}</div>`;
   else if (x.status === 'submitted') status = `<p class="pnote hint">${x.pendingUpload ? 'Saved on this device. It will be sent when the internet is back.' : 'Sent. Waiting for your teacher to check it.'} You can still record again.</p>`;
+  const fb = x.remark && x.status !== 'redo' ? `<div class="fb-learner"><b>Teacher's feedback:</b> ${esc(x.remark)}</div>` : '';
   return `<div class="panel pcard">
     <p class="sub">Word ${PR.idx + 1} of ${list.length}</p>
-    ${status}
-    <div class="pword">${esc(x.word)}</div>
-    <button type="button" class="mic${recording ? ' rec' : ''}" id="micBtn" aria-label="${recording ? 'Stop recording' : 'Record your voice'}">${recording ? STOP_SVG : MIC_SVG}</button>
-    <p class="pnote">${recording ? 'Recording. Say the word, then tap to stop.' : d ? 'Listen to your answer. Submit it, or record again.' : 'Tap the microphone, then read the word out loud.'}</p>
-    ${d ? `<audio controls src="${d.url}"></audio>
-      <div class="print-btns" style="justify-content:center">
-        <button type="button" class="btn" id="recAgain">Record Again</button>
-        <button type="button" class="btn primary" id="recSubmit">Submit</button>
-      </div>` : ''}
-    <p class="msg" id="pracMsg"></p>
+    ${status}${fb}
+    <div class="pgrid">
+      <div class="pcol listen">
+        <h3>1. Listen and Watch</h3>
+        ${wordStageHtml(x.word, true)}
+        <button type="button" class="btn primary" id="modelPlay">\uD83D\uDD0A Listen to My Teacher</button>
+        <p class="sub" id="modelBy"></p>
+      </div>
+      <div class="pcol turn">
+        <h3>2. Your Turn</h3>
+        <button type="button" class="mic${recording ? ' rec' : ''}" id="micBtn" aria-label="${recording ? 'Stop recording' : 'Record your voice'}">${recording ? STOP_SVG : MIC_SVG}</button>
+        <p class="pnote">${recording ? 'Recording. Say the word, then tap to stop.' : d ? 'Listen to your answer. Submit it, or record again.' : 'Tap the microphone, then read the word out loud.'}</p>
+        ${d ? `<audio controls src="${d.url}"></audio>
+          <div class="print-btns" style="justify-content:center">
+            <button type="button" class="btn" id="recAgain">Record Again</button>
+            <button type="button" class="btn primary" id="recSubmit">Submit</button>
+          </div>` : ''}
+        <p class="msg" id="pracMsg"></p>
+      </div>
+    </div>
+    <div class="nb-tip">\u270F\uFE0F <b>Write it in your notebook.</b> Write the word <b>${esc(x.word)}</b> in your vocabulary notebook. Say each sound as you write the letters. Then draw a small picture beside it.</div>
     <div class="pnav">
       <button type="button" class="btn" id="pBack"${PR.idx === 0 ? ' disabled' : ''}>Back</button>
       <button type="button" class="btn" id="pNext"${PR.idx >= list.length - 1 ? ' disabled' : ''}>Next</button>
@@ -2002,6 +2158,10 @@ function bindPractice(){
   if ($('micBtn')) $('micBtn').onclick = () => (REC && REC.id === x.id) ? recStop() : recStart(x);
   if ($('recAgain')) $('recAgain').onclick = () => { dropDraft(x.id); recStart(x); };
   if ($('recSubmit')) $('recSubmit').onclick = () => submitDraft(x);
+  if ($('modelPlay')){
+    ensureModel(x.word);
+    $('modelPlay').onclick = () => { actx(); const m = PR.models && PR.models[x.word.toLowerCase()]; playWord($('teacherBody').querySelector('.pcol.listen .wstage'), m && m.src, x.word); };
+  }
   if ($('pBack')) $('pBack').onclick = () => { recCancel(); PR.idx--; renderTeacher(); };
   if ($('pNext')) $('pNext').onclick = () => { recCancel(); PR.idx++; renderTeacher(); };
 }
@@ -2076,7 +2236,7 @@ function notebookHtml(){
     <div class="stats">
       <div class="stat"><b class="star">\u2605 ${myRewards().total}</b><span>Total Stars</span></div>
       <div class="stat"><b>${myRewards().practice}</b><span>Stars From Practice</span></div>
-      <div class="stat"><b>${myRewards().tasks}</b><span>Stars From Reading Tasks</span></div>
+      <div class="stat"><b>${myRewards().tasks}</b><span>Stars From Reading Assessment Tasks</span></div>
       <div class="stat"><b>${myRewards().games}</b><span>Stars From Games</span></div>
       <div class="stat"><b>${PR.items.filter(x => x.status === 'correct').length}</b><span>Words Learned</span></div>
       <div class="stat"><b>${PR.items.filter(x => x.status !== 'new').length}</b><span>Words Practiced</span></div>
@@ -2084,7 +2244,8 @@ function notebookHtml(){
     ${keys.length ? keys.map(k => { const w = weeks[k]; return `
       <div class="nb-week"><b>Week of ${esc(fmtDay(k))}</b>
         <div class="sub">${w.length} words, ${w.filter(x => x.status !== 'new').length} practiced, ${w.filter(x => x.status === 'correct').length} correct</div>
-        <div class="nb-words">${w.map(x => `<span class="nb-w ${esc(x.status)}">${tag(x)}${esc(x.word)}${note(x)}</span>`).join('')}</div>
+        ${w.map(x => `<div class="nb-row"><span class="nb-w ${esc(x.status)}">${tag(x)}${esc(x.word)}${note(x)}</span>
+          <span class="sub">${x.submittedAt ? 'Sent ' + esc(fmtDateTime(x.submittedAt)) + '.' : 'Not recorded yet.'}${x.reviewedAt ? ' Checked by ' + esc(x.reviewedBy || 'the teacher') + ', ' + esc(fmtDateTime(x.reviewedAt)) + '.' : ''}${x.remark ? ' Teacher\'s feedback: ' + esc(x.remark) : ''}</span></div>`).join('')}
       </div>`; }).join('') : '<p class="hint">No practice words yet.</p>'}
   </div>`;
 }
@@ -2461,8 +2622,8 @@ GI.mama = {
 function mamaRound(){
   const cur = FG.cur = FG.rounds[FG.round];
   const opts = shuffle([cur].concat(otherLetters([cur], 2, learned(Math.max(FG.level, 3)))));
-  $('gBubbles').innerHTML = `<div class="mama" id="mama">${duckSvg()}<span class="tag">${cur.toUpperCase()}</span></div>
-    <div class="babies">${opts.map(o => `<button type="button" class="baby" data-ch="${o}" aria-label="Baby duck ${o}">${duckSvg()}<span class="tag">${o}</span></button>`).join('')}</div>`;
+  $('gBubbles').innerHTML = `<div class="mama" id="mama">${duckSvg()}<span class="dtag">${cur.toUpperCase()}</span></div>
+    <div class="babies">${opts.map(o => `<button type="button" class="baby" data-ch="${o}" aria-label="Baby duck ${o}">${duckSvg()}<span class="dtag">${o}</span></button>`).join('')}</div>`;
   setAsk(`Find baby <b>${cur}</b> for Mama <b>${cur.toUpperCase()}</b>`, 3, FG.round);
   FG.busy = false;
   $('gBubbles').querySelectorAll('.baby').forEach(el => el.onclick = () => {
@@ -2625,7 +2786,7 @@ function traceRound(){
   const g = guide.getContext('2d');
   g.font = font; g.textAlign = 'center'; g.textBaseline = 'middle';
   g.fillStyle = '#E6EDF8'; g.fillText(ch, cx, cy);
-  g.setLineDash([6, 10]); g.lineWidth = 4; g.strokeStyle = '#8FA6CF'; g.strokeText(ch, cx, cy);
+  g.setLineDash([6, 10]); g.lineWidth = 4; g.strokeStyle = '#8FC4A2'; g.strokeText(ch, cx, cy);
   const mk = extra => { const c = document.createElement('canvas'); c.width = guide.width; c.height = guide.height; const x = c.getContext('2d');
     x.font = font; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillStyle = '#000'; x.fillText(ch, cx, cy);
     if (extra){ x.lineWidth = extra; x.strokeStyle = '#000'; x.lineJoin = 'round'; x.strokeText(ch, cx, cy); }
@@ -2662,12 +2823,291 @@ function passTrace(){
 }
 
 /* =========================================================
+   PHONICS COLORS AND SOUND IT OUT ANIMATION
+   ========================================================= */
+const CH_LABEL = { vow: 'vowel', team: 'vowel team', dig: 'two letters, one sound', magic: 'magic e', sil: 'silent letter', soft: 'soft c or g', dbl: 'double letters', end: 'word ending' };
+function chunkWord(w){
+  const word = String(w || '');
+  if (/^[A-Z][a-z]$/.test(word)) return [{ t: word[0], c: 'let' }, { t: word[1], c: 'let' }];
+  const lw = word.toLowerCase(), out = [];
+  let magicV = -1;
+  if (lw.length >= 3 && /[aeiou][^aeiou\s]e$/.test(lw) && !/[aeiou]{2}[^aeiou\s]e$/.test(lw)) magicV = lw.length - 3;
+  let i = 0;
+  while (i < lw.length){
+    const rest = lw.slice(i), ch = lw[i];
+    if (ch === ' '){ out.push({ t: ' ', c: 'sp' }); i++; continue; }
+    if (i === lw.length - 1 && magicV >= 0 && ch === 'e'){ out.push({ t: word[i], c: 'magic sil' }); i++; continue; }
+    if (i === magicV){ out.push({ t: word[i], c: 'magic' }); i++; continue; }
+    if (i === 0 && /^(kn|wr|gn)/.test(lw)){ out.push({ t: word[0], c: 'sil' }); i++; continue; }
+    if (rest === 'mb'){ out.push({ t: word[i], c: '' }); out.push({ t: word[i + 1], c: 'sil' }); break; }
+    const dm = rest.match(/^([bdfgklmnprtz])\1(ing|ed|er)$/);
+    if (dm){ out.push({ t: word.substr(i, 2), c: 'dbl' }); out.push({ t: word.substr(i + 2), c: 'end' }); break; }
+    if (i > 1 && /^(ing|ed)$/.test(rest)){ out.push({ t: word.substr(i), c: 'end' }); break; }
+    if (i === lw.length - 1 && ch === 'e' && lw.length > 3){ out.push({ t: word[i], c: 'sil' }); i++; continue; }
+    const g = ['tch','igh','dge','sh','ch','th','wh','ph','ck','ng','nk','qu'].find(x => rest.indexOf(x) === 0 && !(x === 'ng' && /[eiy]/.test(lw[i + 2] || '')));
+    if (g){ out.push({ t: word.substr(i, g.length), c: 'dig' }); i += g.length; continue; }
+    const vt = ['ai','ay','ee','ea','oa','ow','oo','ou','oi','oy','ie','ei','ue','ew','ar','er','ir','or','ur'].find(x => rest.indexOf(x) === 0);
+    if (vt){ out.push({ t: word.substr(i, 2), c: 'team' }); i += 2; continue; }
+    if ((ch === 'c' || ch === 'g') && /[eiy]/.test(lw[i + 1] || '')){ out.push({ t: word[i], c: 'soft' }); i++; continue; }
+    out.push({ t: word[i], c: 'aeiou'.indexOf(ch) >= 0 ? 'vow' : '' }); i++;
+  }
+  return out;
+}
+function wordStageHtml(w, big){
+  const ch = chunkWord(w);
+  const kinds = [...new Set(ch.map(c => c.c.split(' ')[0]).filter(k => CH_LABEL[k]))];
+  return `<div class="wstage${big ? ' big' : ''}">
+    <div class="wword">${ch.map(c => `<span class="ch ${c.c}">${c.t === ' ' ? '&nbsp;' : esc(c.t)}</span>`).join('')}</div>
+    <div class="road"><span class="car" aria-hidden="true">\uD83D\uDE97</span></div>
+    ${big && kinds.length ? `<div class="wlegend">${kinds.map(k => `<span class="ch ${k}">\u25CF</span> ${CH_LABEL[k]}`).join('<span class="gap"></span>')}</div>` : ''}
+  </div>`;
+}
+/* Each sound part lights up while a little car drives under it. Then the whole word is read. */
+function playWord(stage, src, word){
+  if (!stage) return;
+  (stage._t || []).forEach(clearTimeout); stage._t = [];
+  const T = (f, ms) => stage._t.push(setTimeout(f, ms));
+  const chunks = [...stage.querySelectorAll('.ch')].filter(c => c.textContent.trim() && !c.closest('.wlegend'));
+  const car = stage.querySelector('.car'), road = stage.querySelector('.road');
+  const carTo = x => { car.style.transform = `translateX(${Math.max(0, x)}px)`; };
+  stage.classList.remove('blend'); chunks.forEach(c => c.classList.remove('on'));
+  car.style.transition = 'none'; carTo(0); void car.offsetWidth; car.style.transition = '';
+  const per = 650;
+  chunks.forEach((c, i) => T(() => {
+    chunks.forEach(x => x.classList.remove('on')); c.classList.add('on');
+    const r = road.getBoundingClientRect(), e = c.getBoundingClientRect();
+    carTo(e.left - r.left + e.width / 2 - 16);
+    tone(440 + i * 70, 0.09, 'triangle', 0.08);
+  }, 250 + i * per));
+  T(() => {
+    chunks.forEach(x => x.classList.remove('on')); stage.classList.add('blend');
+    carTo(road.getBoundingClientRect().width - 36);
+    if (src){ try { const a = new Audio(src); a.play().catch(() => say(word)); } catch(e){ say(word); } }
+    else say(/^[A-Z][a-z]$/.test(word) ? word[0] : word);
+  }, 250 + chunks.length * per);
+  T(() => stage.classList.remove('blend'), 250 + chunks.length * per + 1600);
+}
+
+/* Simple microphone recorder, used in the Word Bank */
+async function micRecord(onDone, onError){
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia || !window.MediaRecorder){ onError(micHelp()); return null; }
+  let stream;
+  try { stream = await navigator.mediaDevices.getUserMedia({ audio: true }); }
+  catch(e){ onError(e && e.name === 'NotAllowedError' && window.top === window ? 'Please allow the microphone, then tap Record again.' : micHelp()); return null; }
+  const types = ['audio/webm;codecs=opus', 'audio/webm', 'audio/mp4', 'audio/ogg'];
+  const mime = types.find(t => MediaRecorder.isTypeSupported && MediaRecorder.isTypeSupported(t)) || '';
+  const media = mime ? new MediaRecorder(stream, { mimeType: mime, audioBitsPerSecond: 32000 }) : new MediaRecorder(stream);
+  const chunks = []; const ctl = { cancelled: false };
+  media.ondataavailable = e => { if (e.data && e.data.size) chunks.push(e.data); };
+  media.onstop = () => { stream.getTracks().forEach(t => t.stop()); clearTimeout(ctl.timer); if (!ctl.cancelled && chunks.length){ const blob = new Blob(chunks, { type: media.mimeType || mime || 'audio/webm' }); onDone(blob, blob.type); } };
+  media.start();
+  ctl.stop = () => { if (media.state !== 'inactive') media.stop(); };
+  ctl.cancel = () => { ctl.cancelled = true; ctl.stop(); };
+  ctl.timer = setTimeout(ctl.stop, 8000);
+  return ctl;
+}
+
+/* =========================================================
+   WORD BANK (School Head and advisers)
+   ========================================================= */
+const BANK_GROUPS = ['Letters and Sounds', 'CVC Words', 'Word Families', 'Sight Words', 'Digraphs and Blends', 'Magic E', 'Vowel Teams', 'Other Patterns', 'Words Around Us', 'Other Words'];
+let BK = null;
+async function loadBank(auth, el){
+  const keep = BK && BK.el === el ? BK : null;
+  BK = { auth, el, data: keep ? keep.data : null, ks: keep ? keep.ks : '', group: keep ? keep.group : 'Letters and Sounds', status: keep ? keep.status : '', q: keep ? keep.q : '', rec: null, drafts: {}, audio: keep ? keep.audio : {}, preview: keep ? keep.preview : '' };
+  if (!BK.data) el.innerHTML = '<div class="panel"><p class="hint">Loading the word bank.</p></div>';
+  try {
+    const res = await callApi(Object.assign({ action: 'modelBank' }, auth));
+    if (!res || !res.ok){ el.innerHTML = `<div class="panel"><p class="msg err">${esc((res && res.error) || 'Could not load the word bank.')}</p></div>`; return; }
+    BK.data = res; renderBank();
+  } catch(e){ el.innerHTML = '<div class="panel"><p class="msg err">The word bank needs the internet. Connect, then open this tab again.</p></div>'; }
+}
+const BK_STATUS = [['', 'All Words'], ['none', 'Not Recorded Yet'], ['pending', 'Waiting for Approval'], ['approved', 'Approved'], ['redo', 'Needs Redo'], ['mine', 'My Recordings']];
+function bankFiltered(){
+  const d = BK.data, q = BK.q.trim().toLowerCase();
+  return d.words.filter(w => (!BK.ks || String(w.ks).split(',').indexOf(BK.ks) >= 0)
+    && (!BK.group || w.group === BK.group)
+    && (!q || w.word.toLowerCase().indexOf(q) >= 0)
+    && (!BK.status || (BK.status === 'none' ? !w.hasAudio : BK.status === 'mine' ? w.mine : w.status === BK.status)));
+}
+function statusTag(w){
+  if (!w.hasAudio) return '<span class="tag">Not recorded yet</span>';
+  if (w.status === 'approved') return '<span class="tag ok">Approved</span>';
+  if (w.status === 'redo') return '<span class="tag red">Needs redo</span>';
+  return '<span class="tag">Waiting for approval</span>';
+}
+function renderBank(){
+  const d = BK.data, el = BK.el, head = d.role === 'head';
+  const words = bankFiltered();
+  const groups = BANK_GROUPS.filter(g => d.words.some(w => w.group === g));
+  const me = d.teachers.find(t => t.name === d.me);
+  const recorded = d.words.filter(w => w.hasAudio).length;
+  const pv = BK.preview && d.words.find(w => w.id === BK.preview);
+  const byCat = []; words.forEach(w => { let c = byCat[byCat.length - 1]; if (!c || c.name !== w.category){ c = { name: w.category, group: w.group, items: [] }; byCat.push(c); } c.items.push(w); });
+  el.innerHTML = `<div class="panel">
+    <h2>Word Bank</h2>
+    <p class="sub">${d.words.length} words. ${recorded} recorded by teachers. ${d.words.length - recorded} still need a teacher's voice.</p>
+    <p class="hint">${head ? 'Listen to each teacher recording, then tap Approve or Redo with your feedback. Teachers see your feedback here.' : 'Tap Record on any word no one has recorded yet. Once you record a word, it is yours, and other teachers can listen to it. Every recorded word gives you 1 star. Learners hear these recordings when they practice.'}</p>
+    ${!head ? `<p><span class="star">\u2605 ${me ? me.stars : 0}</span> Your stars from recording words</p>` : ''}
+    <div class="tablewrap"><table class="stable"><thead><tr><th>Teacher</th><th>Recorded</th><th>Approved</th><th>Waiting</th><th>Redo</th><th>Stars</th></tr></thead>
+      <tbody>${d.teachers.map(t => `<tr><td>${esc(t.name)}</td><td>${t.recorded}</td><td>${t.approved}</td><td>${t.pending}</td><td>${t.redo}</td><td class="star">\u2605 ${t.stars}</td></tr>`).join('') || '<tr><td colspan="6">No recordings yet. Be the first!</td></tr>'}</tbody></table></div>
+    <div class="fields" style="margin-top:12px">
+      <label>Key Stage<select id="bkKs"><option value="">Both</option><option value="1"${BK.ks === '1' ? ' selected' : ''}>Key Stage 1</option><option value="2"${BK.ks === '2' ? ' selected' : ''}>Key Stage 2</option></select></label>
+      <label>Group<select id="bkGroup"><option value="">All Groups</option>${groups.map(g => `<option${g === BK.group ? ' selected' : ''}>${esc(g)}</option>`).join('')}</select></label>
+      <label>Show<select id="bkStatus">${BK_STATUS.filter(s => head ? s[0] !== 'mine' : true).map(s => `<option value="${s[0]}"${s[0] === BK.status ? ' selected' : ''}>${s[1]}</option>`).join('')}</select></label>
+      <label>Search<input id="bkQ" value="${esc(BK.q)}" placeholder="Type a word"></label>
+    </div>
+    <p class="msg" id="bkMsg"></p>
+  </div>
+  ${pv ? `<div class="panel bk-preview"><div class="res-head"><h2>How Learners See "${esc(pv.word)}"</h2><button type="button" class="btn small" id="bkClosePv">Close</button></div>
+    ${wordStageHtml(pv.word, true)}
+    <div class="print-btns" style="justify-content:center"><button type="button" class="btn primary" id="bkPlayPv">\u25B6 Play</button></div>
+    <p class="hint" style="text-align:center">Each sound part lights up as the car passes under it. Then the recording plays while the whole word glows. ${pv.hasAudio ? '' : 'No recording yet, so the device voice reads it for now.'}</p></div>` : ''}
+  <div class="panel">${byCat.length ? byCat.map(c => `
+    <h3 class="bk-cat">${esc(c.name)} <span class="sub">${esc(c.group)}</span></h3>
+    ${c.items.map(w => bankRow(w, head)).join('')}`).join('') : '<p class="hint">No words match. Try another group or search.</p>'}</div>`;
+  $('bkKs').onchange = e => { BK.ks = e.target.value; renderBank(); };
+  $('bkGroup').onchange = e => { BK.group = e.target.value; renderBank(); };
+  $('bkStatus').onchange = e => { BK.status = e.target.value; renderBank(); };
+  $('bkQ').oninput = e => { BK.q = e.target.value; clearTimeout(BK.qt); BK.qt = setTimeout(() => { renderBank(); const q = $('bkQ'); q.focus(); q.setSelectionRange(q.value.length, q.value.length); }, 350); };
+  if (pv){
+    $('bkClosePv').onclick = () => { BK.preview = ''; renderBank(); };
+    $('bkPlayPv').onclick = async () => { actx(); const src = pv.hasAudio ? await bankAudio(pv.id) : ''; playWord(el.querySelector('.bk-preview .wstage'), src, pv.word); };
+  }
+  el.onclick = bankClick;
+}
+function bankRow(w, head){
+  const d = BK.data, rec = BK.rec && BK.rec.id === w.id, draft = BK.drafts[w.id];
+  const canRecord = !w.hasAudio || w.mine || head;
+  return `<div class="bw-row" data-id="${esc(w.id)}">
+    <button type="button" class="bw-word" data-show="${esc(w.id)}" title="See how learners see this word">${wordStageHtml(w.word, false)}</button>
+    <div class="bw-meta">${statusTag(w)} <span class="sub">KS ${esc(String(w.ks).replace(',', ' and '))}</span>
+      <div class="sub">${w.hasAudio ? 'Recorded by ' + esc(w.recordedBy) + ', ' + esc(fmtDateTime(w.recordedAt)) : ''}${w.reviewedAt && w.status !== 'pending' ? '. ' + (w.status === 'approved' ? 'Approved' : 'Sent back') + ' ' + esc(fmtDateTime(w.reviewedAt)) : ''}</div>
+      ${w.feedback ? `<div class="fb"><b>School Head's feedback:</b> ${esc(w.feedback)}</div>` : ''}
+    </div>
+    <div class="bw-actions">
+      ${w.hasAudio ? `<button type="button" class="btn small" data-listen="${esc(w.id)}" aria-label="Listen">\uD83D\uDD0A Listen</button>` : ''}
+      <button type="button" class="btn small" data-show="${esc(w.id)}">Show Me</button>
+      ${canRecord ? `<button type="button" class="btn small ${rec ? 'danger' : 'primary'}" data-rec="${esc(w.id)}">${rec ? '\u25A0 Stop' : w.hasAudio ? '\uD83C\uDFA4 Record Again' : '\uD83C\uDFA4 Record'}</button>` : `<span class="sub">Recorded by ${esc(w.recordedBy)}</span>`}
+    </div>
+    ${draft ? `<div class="bw-draft"><audio controls src="${draft.url}"></audio>
+      <button type="button" class="btn small primary" data-save="${esc(w.id)}">Save Recording</button>
+      <button type="button" class="btn small" data-again="${esc(w.id)}">Record Again</button>
+      <button type="button" class="btn small" data-cancel="${esc(w.id)}">Cancel</button></div>` : ''}
+    ${head && w.hasAudio ? `<div class="bw-judge"><input data-fb="${esc(w.id)}" placeholder="Feedback for the teacher (optional)" value="${esc(w.feedback || '')}">
+      <button type="button" class="btn small primary" data-approve="${esc(w.id)}">Approve</button>
+      <button type="button" class="btn small" data-redo="${esc(w.id)}">Redo</button>
+      <button type="button" class="btn small" data-clear="${esc(w.id)}">Remove Recording</button></div>` : ''}
+  </div>`;
+}
+async function bankAudio(id){
+  if (BK.audio[id]) return BK.audio[id];
+  const res = await callApi(Object.assign({ action: 'modelAudioT', id }, BK.auth));
+  if (!res || !res.ok) throw new Error((res && res.error) || 'Could not play the recording.');
+  return (BK.audio[id] = `data:${res.mime};base64,${res.audio}`);
+}
+function bankUpdate(w){ BK.data.words = BK.data.words.map(x => x.id === w.id ? w : x); delete BK.audio[w.id]; }
+async function bankRefreshTeachers(){ try { const res = await callApi(Object.assign({ action: 'modelBank' }, BK.auth)); if (res && res.ok){ BK.data = res; renderBank(); } } catch(e){} }
+async function bankClick(e){
+  const b = e.target.closest('button'); if (!b || !BK) return;
+  const m = t => setMsg($('bkMsg'), t, 'err');
+  const id = b.dataset.show || b.dataset.listen || b.dataset.rec || b.dataset.save || b.dataset.again || b.dataset.cancel || b.dataset.approve || b.dataset.redo || b.dataset.clear;
+  const w = id && BK.data.words.find(x => x.id === id); if (!w) return;
+  actx();
+  if (b.dataset.show){ BK.preview = id; renderBank(); BK.el.querySelector('.bk-preview').scrollIntoView({ behavior: 'smooth', block: 'center' }); const src = w.hasAudio ? await bankAudio(id).catch(() => '') : ''; playWord(BK.el.querySelector('.bk-preview .wstage'), src, w.word); return; }
+  if (b.dataset.listen){ try { new Audio(await bankAudio(id)).play(); } catch(err){ m(err.message || 'No internet.'); } return; }
+  if (b.dataset.rec || b.dataset.again){
+    if (BK.rec && BK.rec.id === id){ BK.rec.ctl.stop(); return; }
+    if (BK.rec) BK.rec.ctl.cancel();
+    delete BK.drafts[id];
+    const ctl = await micRecord((blob, mime) => { BK.rec = null; BK.drafts[id] = { blob, mime, url: URL.createObjectURL(blob) }; renderBank(); }, t => { BK.rec = null; m(t); renderBank(); });
+    if (ctl){ BK.rec = { id, ctl }; renderBank(); }
+    return;
+  }
+  if (b.dataset.cancel){ delete BK.drafts[id]; renderBank(); return; }
+  if (b.dataset.save){
+    const dr = BK.drafts[id]; if (!dr) return;
+    b.disabled = true; b.textContent = 'Saving';
+    try {
+      const res = await callApi(Object.assign({ action: 'recordModel', id, audio: await blobToBase64(dr.blob), mime: dr.mime }, BK.auth));
+      if (!res || !res.ok){ m((res && res.error) || 'Not saved.'); b.disabled = false; b.textContent = 'Save Recording'; return; }
+      delete BK.drafts[id]; bankUpdate(res.word); setMsg($('bkMsg'), `Saved "${w.word}". Thank you! You earned a star.`, 'good'); bankRefreshTeachers();
+    } catch(err){ m('No internet. Try again when you are online.'); b.disabled = false; b.textContent = 'Save Recording'; }
+    return;
+  }
+  if (b.dataset.approve || b.dataset.redo){
+    const fb = BK.el.querySelector(`[data-fb="${id}"]`);
+    try {
+      const res = await callApi(Object.assign({ action: 'judgeModel', id, verdict: b.dataset.approve ? 'approved' : 'redo', feedback: fb ? fb.value.trim() : '' }, BK.auth));
+      if (!res || !res.ok){ m((res && res.error) || 'Not saved.'); return; }
+      bankUpdate(res.word); bankRefreshTeachers(); setMsg($('bkMsg'), b.dataset.approve ? `"${w.word}" approved.` : `"${w.word}" sent back for redo. The teacher will see your feedback.`, 'good');
+    } catch(err){ m('No internet. Try again when you are online.'); }
+    return;
+  }
+  if (b.dataset.clear){
+    if (!ask(`Remove the recording of "${w.word}" by ${w.recordedBy}? Any teacher can then record it.`)) return;
+    try {
+      const res = await callApi(Object.assign({ action: 'clearModel', id }, BK.auth));
+      if (!res || !res.ok){ m((res && res.error) || 'Not removed.'); return; }
+      bankUpdate(res.word); bankRefreshTeachers();
+    } catch(err){ m('No internet. Try again when you are online.'); }
+  }
+}
+
+/* =========================================================
+   MODEL READING FOR LEARNERS (practice card, left column)
+   ========================================================= */
+async function ensureModel(word){
+  if (!PR) return;
+  PR.models = PR.models || {};
+  const k = word.toLowerCase();
+  if (PR.models[k]) return;
+  const cached = S.modelCache && S.modelCache[k];
+  if (cached){ PR.models[k] = cached; paintModelBy(word); return; }
+  PR.models[k] = 'loading'; paintModelBy(word);
+  try {
+    const res = await callApi({ action: 'modelAudio', lrn: PR.lrn, word });
+    if (res && res.ok && !res.none){
+      PR.models[k] = { src: `data:${res.mime};base64,${res.audio}`, by: res.by };
+      S.modelCache = S.modelCache || {};
+      const keys = Object.keys(S.modelCache); if (keys.length > 30) delete S.modelCache[keys[0]];
+      S.modelCache[k] = PR.models[k]; persist();
+    } else PR.models[k] = 'none';
+  } catch(e){ PR.models[k] = 'offline'; }
+  paintModelBy(word);
+}
+function paintModelBy(word){
+  const el = $('modelBy'); if (!el) return;
+  const m = PR.models && PR.models[word.toLowerCase()];
+  el.textContent = m === 'loading' ? 'Getting your teacher\'s voice.' : m === 'none' ? 'No teacher recording yet. The device voice will read it.' : m === 'offline' ? 'No internet. The device voice will read it.' : m && m.by ? 'Your teacher\'s voice: ' + m.by : '';
+}
+
+/* =========================================================
+   START FRESH (School Head): reset stars and levels
+   ========================================================= */
+async function resetLearners(ids, opts, msgEl){
+  if (navigator.onLine === false){ setMsg(msgEl, 'Resetting needs the internet.', 'err'); return false; }
+  setMsg(msgEl, 'Resetting');
+  try {
+    const res = await callApi(Object.assign({ action: 'resetLearners', pin: S.pin }, ids === 'all' ? { all: true } : { learnerIds: ids }, opts));
+    if (!res || !res.ok){ setMsg(msgEl, (res && res.error) || 'Not reset.', 'err'); return false; }
+    const lrns = {}; (res.learnerIds || []).forEach(id => { const l = S.learners[id]; if (l && l.lrn) lrns[l.lrn] = true; });
+    Object.keys(lrns).forEach(lrn => { delete S.rewards[lrn]; delete S.practiceCache[lrn]; delete S.earnedKeys[lrn]; });
+    Object.keys(S.queue.stars).forEach(k => { if (lrns[S.queue.stars[k].lrn]) delete S.queue.stars[k]; });
+    Object.keys(S.queue.recs).forEach(k => { if (lrns[S.queue.recs[k].lrn]) delete S.queue.recs[k]; });
+    S.board = null; persist(); renderSync();
+    setMsg(msgEl, `Done. Removed ${res.removed.stars} star record(s) and ${res.removed.practice} practice word(s).`, 'good');
+    return true;
+  } catch(e){ setMsg(msgEl, 'No internet. Try again when you are online.', 'err'); return false; }
+}
+
+/* =========================================================
    PRACTICE REVIEW (School Head and advisers)
    ========================================================= */
 let REV = null;
 async function loadReview(auth, el){
   const keep = REV && REV.el === el ? REV : null;
-  REV = { auth, el, data: keep ? keep.data : null, status: keep ? keep.status : 'submitted', grade: keep ? keep.grade : '' };
+  REV = { auth, el, data: keep ? keep.data : null, status: keep ? keep.status : 'submitted', grade: keep ? keep.grade : '', view: keep ? keep.view : '' };
   if (!REV.data) el.innerHTML = '<div class="panel"><p class="hint">Loading the practice recordings.</p></div>';
   try {
     const res = await callApi(Object.assign({ action: 'reviewList' }, auth));
@@ -2679,9 +3119,63 @@ async function loadReview(auth, el){
   }
 }
 
+function resultsViewHtml(){
+  const d = REV.data; const list = (d.results || []).filter(a => !REV.grade || String(a.grade) === REV.grade)
+    .sort((a, b) => gradeOrder(a.grade) - gradeOrder(b.grade) || String(a.learnerName).localeCompare(String(b.learnerName)));
+  const grades = [...new Set(d.learners.map(l => String(l.grade)))].sort((a, b) => gradeOrder(a) - gradeOrder(b));
+  const done = {}; list.forEach(a => { done[a.learnerId] = true; });
+  const notYet = d.learners.filter(l => (!REV.grade || String(l.grade) === REV.grade) && !done[l.id]);
+  return `<div class="panel">
+    <h2>Reading Assessment Results</h2>
+    <p class="sub">${list.length} result(s). ${notYet.length ? notYet.length + ' learner(s) not yet assessed.' : 'All your learners are assessed.'}</p>
+    <div class="toolbar">
+      <label>Grade<select id="rvGrade"><option value="">All grades</option>${grades.map(g => `<option value="${g}"${g === REV.grade ? ' selected' : ''}>${gradeLabel(g)}</option>`).join('')}</select></label>
+      <button type="button" class="btn" id="rvPrintAll"${list.length ? '' : ' disabled'}>Print All Results</button>
+    </div>
+    <div class="tablewrap"><table class="stable">
+      <thead><tr><th>Learner</th><th>Grade</th><th>Date</th><th>Literacy Index</th><th>Level</th><th>BOSY Reading Profile</th><th>Signed By</th><th></th></tr></thead>
+      <tbody>${list.map(a => { const sg = a.signatures || {}; const who = ROLES.filter(r => sg[r]).map(r => ROLE_LABEL[r]);
+        return `<tr><td>${esc(a.learnerName)}</td><td>${gradeLabel(a.grade)}</td><td>${esc(fmtDay(a.date))}</td><td><b>${a.literacyIndex}</b></td>
+          <td><span class="level lv-${esc(a.levelKey)}">${esc(a.level)}</span></td><td>${esc(a.readingLevel || 'Not set')}</td>
+          <td>${who.length ? esc(who.join(', ')) : 'None yet'}</td><td><button type="button" class="btn small" data-res="${esc(a.id)}">View</button></td></tr>`; }).join('') || '<tr><td colspan="8">No results yet.</td></tr>'}</tbody>
+    </table></div>
+    ${notYet.length ? `<p class="hint" style="margin-top:10px"><b>Not yet assessed:</b> ${notYet.map(l => esc(l.name)).join(', ')}</p>` : ''}
+  </div>
+  <div id="rvResult"></div>`;
+}
+function bindResultsView(){
+  $('rvGrade').onchange = e => { REV.grade = e.target.value; renderReview(); };
+  const list = () => (REV.data.results || []).filter(a => !REV.grade || String(a.grade) === REV.grade);
+  $('rvPrintAll').onclick = () => printResults(list());
+  REV.el.querySelectorAll('[data-res]').forEach(b => b.onclick = () => {
+    const a = REV.data.results.find(x => x.id === b.dataset.res); if (!a) return;
+    const box = $('rvResult');
+    box.innerHTML = `<div class="panel">${resultHtml(a, false)}
+      <div class="actions"><button type="button" class="btn" id="rvClose">Close</button><button type="button" class="btn primary" id="rvPrint1">Print Result Sheet</button></div></div>`;
+    $('rvClose').onclick = () => { box.innerHTML = ''; };
+    $('rvPrint1').onclick = () => printResults([a]);
+    box.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+}
+
 const REV_STATUS = [['submitted','Waiting for Review'],['redo','Sent Back for Redo'],['correct','Correct'],['all','All Words']];
 function renderReview(){
   const d = REV.data, el = REV.el;
+  const isAdviser = d.role === 'adviser';
+  if (!REV.view) REV.view = isAdviser ? 'results' : 'practice';
+  const tabs = isAdviser ? `<div class="rtabs"><button type="button" class="ltab" data-rview="results" aria-selected="${REV.view === 'results'}">Reading Assessment Results</button><button type="button" class="ltab" data-rview="practice" aria-selected="${REV.view === 'practice'}">Practice Review</button><button type="button" class="ltab" data-rview="bank" aria-selected="${REV.view === 'bank'}">Word Bank</button></div>` : '';
+  if (isAdviser && REV.view === 'bank'){
+    el.innerHTML = `<h1>Hello, ${esc(d.reviewer)}</h1>` + tabs + '<div id="bankHost"></div>';
+    el.querySelectorAll('[data-rview]').forEach(b => b.onclick = () => { if (BK && BK.rec) BK.rec.ctl.cancel(); REV.view = b.dataset.rview; renderReview(); });
+    loadBank(REV.auth, $('bankHost'));
+    return;
+  }
+  if (isAdviser && REV.view === 'results'){
+    el.innerHTML = `<h1>Hello, ${esc(d.reviewer)}</h1>` + tabs + resultsViewHtml();
+    el.querySelectorAll('[data-rview]').forEach(b => b.onclick = () => { REV.view = b.dataset.rview; renderReview(); });
+    bindResultsView();
+    return;
+  }
   const grades = [...new Set(d.learners.map(l => String(l.grade)))].sort((a, b) => gradeOrder(a) - gradeOrder(b));
   const items = d.items
     .filter(x => REV.status === 'all' || x.status === REV.status)
@@ -2689,7 +3183,7 @@ function renderReview(){
     .sort((a, b) => String(b.submittedAt || b.week).localeCompare(String(a.submittedAt || a.week)));
   const waiting = d.items.filter(x => x.status === 'submitted').length;
   const summary = d.summary.filter(x => !REV.grade || String(x.grade) === REV.grade).sort((a, b) => b.stars - a.stars || a.learnerName.localeCompare(b.learnerName));
-  el.innerHTML = `
+  el.innerHTML = (isAdviser ? `<h1>Hello, ${esc(d.reviewer)}</h1>` : '') + tabs + `
   <div class="panel">
     <h2>Practice Review</h2>
     <p class="sub">Signed in as ${esc(d.reviewer)}. ${waiting} recording(s) waiting for review.</p>
@@ -2701,7 +3195,7 @@ function renderReview(){
     <div id="rvList">${items.length ? items.map(x => `
       <div class="rv-item" data-id="${esc(x.id)}">
         <div><div class="rv-word">${esc(x.word)}</div>
-          <div class="sub">${esc(x.learnerName)}, ${gradeLabel(x.grade)}. ${x.submittedAt ? 'Sent ' + esc(fmtDay(x.submittedAt)) : 'Not recorded yet'}${x.reviewedBy ? '. Checked by ' + esc(x.reviewedBy) : ''}</div></div>
+          <div class="sub">${esc(x.learnerName)}, ${gradeLabel(x.grade)}. ${x.submittedAt ? 'Sent ' + esc(fmtDateTime(x.submittedAt)) : 'Not recorded yet'}${x.reviewedBy ? '. Checked by ' + esc(x.reviewedBy) + (x.reviewedAt ? ', ' + esc(fmtDateTime(x.reviewedAt)) : '') : ''}</div></div>
         <div>${x.status === 'correct' ? '<span class="star">\u2605 Correct</span>' : x.status === 'redo' ? '<span class="tag">Redo</span>' : x.status === 'submitted' ? '<span class="tag">Waiting</span>' : '<span class="tag">Not yet</span>'}</div>
         <div class="rv-actions">
           ${x.hasAudio ? `<button type="button" class="btn small" data-play="${esc(x.id)}">Play</button><span data-audio="${esc(x.id)}"></span>` : ''}
@@ -2715,10 +3209,10 @@ function renderReview(){
     <h2>Stars Summary</h2>
     <p class="sub">Week of ${esc(fmtDay(d.week))}</p>
     <div class="tablewrap"><table class="stable">
-      <thead><tr><th>Learner</th><th>Grade</th><th>Words This Week</th><th>Practiced</th><th>Correct</th><th>Practice \u2605</th><th>Reading Tasks \u2605</th><th>Games \u2605</th><th>Total \u2605</th></tr></thead>
+      <thead><tr><th>Learner</th><th>Grade</th><th>Words This Week</th><th>Practiced</th><th>Correct</th><th>Practice \u2605</th><th>Reading Assessment Tasks \u2605</th><th>Games \u2605</th><th>Total \u2605</th></tr></thead>
       <tbody>${summary.map(x => `<tr><td>${esc(x.learnerName)}</td><td>${gradeLabel(x.grade)}</td><td>${x.weekWords}</td><td>${x.weekDone}</td><td>${x.weekCorrect}</td><td>${x.practiceStars != null ? x.practiceStars : x.stars}</td><td>${x.taskStars || 0}</td><td>${x.gameStars || 0}</td><td class="star">\u2605 ${x.stars}</td></tr>`).join('') || '<tr><td colspan="9">No learners yet.</td></tr>'}</tbody>
     </table></div>
-    <p class="hint">Learners earn one star for each practice word read correctly, each reading task finished, and each game level passed. Each learner gets 8 new words every Monday, chosen from the letter sounds and word patterns they missed in the assessment. Words sent back for redo stay on their list.</p>
+    <p class="hint">Learners earn one star for each practice word read correctly, each reading assessment task finished, and each game level passed. Each learner gets 8 new words every Monday, chosen from the letter sounds and word patterns they missed in the assessment. Words sent back for redo stay on their list.</p>
   </div>
   <div class="panel">
     <h2>Add a Practice Word</h2>
@@ -2729,6 +3223,7 @@ function renderReview(){
     <button type="button" class="btn primary" id="rvAdd">Add Word</button>
     <p class="msg" id="rvAddMsg"></p>
   </div>`;
+  el.querySelectorAll('[data-rview]').forEach(b => b.onclick = () => { REV.view = b.dataset.rview; renderReview(); });
   $('rvStatus').onchange = e => { REV.status = e.target.value; renderReview(); };
   $('rvGrade').onchange = e => { REV.grade = e.target.value; renderReview(); };
   $('rvReload').onclick = () => loadReview(REV.auth, REV.el);
@@ -2781,6 +3276,16 @@ async function addWord(){
   } catch(e){ setMsg(m, 'No internet. Try again when you are online.', 'err'); }
 }
 
+let advIdle = 0;
+function touchAdviser(){ advIdle = Date.now(); }
+setInterval(() => {
+  if (!$('viewAdviser').classList.contains('hidden') && advIdle && Date.now() - advIdle > 20 * 60 * 1000){
+    REV = null; advIdle = 0; show('viewLogin');
+    setMsg($('advLoginMsg'), 'You were signed out after 20 minutes without use. Please sign in again.', 'err');
+  }
+}, 30000);
+['pointerdown', 'keydown'].forEach(ev => document.addEventListener(ev, touchAdviser, true));
+
 async function adviserLogin(){
   const m = $('advLoginMsg');
   const email = $('advEmail').value.trim(), pin = $('advPin').value.trim();
@@ -2793,7 +3298,7 @@ async function adviserLogin(){
     const text = $('revAdviser').textContent.trim();
     show('viewLogin'); setMsg(m, text || 'Sign in failed.', 'err'); return;
   }
-  setMsg(m, ''); $('advPin').value = '';
+  setMsg(m, ''); $('advPin').value = ''; touchAdviser();
 }
 
 /* =========================================================
@@ -2811,8 +3316,9 @@ async function loadBoard(){
 function pieSvg(parts){
   const total = parts.reduce((t, p) => t + p.value, 0);
   const r = 100, c = 110;
-  if (!total) return `<svg viewBox="0 0 220 220" role="img" aria-label="No learners yet"><circle cx="${c}" cy="${c}" r="${r}" fill="#E8EEFA"/></svg>`;
-  let angle = -Math.PI / 2, paths = '';
+  if (!total) return `<svg viewBox="0 0 220 220" role="img" aria-label="No learners yet"><circle cx="${c}" cy="${c}" r="${r}" fill="#E4F3E8"/></svg>`;
+  let angle = -Math.PI / 2, paths = '', used = 0, shown = 0;
+  const visible = parts.filter(p => p.value / total >= 0.06).length;
   parts.forEach(p => {
     if (!p.value) return;
     const frac = p.value / total;
@@ -2822,7 +3328,12 @@ function pieSvg(parts){
     const x2 = c + r * Math.cos(a2), y2 = c + r * Math.sin(a2);
     paths += `<path d="M${c},${c} L${x1.toFixed(2)},${y1.toFixed(2)} A${r},${r} 0 ${frac > 0.5 ? 1 : 0} 1 ${x2.toFixed(2)},${y2.toFixed(2)} Z" fill="${p.color}" stroke="#fff" stroke-width="2"/>`;
     const mid = angle + frac * Math.PI;
-    if (frac >= 0.06) paths += `<text x="${(c + r * 0.6 * Math.cos(mid)).toFixed(1)}" y="${(c + r * 0.6 * Math.sin(mid)).toFixed(1)}" text-anchor="middle" dominant-baseline="middle" font-family="Atkinson Hyperlegible, Arial, sans-serif" font-weight="700" font-size="18" fill="${p.text}">${Math.round(frac * 100)}%</text>`;
+    if (frac >= 0.06){
+      shown++;
+      const pct = shown === visible && visible > 1 ? 100 - used : Math.round(frac * 100);   // labels always add up to 100%
+      used += pct;
+      paths += `<text x="${(c + r * 0.6 * Math.cos(mid)).toFixed(1)}" y="${(c + r * 0.6 * Math.sin(mid)).toFixed(1)}" text-anchor="middle" dominant-baseline="middle" font-family="Atkinson Hyperlegible, Arial, sans-serif" font-weight="700" font-size="18" fill="${p.text}">${pct}%</text>`;
+    }
     angle = a2;
   });
   return `<svg viewBox="0 0 220 220" role="img" aria-label="${parts.map(p => p.label + ' ' + p.value).join(', ')}">${paths}</svg>`;
@@ -2839,8 +3350,8 @@ function renderBoard(){
   const notYet = Math.max(0, b.totalLearners - b.assessed);
   note.textContent = b.totalLearners ? `${b.assessed} of ${b.totalLearners} learners have been assessed.` : 'No learners on the list yet.';
   const parts = [
-    { label: 'Assessed', value: b.assessed, color: '#1F3A93', text: '#fff' },
-    { label: 'Not yet assessed', value: notYet, color: '#CFDCEF', text: '#1F3A93' }
+    { label: 'Assessed', value: b.assessed, color: '#0B6B3A', text: '#fff' },
+    { label: 'Not yet assessed', value: notYet, color: '#F8D27A', text: '#5A3D00' }
   ];
   $('pieChart').innerHTML = pieSvg(parts);
   $('pieLegend').innerHTML = parts.map(p => `<div><span style="background:${p.color}"></span>${p.label}: <b>${p.value}</b></div>`).join('');
@@ -2882,10 +3393,10 @@ function openReader(task){
   if (task === 't3'){
     if (!LSess.patterns) return;
     items = []; LSess.patterns.forEach(p => wordSeq(LSess.code, p.pattern, p.words.length).forEach(i => items.push(p.words[i])));
-    kind = 'word'; title = 'Task 3: Reading Words';
+    kind = 'word'; title = 'Reading Assessment Task 3: Reading Words';
   } else {
     items = letterSeq(LSess.code, task).map(L => L + ' ' + L.toLowerCase());
-    kind = 'letter'; title = task === 't1' ? 'Task 1: Letter Names' : 'Task 2: Letter Sounds';
+    kind = 'letter'; title = task === 't1' ? 'Reading Assessment Task 1: Letter Names' : 'Reading Assessment Task 2: Letter Sounds';
   }
   RD = { items, kind, title, idx: 0, done: false, task };
   show('viewReader'); paintReader();
@@ -3031,9 +3542,39 @@ function bind(){
   $('addAdviser').addEventListener('click', () => { advDraft.push({ id: uid(), grade: $('lFilter').value || '1', name: '', email: '' }); renderAdvisers(); });
   $('adviserList').addEventListener('input', e => { const t = e.target; if (t.dataset.i == null) return; advDraft[+t.dataset.i][t.dataset.f] = t.value; });
   $('adviserList').addEventListener('change', e => { const t = e.target; if (t.dataset.i == null) return; advDraft[+t.dataset.i][t.dataset.f] = t.value; });
-  $('adviserList').addEventListener('click', e => { const b = e.target.closest('[data-rm]'); if (!b) return; advDraft.splice(+b.dataset.rm, 1); renderAdvisers(); });
+  $('adviserList').addEventListener('click', e => {
+    const g = e.target.closest('[data-gen]');
+    if (g){ advDraft[+g.dataset.gen].pin = randomPin(); renderAdvisers(); setMsg($('advMsg'), 'New PIN made. Tap Save Advisers to keep it.', 'good'); return; }
+    const b = e.target.closest('[data-rm]'); if (!b) return;
+    if (!ask('Remove this adviser? They will no longer be able to sign in.')) return;
+    advDraft.splice(+b.dataset.rm, 1); renderAdvisers(); setMsg($('advMsg'), 'Removed. Tap Save Advisers to finish.', 'good');
+  });
+  $('togglePins').addEventListener('click', () => { showPins = !showPins; renderSigninList(); });
+  $('signinList').addEventListener('click', e => {
+    const b = e.target.closest('[data-msg]'); if (!b) return;
+    const box = $('signinList').querySelector(`[data-msgbox="${b.dataset.msg}"]`);
+    box.classList.toggle('hidden');
+    b.textContent = box.classList.contains('hidden') ? 'Show Message' : 'Hide Message';
+    if (!box.classList.contains('hidden')){ box.focus(); box.select(); try { navigator.clipboard.writeText(box.value).then(() => { b.textContent = 'Copied. Hide Message'; }, () => {}); } catch(x){} }
+  });
   $('nGrade').addEventListener('change', renderAdviserSelect);
-  $('learnerList').addEventListener('click', e => { const b = e.target.closest('[data-del]'); if (b) deleteLearner(b.dataset.del); });
+  $('learnerList').addEventListener('click', e => {
+    const b = e.target.closest('[data-del]'); if (b) deleteLearner(b.dataset.del);
+    const r = e.target.closest('[data-reset]');
+    if (r){
+      const l = S.learners[r.dataset.reset]; if (!l) return;
+      if (!ask(`Reset ${l.first} ${l.last}?\n\nThis removes all their stars, game levels, reading assessment task stars, practice words, and practice recordings. Their reading assessment result stays.`)) return;
+      resetLearners([l.id], { games: true, tasks: true, practice: true }, $('listMsg'));
+    }
+  });
+  $('rsAll').addEventListener('click', async () => {
+    const m = $('rsMsg');
+    if ($('rsWord').value.trim().toUpperCase() !== 'RESET'){ setMsg(m, 'Type RESET in the box first.', 'err'); return; }
+    const opts = { games: $('rsGames').checked, tasks: $('rsTasks').checked, practice: $('rsPractice').checked };
+    if (!opts.games && !opts.tasks && !opts.practice){ setMsg(m, 'Tick at least one box.', 'err'); return; }
+    if (!ask('Reset ALL learners? This cannot be undone.')) return;
+    if (await resetLearners('all', opts, m)) $('rsWord').value = '';
+  });
   $('rAdviser').addEventListener('change', () => { $('sendPanel').classList.add('hidden'); renderRecords(); });
   $('lrnImportBtn').addEventListener('click', importLrns);
   $('lrnFile').addEventListener('change', e => {
@@ -3078,7 +3619,36 @@ function bind(){
   setInterval(flush, 30000);
 }
 
+/* Current date and time at the top, so screenshots show when they were taken */
+function tickClock(){
+  const now = new Date();
+  const full = now.toLocaleString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit', second: '2-digit' });
+  $('clock').textContent = full;
+  document.querySelectorAll('[data-clock]').forEach(el => { el.textContent = full; });
+}
+function fmtDateTime(iso){
+  if (!iso) return '';
+  const d = new Date(iso); if (isNaN(d)) return String(iso);
+  return d.toLocaleString('en-US', { month: 'long', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit' });
+}
+
+/* Logo or title: back to the main page */
+function goHome(e){
+  if (e) e.preventDefault();
+  if (FG){ stopGame(); FG = null; }
+  try { speechSynthesis.cancel(); } catch(x){}
+  if (typeof recCancel === 'function') recCancel();
+  RD = null;
+  if (!$('viewTeacher').classList.contains('hidden') || !$('viewReader').classList.contains('hidden') || !$('viewGame').classList.contains('hidden')){ TV = null; LSess = null; PR = null; }
+  if (!$('viewAdviser').classList.contains('hidden')) REV = null;
+  show('viewLogin');
+}
+
 function init(){
+  $('siteFoot').innerHTML = `<b>${SBRA}</b>, Baluyan Elementary School<br>First created on ${APP_CREATED}. Version ${APP_VERSION}, updated ${APP_UPDATED}.`;
+  $('homeLink').addEventListener('click', goHome);
+  $('adminBack').addEventListener('click', () => { if (S.session === 'admin' && S.pin) enterAdmin(); });
+  tickClock(); setInterval(tickClock, 1000);
   const st = document.createElement('style'); st.textContent = RESULT_CSS; document.head.appendChild(st);
   fillGradeSelects();
   timers.t1 = new Timer('t1', $('timer1'), 'Task 1');
