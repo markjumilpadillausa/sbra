@@ -83,6 +83,11 @@
   .bub.pill{border-radius:999px;font-weight:700}
   /* Standings */
   .adj{display:flex;gap:8px;flex-wrap:wrap;align-items:flex-end}
+  .mywords{margin:4px 0 10px;line-height:2}
+  .tchips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .tchips span{background:var(--ink-soft);border-radius:999px;padding:5px 12px;font-size:.9rem}
+  .tcard details summary{cursor:pointer;font-weight:700;color:var(--ink);margin-top:4px}
+  .tcard{border-left:5px solid var(--gold)}
   .adj label{margin:0}
   .journey{display:flex;gap:16px;align-items:center;border-left:6px solid var(--gold)}
   .badge-big{font-size:3.6rem;line-height:1}
@@ -431,6 +436,24 @@
   .signin-row .pinv{font-variant-numeric:tabular-nums;letter-spacing:.12em;font-weight:700}
   .signin-row textarea{margin-top:8px;font-size:.9rem}
 
+  /* What's inside banner */
+  .inside{background:linear-gradient(135deg,#0B6B3A 0%,#15924F 60%,#F5A623 140%);color:#fff;border-radius:16px;padding:18px 18px 14px;margin:6px 0 18px;box-shadow:0 8px 24px rgba(11,107,58,.25)}
+  .in-head{display:flex;align-items:center;gap:14px}
+  .in-head h2{color:#fff;font-size:1.6rem;margin:0}
+  .in-head p{margin:4px 0 0;opacity:.95}
+  .in-frog{width:84px;flex:none;animation:byejump .9s ease-in-out infinite alternate}
+  .in-frog svg{width:100%;height:auto;display:block}
+  .in-tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin:14px 0 10px}
+  .in-tile{background:rgba(255,255,255,.96);color:var(--ink);border-radius:14px;padding:12px;text-align:center;border-bottom:5px solid var(--gold)}
+  .in-ico{display:block;font-size:2rem;line-height:1.1}
+  .in-num{display:block;font-size:2.2rem;line-height:1.1;font-variant-numeric:tabular-nums}
+  .in-tile span:last-child{font-weight:700;font-size:.9rem;color:var(--graphite)}
+  .in-foot{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:.88rem;opacity:.95}
+  @media (prefers-reduced-motion:reduce){.in-frog{animation:none}}
+  /* Notebooks */
+  .nbk-row{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--rule);flex-wrap:wrap}
+  .nbk-open{background:#FFFDF3;border:1px solid var(--gold);border-radius:12px;padding:10px 12px;margin:6px 0 10px}
+  .nbk-w{display:flex;flex-wrap:wrap;gap:4px 10px;align-items:center;padding:6px 0;border-bottom:1px dashed var(--rule)}
   /* Sign in page dashboard */
   .dash-grid{display:grid;grid-template-columns:minmax(220px,300px) 1fr;gap:20px;align-items:start;margin-bottom:6px}
   @media (max-width:700px){ .dash-grid{grid-template-columns:1fr} }
@@ -532,7 +555,7 @@
 <header class="top">
   <a href="#" class="brand" id="homeLink" title="Go to the main page" aria-label="Baluyan Elementary School, go to the main page">
     <img class="logo" alt="Baluyan Elementary School logo" src="data:image/png;base64,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">
-    <span><span class="school" style="display:block">Baluyan Elementary School</span><span class="app" style="display:block">School-based Reading Assessment</span></span>
+    <span><span class="school" style="display:block">Baluyan Elementary School</span><span class="app" style="display:block">e-READ Project</span></span>
   </a>
   <div class="top-right">
     <span class="clock" id="clock" aria-live="off"></span>
@@ -545,6 +568,7 @@
 
   <!-- Sign in -->
   <section id="viewLogin" class="hidden">
+    <div class="inside hidden" id="insidePanel"></div>
     <h1>Who Is Signing In?</h1>
     <p class="hint">School-based Reading Assessment</p>
     <div class="home-note hidden" id="adminBackNote">
@@ -611,7 +635,10 @@
       <button class="tab" role="tab" type="button" data-tab="bank" aria-selected="false">Word Bank</button>
       <button class="tab" role="tab" type="button" data-tab="stars" aria-selected="false">Stars and Rankings</button>
       <button class="tab" role="tab" type="button" data-tab="activity" aria-selected="false">Sign In Activity</button>
+      <button class="tab" role="tab" type="button" data-tab="teachers" aria-selected="false">Teachers</button>
+      <button class="tab" role="tab" type="button" data-tab="notebooks" aria-selected="false">Learner Notebooks</button>
       <button class="tab" role="tab" type="button" disabled>Numeracy <small>(Coming Soon)</small></button>
+      <button class="tab" role="tab" type="button" disabled>Comprehension <small>(Coming Soon)</small></button>
     </nav>
 
     <!-- Assessment form -->
@@ -785,6 +812,12 @@
     <!-- Sign In Activity -->
     <div id="tab-activity" class="hidden"><div id="actAdmin"></div></div>
 
+    <!-- Teachers: stars and weekly report -->
+    <div id="tab-teachers" class="hidden"><div id="teachersAdmin"></div></div>
+
+    <!-- Learner Notebooks by grade -->
+    <div id="tab-notebooks" class="hidden"><div id="nbAdmin"></div></div>
+
     <!-- Printables -->
     <div id="tab-print" class="hidden">
       <div class="panel">
@@ -904,7 +937,7 @@ const PRACTICE_URL = 'https://markjumilpadillausa.github.io/sbra/';
 
 const SBRA = 'School-based Reading Assessment';
 const APP_CREATED = 'September 25, 2026';
-const APP_VERSION = '3.2';
+const APP_VERSION = '3.5';
 const APP_UPDATED = 'September 26, 2026';
 const STORE_KEY = 'baluyanAssess_v1';
 const DRAFT_KEY = 'baluyanAssess_draft_v2';
@@ -1288,7 +1321,9 @@ function enterAdmin(){
 function selectTab(name){
   currentTab = name;
   document.querySelectorAll('.tab[data-tab]').forEach(b => b.setAttribute('aria-selected', b.dataset.tab === name ? 'true' : 'false'));
-  ['assess','learners','records','print','practice','bank','stars','activity'].forEach(t => $('tab-' + t).classList.toggle('hidden', t !== name));
+  ['assess','learners','records','print','practice','bank','stars','activity','teachers','notebooks'].forEach(t => $('tab-' + t).classList.toggle('hidden', t !== name));
+  if (name === 'notebooks') loadNotebooks({ pin: S.pin }, $('nbAdmin'));
+  if (name === 'teachers') loadTeachers($('teachersAdmin'));
   if (name === 'activity') loadActivity({ pin: S.pin }, $('actAdmin'));
   if (name === 'stars') loadStandings({ pin: S.pin }, $('starsAdmin'));
   if (name === 'bank') loadBank({ pin: S.pin }, $('bankAdmin'));
@@ -2370,7 +2405,7 @@ function bindResults(){
   $('padSave').onclick = saveSignature;
 }
 
-const LTABS = [['practice','Practice Words'],['games','Games'],['notebook','My Notebook'],['tasks','Reading Assessment Tasks'],['results','Results']];
+const LTABS = [['practice','Practice Words'],['games','Games'],['notebook','My Notebook'],['tasks','Reading Assessment Tasks'],['results','Results'],['comp','Stories (Coming Soon)']];
 function renderTeacher(){
   const body = $('teacherBody'); const { learner } = TV;
   const stars = myRewards().total;
@@ -2382,6 +2417,8 @@ function renderTeacher(){
   else if (TV.tab === 'games') main = gamesHtml();
   else if (TV.tab === 'notebook') main = notebookHtml();
   else if (TV.tab === 'tasks') main = tasksPanel();
+  else if (TV.tab === 'comp') main = `<div class="panel" style="text-align:center"><div class="sc-frog" style="width:120px;margin:0 auto">${FROG_SVG}</div>
+    <h2>Stories are coming soon! \uD83D\uDCD6</h2><p>Short stories to read, with questions to answer. Keep practicing your words, and you will be ready!</p></div>`;
   else main = resultsHtml();
   body.innerHTML = head + main;
   body.querySelectorAll('[data-ltab]').forEach(b => b.onclick = () => { recCancel(); TV.tab = b.dataset.ltab; renderTeacher(); });
@@ -2439,6 +2476,7 @@ function practiceHtml(){
   const recording = REC && REC.id === x.id;
   let status = '';
   if (x.status === 'redo') status = `<div class="redo-note"><b>Please record again.</b>${x.remark ? ' Teacher says: ' + esc(x.remark) : ''}</div>`;
+  if (x.firstWeek) status += `<p class="sub">\uD83D\uDD01 A word from the week of ${esc(fmtDay(x.firstWeek))}. Let's master it this week!</p>`;
   else if (x.status === 'submitted') status = `<p class="pnote hint">${x.pendingUpload ? 'Saved on this device. It will be sent when the internet is back.' : 'Sent. Waiting for your teacher to check it.'} You can still record again.</p>`;
   const fb = x.remark && x.status !== 'redo' ? `<div class="fb-learner"><b>Teacher's feedback:</b> ${esc(x.remark)}</div>` : '';
   return `<div class="panel pcard">
@@ -3572,7 +3610,8 @@ function renderBank(){
       <tbody>${d.teachers.map(t => `<tr><td>${esc(t.name)}</td><td>${t.added || 0}</td><td>${t.recorded}</td><td>${t.approved}</td><td>${t.pending}</td><td>${t.redo}</td><td class="star">\u2605 ${t.stars}</td></tr>`).join('') || '<tr><td colspan="7">No words added or recorded yet. Be the first!</td></tr>'}</tbody></table></div>
     <div class="addword">
       <h3 style="margin-top:0">Add a Word</h3>
-      <p class="hint">Type or paste <b>one English word</b>, choose the grade level, then tap Add Word. You earn 1 star for every new word. If the word is already in the bank, you will be told, and it will not be added again.</p>
+      <p class="hint">Type or paste <b>one English word</b>, choose the grade level, then tap Add Word. ${head ? 'Words you add are approved right away.' : 'The School Head checks every new word first. Once it is approved, learners get it and you earn 1 star.'} If the word is already in the bank, you will be told, and it will not be added again.</p>
+      ${!head ? (() => { const mineW = d.words.filter(x => x.custom && x.addedBy === d.me); return mineW.length ? `<div class="mywords"><b>My added words:</b> ${mineW.map(x => `<span class="tag ${x.wordStatus === 'approved' ? 'ok' : x.wordStatus === 'rejected' ? 'red' : ''}" title="${esc(x.wordNote || '')}">${esc(x.word)}: ${x.wordStatus === 'approved' ? 'Approved' : x.wordStatus === 'rejected' ? 'Not approved' + (x.wordNote ? ' (' + esc(x.wordNote) + ')' : '') : 'Waiting for approval'}</span>`).join(' ')}</div>` : ''; })() : ''}
       <div class="fields">
         <label>Word<input id="awWord" autocomplete="off" autocapitalize="off" spellcheck="true" maxlength="24" placeholder="Example: bicycle"></label>
         <label>Grade Level<select id="awGrade">${(d.grades || []).map(g => `<option value="${g}"${g === BK.awGrade ? ' selected' : ''}>${gradeLabel(g)}</option>`).join('')}</select></label>
@@ -3621,7 +3660,7 @@ function renderBank(){
         if (!res || !res.ok){ setMsg(m, (res && res.error) || 'Not added.', 'err'); return; }
         BK.preview = res.word.id; BK.lastAdded = res.word.word;
         await bankRefreshTeachers();
-        setMsg($('awMsg'), `Added "${res.word.word}". Thank you! You earned a star. Here is how learners will read it.`, 'good');
+        setMsg($('awMsg'), head ? `Added "${res.word.word}". Here is how learners will read it.` : `Thank you! "${res.word.word}" was sent to the School Head for approval. You earn a star once it is approved. Here is how learners will read it.`, 'good');
         const pvStage = BK.el.querySelector('.bk-preview .wstage');
         if (pvStage){ BK.el.querySelector('.bk-preview').scrollIntoView({ behavior: 'smooth', block: 'center' }); actx(); playWord(pvStage, '', res.word.word); }
       } catch(e){ $('awAdd').disabled = false; setMsg(m, 'No internet. Try again when you are online.', 'err'); }
@@ -4259,7 +4298,13 @@ function renderReview(){
   const d = REV.data, el = REV.el;
   const isAdviser = d.role === 'adviser';
   if (!REV.view) REV.view = isAdviser ? 'results' : 'practice';
-  const tabs = isAdviser ? `<div class="rtabs"><button type="button" class="ltab" data-rview="results" aria-selected="${REV.view === 'results'}">Reading Assessment Results</button><button type="button" class="ltab" data-rview="practice" aria-selected="${REV.view === 'practice'}">Practice Review</button><button type="button" class="ltab" data-rview="bank" aria-selected="${REV.view === 'bank'}">Word Bank</button><button type="button" class="ltab" data-rview="rank" aria-selected="${REV.view === 'rank'}">Star Rankings</button><button type="button" class="ltab" data-rview="act" aria-selected="${REV.view === 'act'}">Learner Activity</button></div>` : '';
+  const tabs = isAdviser ? `<div class="rtabs"><button type="button" class="ltab" data-rview="results" aria-selected="${REV.view === 'results'}">Reading Assessment Results</button><button type="button" class="ltab" data-rview="practice" aria-selected="${REV.view === 'practice'}">Practice Review</button><button type="button" class="ltab" data-rview="bank" aria-selected="${REV.view === 'bank'}">Word Bank</button><button type="button" class="ltab" data-rview="rank" aria-selected="${REV.view === 'rank'}">Star Rankings</button><button type="button" class="ltab" data-rview="act" aria-selected="${REV.view === 'act'}">Learner Activity</button><button type="button" class="ltab" data-rview="nb" aria-selected="${REV.view === 'nb'}">Learner Notebooks</button></div>` : '';
+  if (isAdviser && REV.view === 'nb'){
+    el.innerHTML = `<h1>Hello, ${esc(d.reviewer)} <span class="star">\u2605 ${d.myStars || 0}</span></h1>` + tabs + '<div id="nbHost"></div>';
+    el.querySelectorAll('[data-rview]').forEach(b => b.onclick = () => { REV.view = b.dataset.rview; renderReview(); });
+    loadNotebooks(REV.auth, $('nbHost'));
+    return;
+  }
   if (isAdviser && REV.view === 'act'){
     el.innerHTML = `<h1>Hello, ${esc(d.reviewer)} <span class="star">\u2605 ${d.myStars || 0}</span></h1>` + tabs + '<div id="actHost"></div>';
     el.querySelectorAll('[data-rview]').forEach(b => b.onclick = () => { REV.view = b.dataset.rview; renderReview(); });
@@ -4509,6 +4554,242 @@ function renderActivity(){
   if ($('acASort')) $('acASort').onchange = e => { ACT.asort = e.target.value; renderActivity(); };
 }
 
+/* =========================================================
+   TEACHERS (School Head): stars and the weekly report of what each teacher did
+   ========================================================= */
+let TSD = null;
+async function loadTeachers(el, week){
+  const keep = TSD && TSD.el === el ? TSD : null;
+  if (!keep) el.innerHTML = loaderHtml('Getting the teacher records ready.');
+  try {
+    const [a, b, c] = await Promise.all([
+      callApi({ action: 'teacherStarsList', pin: S.pin }),
+      callApi({ action: 'teacherWeek', pin: S.pin, week: week || (keep && keep.week) || '' }),
+      callApi({ action: 'addedWords', pin: S.pin })
+    ]);
+    if (!a || !a.ok || !b || !b.ok){ el.innerHTML = `<div class="panel"><p class="msg err">${esc((a && a.error) || (b && b.error) || 'Could not load the teacher records.')}</p></div>`; return; }
+    TSD = { el, stars: a.teachers, rep: b, week: b.week, adj: keep ? keep.adj : '', added: c && c.ok ? c.words : [], awShow: keep ? keep.awShow : 'pending' };
+    renderTeachers();
+  } catch(e){ el.innerHTML = '<div class="panel"><p class="msg err">Teacher records need the internet. Connect, then open this tab again.</p></div>'; }
+}
+function classesText(cls){ return (cls || []).map(c => classLabel(c.grade, c.section || (sectionsOf(c.grade).length === 1 ? sectionsOf(c.grade)[0] : ''))).join('; '); }
+function teacherReportHtml(t){
+  const ok = t.reviews.filter(r => r.result === 'correct').length, redo = t.reviews.filter(r => r.result === 'redo').length;
+  const none = !t.signIns.length && !t.reviews.length && !t.added.length && !t.recorded.length && !t.adjustments.length;
+  const tbl = (head, rows) => `<div class="tablewrap"><table class="stable"><thead><tr>${head.map(h => `<th>${h}</th>`).join('')}</tr></thead><tbody>${rows.join('')}</tbody></table></div>`;
+  return `<div class="panel tcard">
+    <div class="res-head"><div><h3 style="margin:0">${esc(t.name)}</h3><div class="sub">${esc(t.email)}${t.classes.length ? ', ' + esc(classesText(t.classes)) : ''}</div></div>
+      <span class="star" style="font-size:1.2rem">\u2605 ${t.stars} this week</span></div>
+    ${none ? '<p class="hint">No activity this week.</p>' : `
+    <div class="tchips">
+      <span>\uD83D\uDD11 Signed in <b>${t.signIns.length}</b> time${t.signIns.length === 1 ? '' : 's'}</span>
+      <span>\u2705 Rated <b>${t.reviews.length}</b> recording${t.reviews.length === 1 ? '' : 's'} (${ok} correct, ${redo} redo)</span>
+      <span>\u2795 Added <b>${t.added.length}</b> word${t.added.length === 1 ? '' : 's'}</span>
+      <span>\uD83C\uDFA4 Recorded <b>${t.recorded.length}</b> word${t.recorded.length === 1 ? '' : 's'}</span>
+    </div>
+    <details><summary>See the details</summary>
+      ${t.reviews.length ? '<h3>Recordings Rated</h3>' + tbl(['Date and Time', 'Learner', 'Grade', 'Word', 'Result', 'Remark'],
+        t.reviews.sort((a, b) => String(a.at).localeCompare(String(b.at))).map(r => `<tr><td>${esc(fmtDateTime(r.at))}</td><td>${esc(r.learner)}</td><td>${gradeLabel(r.grade)}</td><td><b>${esc(r.word)}</b></td><td>${r.result === 'correct' ? '<span class="tag ok">\u2605 Correct</span>' : '<span class="tag red">Redo</span>'}</td><td>${esc(r.remark || '')}</td></tr>`)) : ''}
+      ${t.added.length ? '<h3>Words Added to the Word Bank</h3>' + tbl(['Date and Time', 'Word', 'List'],
+        t.added.map(r => `<tr><td>${esc(fmtDateTime(r.at))}</td><td><b>${esc(r.word)}</b></td><td>${esc(r.category)} ${r.status === 'approved' ? '<span class="tag ok">Approved</span>' : r.status === 'rejected' ? '<span class="tag red">Not approved</span>' : '<span class="tag">Waiting</span>'}</td></tr>`)) : ''}
+      ${t.recorded.length ? '<h3>Words Recorded</h3>' + tbl(['Date and Time', 'Word', 'Status', 'Your Feedback'],
+        t.recorded.map(r => `<tr><td>${esc(fmtDateTime(r.at))}</td><td><b>${esc(r.word)}</b></td><td>${r.status === 'approved' ? '<span class="tag ok">Approved</span>' : r.status === 'redo' ? '<span class="tag red">Redo</span>' : '<span class="tag">Waiting</span>'}</td><td>${esc(r.feedback || '')}</td></tr>`)) : ''}
+      ${t.adjustments.length ? '<h3>Stars You Added or Deducted</h3>' + tbl(['Date and Time', 'Stars', 'Reason'],
+        t.adjustments.map(r => `<tr><td>${esc(fmtDateTime(r.at))}</td><td>${r.stars > 0 ? '+' : ''}${r.stars}</td><td>${esc(r.reason)}</td></tr>`)) : ''}
+      ${t.signIns.length ? '<h3>Sign Ins</h3><p>' + t.signIns.map(x => esc(fmtDateTime(x))).join('<br>') + '</p>' : ''}
+    </details>`}
+  </div>`;
+}
+function renderTeachers(){
+  const d = TSD;
+  const w = d.rep.weeks.find(x => x.start === d.week) || { start: d.week, end: d.week, week: '' };
+  d.el.innerHTML = `<div class="panel">
+    <h2>Teacher Stars</h2>
+    <p class="hint">Teachers earn 1 star for every word they add to the Word Bank and every word they record. You can add, deduct, or reset their stars here. Every change is saved in the report below.</p>
+    <div class="tablewrap"><table class="stable"><thead><tr><th>Teacher</th><th>Words Added</th><th>Words Recorded</th><th>Added or Deducted</th><th>Total \u2605</th><th></th></tr></thead>
+      <tbody>${d.stars.map(t => `<tr><td>${esc(t.name)}<div class="sub">${esc(t.email)}</div></td><td>${t.added}</td><td>${t.recorded}${t.redo ? ` <span class="sub">(${t.redo} redo)</span>` : ''}</td><td>${t.adjust > 0 ? '+' : ''}${t.adjust}</td><td class="star">\u2605 ${t.stars}</td>
+        <td><div class="rec-btns"><button type="button" class="btn small" data-tadd="${esc(t.email)}">Add</button><button type="button" class="btn small" data-tsub="${esc(t.email)}">Deduct</button><button type="button" class="btn small" data-treset="${esc(t.email)}">Reset</button></div></td></tr>
+        ${d.adj && d.adj.email === t.email ? `<tr><td colspan="6"><div class="adj">
+          <label>${d.adj.sign > 0 ? 'Stars to Add' : 'Stars to Deduct'}<select id="tadjN">${[1, 2, 3, 5, 10, 20].map(n => `<option>${n}</option>`).join('')}</select></label>
+          <label style="flex:1">Reason<input id="tadjWhy" maxlength="120" placeholder="${d.adj.sign > 0 ? 'Example: Helped record many words' : 'Example: Correction'}"></label>
+          <button type="button" class="btn small primary" id="tadjSave">${d.adj.sign > 0 ? 'Add' : 'Deduct'}</button>
+          <button type="button" class="btn small" id="tadjCancel">Cancel</button></div><p class="msg" id="tadjMsg"></p></td></tr>` : ''}`).join('') || '<tr><td colspan="6">No teachers yet. Add advisers in the Learners tab.</td></tr>'}</tbody></table></div>
+    <p class="msg" id="tsMsg"></p>
+  </div>
+  <div class="panel">
+    <h2>Words Added by Teachers</h2>
+    <p class="hint">New words from teachers wait here for your approval. Only approved words reach the learners, and the teacher earns 1 star for each approved word.</p>
+    <div class="toolbar"><label>Show<select id="awfShow">${[['pending', 'Waiting for Approval'], ['approved', 'Approved'], ['rejected', 'Not Approved'], ['', 'All Words']].map(x => `<option value="${x[0]}"${x[0] === (d.awShow != null ? d.awShow : 'pending') ? ' selected' : ''}>${x[1]}</option>`).join('')}</select></label></div>
+    ${(() => { const show = d.awShow != null ? d.awShow : 'pending'; const rows = (d.added || []).filter(x => !show || x.status === show);
+      const byT = {}; (d.added || []).forEach(x => { const k = x.addedBy; byT[k] = byT[k] || { a: 0, p: 0, r: 0 }; byT[k][x.status === 'approved' ? 'a' : x.status === 'rejected' ? 'r' : 'p']++; });
+      return `<div class="tchips">${Object.keys(byT).map(k => `<span><b>${esc(k)}</b>: ${byT[k].a} approved, ${byT[k].p} waiting, ${byT[k].r} not approved</span>`).join('') || '<span>No words added by teachers yet.</span>'}</div>
+      <div class="tablewrap"><table class="stable"><thead><tr><th>Word</th><th>List</th><th>Added By</th><th>Date and Time</th><th>Status</th><th></th></tr></thead><tbody>
+      ${rows.map(x => `<tr><td><b style="font-family:var(--card);font-size:1.15rem">${esc(x.word)}</b></td><td>${esc(x.category)}<div class="sub">KS ${esc(String(x.ks).replace(',', ' and '))}</div></td><td>${esc(x.addedBy)}</td><td>${esc(fmtDateTime(x.addedAt))}</td>
+        <td>${x.status === 'approved' ? '<span class="tag ok">Approved</span>' : x.status === 'rejected' ? '<span class="tag red">Not approved</span>' : '<span class="tag">Waiting</span>'}${x.note ? `<div class="sub">${esc(x.note)}</div>` : ''}</td>
+        <td><div class="rec-btns">${x.status !== 'approved' ? `<button type="button" class="btn small primary" data-wok="${esc(x.id)}">Approve</button>` : ''}${x.status !== 'rejected' ? `<button type="button" class="btn small" data-wno="${esc(x.id)}">Not Approved</button>` : ''}</div></td></tr>`).join('') || '<tr><td colspan="6">Nothing here.</td></tr>'}
+      </tbody></table></div>`; })()}
+    <p class="msg" id="awfMsg"></p>
+  </div>
+  <div class="panel">
+    <h2>Weekly Teacher Report</h2>
+    <p class="hint">What each teacher did in the week: sign ins, recordings they rated, words they added, and words they recorded.</p>
+    <div class="toolbar">
+      <label>Week<select id="trWeek">${d.rep.weeks.map(x => `<option value="${x.start}"${x.start === d.week ? ' selected' : ''}>${esc(weekLabel(x))}</option>`).join('')}</select></label>
+      <button type="button" class="btn" id="trPrint">Print This Report</button>
+    </div>
+  </div>
+  <div id="trList">${d.rep.teachers.map(teacherReportHtml).join('') || '<div class="panel"><p class="hint">No teachers yet.</p></div>'}</div>`;
+  $('awfShow').onchange = e => { d.awShow = e.target.value; renderTeachers(); };
+  d.el.querySelectorAll('[data-wok],[data-wno]').forEach(b => b.onclick = async () => {
+    const id = b.dataset.wok || b.dataset.wno, ok = !!b.dataset.wok;
+    let note = '';
+    if (!ok){ try { note = window.prompt('Why is this word not approved? The teacher will see this note.', '') || ''; } catch(e){} }
+    setMsg($('awfMsg'), 'Saving');
+    try {
+      const res = await callApi({ action: 'judgeWord', pin: S.pin, id, verdict: ok ? 'approved' : 'rejected', note });
+      if (!res || !res.ok){ setMsg($('awfMsg'), (res && res.error) || 'Not saved.', 'err'); return; }
+      loadTeachers(d.el);
+    } catch(e){ setMsg($('awfMsg'), 'No internet. Try again when you are online.', 'err'); }
+  });
+  $('trWeek').onchange = e => { d.week = e.target.value; d.el.querySelector('#trList').innerHTML = loaderHtml('Getting that week ready.'); loadTeachers(d.el, e.target.value); };
+  $('trPrint').onclick = () => {
+    d.el.querySelectorAll('details').forEach(x => { x.open = true; });
+    printHtml(`<div class="rpage"><table class="rp-head"><tr><td><b>Baluyan Elementary School</b><br>e-READ Project</td><td class="rp-title">Weekly Teacher Report<br><span>${esc(weekLabel(w))}</span></td></tr></table>${d.el.querySelector('#trList').innerHTML}</div>`);
+  };
+  d.el.querySelectorAll('[data-tadd],[data-tsub]').forEach(b => b.onclick = () => { d.adj = { email: b.dataset.tadd || b.dataset.tsub, sign: b.dataset.tadd ? 1 : -1 }; renderTeachers(); const f = $('tadjWhy'); if (f) f.focus(); });
+  d.el.querySelectorAll('[data-treset]').forEach(b => b.onclick = async () => {
+    const t = d.stars.find(x => x.email === b.dataset.treset);
+    if (!ask(`Reset the stars of ${t.name} to 0? This is saved in the report.`)) return;
+    setMsg($('tsMsg'), 'Resetting');
+    try { const res = await callApi({ action: 'adjustTeacherStars', pin: S.pin, email: t.email, reset: true }); if (!res || !res.ok){ setMsg($('tsMsg'), (res && res.error) || 'Not reset.', 'err'); return; } loadTeachers(d.el); }
+    catch(e){ setMsg($('tsMsg'), 'No internet. Try again when you are online.', 'err'); }
+  });
+  if ($('tadjSave')){
+    $('tadjCancel').onclick = () => { d.adj = ''; renderTeachers(); };
+    $('tadjSave').onclick = async () => {
+      const why = $('tadjWhy').value.trim(), n = +$('tadjN').value * d.adj.sign;
+      if (!why){ setMsg($('tadjMsg'), 'Type a short reason first.', 'err'); return; }
+      setMsg($('tadjMsg'), 'Saving');
+      try { const res = await callApi({ action: 'adjustTeacherStars', pin: S.pin, email: d.adj.email, amount: n, reason: why }); if (!res || !res.ok){ setMsg($('tadjMsg'), (res && res.error) || 'Not saved.', 'err'); return; } d.adj = ''; loadTeachers(d.el); }
+      catch(e){ setMsg($('tadjMsg'), 'No internet. Try again when you are online.', 'err'); }
+    };
+  }
+}
+
+/* =========================================================
+   LEARNER NOTEBOOKS: every word each learner practiced and sent
+   ========================================================= */
+let NB = null;
+async function loadNotebooks(auth, el){
+  const keep = NB && NB.el === el ? NB : null;
+  NB = { auth, el, data: keep ? keep.data : null, grade: keep ? keep.grade : '', q: keep ? keep.q : '', open: keep ? keep.open : '' };
+  if (!NB.data) el.innerHTML = loaderHtml('Opening the notebooks.');
+  try {
+    const res = await callApi(Object.assign({ action: 'notebooks' }, auth));
+    if (!res || !res.ok){ el.innerHTML = `<div class="panel"><p class="msg err">${esc((res && res.error) || 'Could not open the notebooks.')}</p></div>`; return; }
+    NB.data = res; renderNotebooks();
+  } catch(e){ el.innerHTML = '<div class="panel"><p class="msg err">The notebooks need the internet. Connect, then open this tab again.</p></div>'; }
+}
+function nbStatus(x){
+  return x.status === 'correct' ? '<span class="tag ok">\u2605 Correct</span>' : x.status === 'redo' ? '<span class="tag red">Redo</span>' : x.status === 'submitted' ? '<span class="tag">Waiting for review</span>' : '<span class="tag">Not practiced yet</span>';
+}
+function renderNotebooks(){
+  const d = NB.data, head = d.role === 'head';
+  const grades = [...new Set(d.learners.map(l => String(l.grade)))].sort((a, b) => gradeOrder(a) - gradeOrder(b));
+  const q = NB.q.trim().toLowerCase();
+  const list = d.learners.filter(l => (!NB.grade || String(l.grade) === NB.grade) && (!q || l.name.toLowerCase().indexOf(q) >= 0));
+  const sum = l => ({ total: l.items.length, done: l.items.filter(x => x.status !== 'new').length, ok: l.items.filter(x => x.status === 'correct').length, stars: l.items.reduce((t, x) => t + (x.stars || 0), 0) });
+  NB.el.innerHTML = `<div class="panel">
+    <h2>Learner Notebooks</h2>
+    <p class="hint">Every word each learner was given, practiced, and sent, week by week. A word is never given twice to the same learner.</p>
+    <div class="toolbar">
+      ${head || grades.length > 1 ? `<label>Grade<select id="nbGrade"><option value="">All grades</option>${grades.map(g => `<option value="${g}"${g === NB.grade ? ' selected' : ''}>${gradeLabel(g)}</option>`).join('')}</select></label>` : ''}
+      <label>Search<input id="nbQ" value="${esc(NB.q)}" placeholder="Learner name"></label>
+      <button type="button" class="btn" id="nbReload">Refresh</button>
+      <button type="button" class="btn primary" id="nbPrintAll">Print All Shown</button>
+    </div>
+    <label class="inline-check"><input type="checkbox" id="nbOnlyNot"${NB.onlyNot ? ' checked' : ''}> Print only the words not yet mastered</label>
+    ${list.map(l => { const t = sum(l), open = NB.open === l.id;
+      const weeks = {}; l.items.forEach(x => (weeks[x.week] = weeks[x.week] || []).push(x));
+      return `<div class="nbk-row"><div><b>${esc(l.name)}</b><div class="sub">${esc(classLabel(l.grade, l.section))}</div></div>
+        <div class="sub">${t.total} words, ${t.done} practiced, ${t.ok} correct <span class="star">\u2605 ${t.stars}</span></div>
+        <div class="rec-btns"><button type="button" class="btn small" data-nbopen="${esc(l.id)}">${open ? 'Close' : 'Open Notebook'}</button><button type="button" class="btn small" data-nbprint="${esc(l.id)}">Print</button></div></div>
+        ${open ? `<div class="nbk-open">${Object.keys(weeks).sort().reverse().map(wk => `
+          <div class="nb-week"><b>Week of ${esc(fmtDay(wk))}</b> <span class="sub">${weeks[wk].length} words, ${weeks[wk].filter(x => x.status !== 'new').length} practiced, ${weeks[wk].filter(x => x.status === 'correct').length} correct</span>
+          ${weeks[wk].map(x => `<div class="nbk-w"><b style="font-family:var(--card);font-size:1.15rem">${esc(x.word)}</b> ${nbStatus(x)}${x.firstWeek ? ` <span class="tag">Carried from ${esc(fmtDay(x.firstWeek))}</span>` : ''}
+            <span class="sub">${x.submittedAt ? 'Sent ' + esc(fmtDateTime(x.submittedAt)) + '.' : ''}${x.reviewedAt ? ' Checked by ' + esc(x.reviewedBy || '') + ', ' + esc(fmtDateTime(x.reviewedAt)) + '.' : ''}${x.remark ? ' Remark: ' + esc(x.remark) : ''}${x.source === 'teacher' ? ' (added by a teacher)' : ''}</span>
+            ${x.hasAudio ? `<button type="button" class="btn small" data-nbplay="${esc(x.id)}">\uD83D\uDD0A Play</button><span data-nbaudio="${esc(x.id)}"></span>` : ''}</div>`).join('')}</div>`).join('') || '<p class="hint">No words yet.</p>'}</div>` : ''}`; }).join('') || '<p class="hint">No learners found.</p>'}
+  </div>`;
+  if ($('nbGrade')) $('nbGrade').onchange = e => { NB.grade = e.target.value; renderNotebooks(); };
+  $('nbQ').oninput = e => { NB.q = e.target.value; clearTimeout(NB.qt); NB.qt = setTimeout(() => { renderNotebooks(); const f = $('nbQ'); f.focus(); f.setSelectionRange(f.value.length, f.value.length); }, 300); };
+  $('nbReload').onclick = () => loadNotebooks(NB.auth, NB.el);
+  $('nbOnlyNot').onchange = e => { NB.onlyNot = e.target.checked; };
+  $('nbPrintAll').onclick = () => printNotebooks(list);
+  NB.el.querySelectorAll('[data-nbprint]').forEach(b => b.onclick = () => printNotebooks(d.learners.filter(l => l.id === b.dataset.nbprint)));
+  NB.el.querySelectorAll('[data-nbopen]').forEach(b => b.onclick = () => { NB.open = NB.open === b.dataset.nbopen ? '' : b.dataset.nbopen; renderNotebooks(); });
+  NB.el.querySelectorAll('[data-nbplay]').forEach(b => b.onclick = async () => {
+    b.disabled = true; b.textContent = 'Loading';
+    try {
+      const res = await callApi(Object.assign({ action: 'getAudio', id: b.dataset.nbplay }, NB.auth));
+      if (!res || !res.ok){ b.textContent = 'Not available'; return; }
+      NB.el.querySelector(`[data-nbaudio="${b.dataset.nbplay}"]`).innerHTML = `<audio controls autoplay src="data:${esc(res.mime)};base64,${res.audio}"></audio>`;
+      b.remove();
+    } catch(e){ b.disabled = false; b.textContent = '\uD83D\uDD0A Play'; }
+  });
+}
+
+/* A printable vocabulary notebook: a cover page, then every word with lines for writing, the result,
+   who checked it and when, and the teacher's remarks. Made for printing, binding, and practice at home. */
+const NB_CSS = `
+.nbp{font-family:'Century Gothic','Didact Gothic',Arial,sans-serif;color:#000;page-break-after:always;break-after:page}
+.nbp:last-child{page-break-after:auto;break-after:auto}
+.nbp-cover{text-align:center;padding-top:40mm}
+.nbp-cover .t{font-size:30pt;font-weight:bold;color:#0B6B3A;margin:6mm 0}
+.nbp-cover .n{font-size:22pt;font-weight:bold;margin:10mm 0 3mm}
+.nbp-cover .c{font-size:13pt}
+.nbp-cover .frog{font-size:60pt}
+.nbp h3{font-size:12pt;color:#0B6B3A;border-bottom:2pt solid #F5A623;padding-bottom:2pt;margin:6mm 0 2mm}
+.nbp table{width:100%;border-collapse:collapse}
+.nbp td,.nbp th{border:0.75pt solid #999;padding:2mm;vertical-align:top;font-size:9.5pt}
+.nbp th{background:#E4F3E8;text-align:left}
+.nbp .w{font-size:22pt;font-weight:bold;white-space:nowrap}
+.nbp .snd{font-size:9pt;color:#555}
+.nbp .lines div{border-bottom:0.75pt dashed #888;height:9mm}
+.nbp .res{font-size:9pt}
+.nbp tr{page-break-inside:avoid;break-inside:avoid}
+.nbp-head{display:flex;justify-content:space-between;font-size:9pt;border-bottom:1pt solid #0B6B3A;padding-bottom:2mm;margin-bottom:3mm}
+`;
+function soundLine(w){
+  if (/^[A-Z][a-z]$/.test(w)) return '';
+  return chunkWord(w).map(c => { const y = chunkSym(c, w); return y ? '/' + y + '/' : ''; }).filter(Boolean).join(' ') + ' = ' + w;
+}
+function printNotebooks(learners){
+  if (!learners.length) return;
+  if (!document.getElementById('nbPrintCss')){ const st = document.createElement('style'); st.id = 'nbPrintCss'; st.textContent = NB_CSS; document.head.appendChild(st); }
+  const only = !!NB.onlyNot;
+  const pages = learners.map(l => {
+    const items = l.items.filter(x => !only || x.status !== 'correct');
+    const weeks = {}; items.forEach(x => (weeks[x.week] = weeks[x.week] || []).push(x));
+    const ok = l.items.filter(x => x.status === 'correct').length;
+    const res = x => x.status === 'correct' ? '\u2605 Correct' : x.status === 'redo' ? 'Redo' : x.status === 'submitted' ? 'Waiting for review' : 'Not practiced yet';
+    return `<div class="nbp nbp-cover"><div class="frog">\uD83D\uDC38</div><div class="t">My Vocabulary Notebook</div>
+        <div class="c">Baluyan Elementary School, e-READ Project</div>
+        <div class="n">${esc(l.name)}</div><div class="c">${esc(classLabel(l.grade, l.section))}${l.lrn ? ', LRN ' + esc(l.lrn) : ''}</div>
+        <div class="c" style="margin-top:8mm">${l.items.length} words, ${ok} mastered${only ? '. This copy shows only the words to keep practicing.' : ''}</div>
+        <div class="c" style="margin-top:4mm">Printed ${esc(fmtDay(new Date().toISOString()))}</div></div>
+      <div class="nbp"><div class="nbp-head"><span><b>${esc(l.name)}</b>, ${esc(classLabel(l.grade, l.section))}</span><span>My Vocabulary Notebook</span></div>
+        <p style="font-size:10pt;margin:0 0 2mm">Read each word. Say its sounds. Write it on the lines three times. Ask someone at home to listen to you read it.</p>
+        ${Object.keys(weeks).sort().map(wk => `<h3>Week of ${esc(fmtDay(wk))}</h3>
+          <table><tr><th style="width:26%">Word</th><th style="width:30%">Write it here</th><th>Result, Checked By, and Remarks</th></tr>
+          ${weeks[wk].map(x => `<tr><td><div class="w">${esc(x.word)}</div><div class="snd">${esc(soundLine(x.word))}</div>${x.firstWeek ? `<div class="snd">From the week of ${esc(fmtDay(x.firstWeek))}</div>` : ''}</td>
+            <td class="lines"><div></div><div></div><div></div></td>
+            <td class="res"><b>${res(x)}</b>${x.submittedAt ? `<br>Sent: ${esc(fmtDateTime(x.submittedAt))}` : ''}${x.reviewedAt ? `<br>Checked by: ${esc(x.reviewedBy || '')}<br>On: ${esc(fmtDateTime(x.reviewedAt))}` : ''}${x.remark ? `<br>Remark: ${esc(x.remark)}` : ''}</td></tr>`).join('')}
+          </table>`).join('') || '<p>No words yet.</p>'}
+        <p style="font-size:9pt;margin-top:5mm">Parent or guardian signature: ______________________ &nbsp; Date: ______________</p></div>`;
+  }).join('');
+  printHtml(pages);
+}
+
 /* Learner page open: check in every 2 minutes to count time online */
 setInterval(() => {
   const open = TV && TV.learner && TV.learner.lrn && (!$('viewTeacher').classList.contains('hidden') || !$('viewGame').classList.contains('hidden') || !$('viewReader').classList.contains('hidden'));
@@ -4554,8 +4835,39 @@ function pieSvg(parts){
   return `<svg viewBox="0 0 220 220" role="img" aria-label="${parts.map(p => p.label + ' ' + p.value).join(', ')}">${paths}</svg>`;
 }
 
+/* The big, happy numbers at the top of the sign in page */
+let INSIDE_SHOWN = false;
+function renderInside(b){
+  const el = $('insidePanel'); const x = b && b.inside;
+  if (!x){ el.classList.add('hidden'); return; }
+  el.classList.remove('hidden');
+  const tiles = [
+    ['\uD83D\uDCDA', x.words, 'Words to Learn'],
+    ['\uD83C\uDFAE', x.games, 'Fun Reading Games'],
+    ['\u2B50', x.levels, 'Levels to Play'],
+    ['\uD83E\uDDE9', x.wordGroups, 'Word Families and Patterns']
+  ];
+  el.innerHTML = `<div class="in-head"><div class="in-frog">${FROG_SVG}</div>
+      <div><h2>Learn to read with Froggy!</h2><p>Practice every day, earn stars, and become a Reading Champion \uD83C\uDFC6</p></div></div>
+    <div class="in-tiles">${tiles.map(t => `<div class="in-tile"><span class="in-ico">${t[0]}</span><b class="in-num" data-to="${t[1]}">${INSIDE_SHOWN ? Number(t[1]).toLocaleString('en-US') : 0}</b><span>${t[2]}</span></div>`).join('')}</div>
+    <div class="in-foot">
+      <span>\uD83D\uDD24 ${x.letterGames} letter games</span><span>\uD83D\uDCD6 ${x.wordGames} word games in every group</span>
+      <span>\uD83C\uDFA4 Record and hear your own voice</span><span>\uD83D\uDCF1 Works on phones, tablets, and computers</span>
+    </div>`;
+  if (!INSIDE_SHOWN){
+    INSIDE_SHOWN = true;
+    // numbers count up for a lively start
+    el.querySelectorAll('.in-num').forEach(n => {
+      const to = +n.dataset.to, t0 = performance.now(), dur = 1400;
+      const step = now => { const p = Math.min(1, (now - t0) / dur), v = Math.round(to * (1 - Math.pow(1 - p, 3))); n.textContent = v.toLocaleString('en-US'); if (p < 1) requestAnimationFrame(step); };
+      requestAnimationFrame(step);
+    });
+  }
+}
+
 function renderBoard(){
   const b = S.board;
+  renderInside(b);
   const note = $('boardNote');
   if (!b){
     note.textContent = !serverAvailable() ? 'The dashboard needs the server link.' : navigator.onLine === false ? 'Connect to the internet to see the dashboard.' : 'Loading the dashboard.';
