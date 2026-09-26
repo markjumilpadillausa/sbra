@@ -45,6 +45,17 @@
   .busy-msg{font-size:1.25rem;font-weight:700;color:var(--ink);margin:4px 0}
   .busy-sub{color:var(--muted);min-height:1.5em;margin:4px 0 12px}
   .mini-load{text-align:center;color:var(--muted)}
+  /* Goodbye animation */
+  .bye-stage{position:relative;width:200px;height:190px;margin:0 auto 10px}
+  .bye-frog{position:absolute;left:25px;bottom:0;width:150px;animation:byejump .7s ease-in-out infinite alternate}
+  .bye-frog svg{width:100%;height:auto;display:block}
+  .bye-wave{position:absolute;right:6px;top:30px;font-size:2.4rem;transform-origin:70% 70%;animation:wave .5s ease-in-out infinite alternate}
+  .bye-pop{position:absolute;left:50%;top:50%}
+  .bye-pop span{position:absolute;font-size:1.4rem;opacity:0;animation:popout 1.3s ease-out forwards}
+  @keyframes byejump{0%{transform:translateY(0) scale(1,1)}100%{transform:translateY(-26px) scale(1.04,.96)}}
+  @keyframes wave{0%{transform:rotate(-15deg)}100%{transform:rotate(20deg)}}
+  @keyframes popout{0%{opacity:0;transform:translate(0,0) scale(.3)}25%{opacity:1}100%{opacity:0;transform:translate(var(--x),var(--y)) scale(1.1)}}
+  @media (prefers-reduced-motion:reduce){.bye-frog,.bye-wave,.bye-pop span{animation:none}}
   /* Word practice games */
   .gsection{border-left:6px solid var(--gold)}
   .chipbar{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
@@ -86,6 +97,15 @@
   .wstage.big .road{display:block}
   .car{position:absolute;left:0;bottom:-3px;line-height:0;transition:transform .45s ease}
   .car svg{display:block}
+  .mv{display:block}
+  .mv.hop{animation:hop .5s ease-out}
+  @keyframes hop{0%{transform:translateY(0)}45%{transform:translateY(-22px)}100%{transform:translateY(0)}}
+  .mfrog{display:block;width:38px}
+  .mfrog svg{width:100%;height:auto}
+  .mslide{position:relative;width:52px}
+  .mslide .mfrog{width:34px;margin:0 auto -4px;transform:rotate(-6deg)}
+  .leafboard{width:52px;height:10px;display:block}
+  @media (prefers-reduced-motion:reduce){.mv.hop{animation:none}}
   .sline{font-family:var(--ui);font-size:clamp(1.1rem,3.6vw,1.6rem);margin-top:8px;color:var(--muted);letter-spacing:.02em}
   .sline .sp,.sline .eq{display:inline-block;padding:0 4px;border-radius:6px;transition:background .2s,color .2s}
   .sline .sp.on{background:#FFF1B8;color:#1d2b36;font-weight:700}
@@ -234,6 +254,30 @@
   .g-card p{font-size:1.15rem;margin:6px 0 16px}
   .g-card .btn{font-size:1.2rem;padding:14px 26px;margin:4px}
   .confetti{position:absolute;inset:0;pointer-events:none;z-index:12;overflow:hidden}
+  /* Pictures in games */
+  .askpic{display:inline-block;font-size:1.5em;vertical-align:middle;margin-left:4px;line-height:1}
+  .picline{display:flex;align-items:center;justify-content:center;gap:10px;margin:0 0 8px;font-size:1.15rem}
+  .picbig{font-size:3rem;line-height:1}
+  .howrow{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:6px;margin:4px 0 14px}
+  .hstep{display:flex;flex-direction:column;align-items:center;min-width:70px;font:700 .85rem var(--card);color:var(--ink)}
+  .hicon{font-size:2rem;line-height:1.2;background:#fff;border:2px solid var(--gold);border-radius:14px;width:54px;height:54px;display:flex;align-items:center;justify-content:center;margin-bottom:3px}
+  .harrow{font-size:1.4rem;color:var(--gold);font-weight:700}
+  .pic.haspic{position:relative;font-size:min(22vw,110px)}
+  .pic.hear.haspic{font-size:min(18vw,80px)}
+  .pic .spk{position:absolute;right:-4px;bottom:-4px;font-size:22px;background:#fff;border:2px solid #F2D27A;border-radius:50%;width:38px;height:38px;display:flex;align-items:center;justify-content:center}
+  .ppic{font-size:3.2rem;line-height:1;margin:2px 0 -4px}
+  /* Show-me finger */
+  .hand{position:absolute;z-index:9;pointer-events:none;font-size:44px;line-height:1;transition:left .55s ease,top .55s ease,opacity .35s ease}
+  .hand.drag{transition:left .6s linear,top .6s linear}
+  .hand .finger{display:block;filter:drop-shadow(0 3px 4px rgba(0,0,0,.3))}
+  .hand.tap .finger{animation:tapf .35s ease}
+  @keyframes tapf{50%{transform:scale(.8) translateY(5px)}}
+  .hand .ripple{position:absolute;left:-2px;top:-14px;width:40px;height:40px;border-radius:50%;border:4px solid var(--gold);opacity:0}
+  .hand.tap .ripple{animation:ripple .6s ease-out}
+  @keyframes ripple{0%{opacity:.95;transform:scale(.3)}100%{opacity:0;transform:scale(1.7)}}
+  .hand.left .hand-tip{left:auto;right:40px}
+  .hand-tip{position:absolute;left:44px;top:8px;white-space:nowrap;background:#fff;border:2px solid var(--gold);border-radius:999px;padding:2px 10px;font:700 .9rem var(--card);color:var(--ink)}
+  @media (prefers-reduced-motion:reduce){.hand,.hand.drag{transition:none}.hand.tap .finger,.hand.tap .ripple{animation:none}}
   .confetti i{position:absolute;top:-24px;width:10px;height:14px;border-radius:2px;animation:fall linear forwards}
   @keyframes fall{to{transform:translate(var(--dx),115vh) rotate(var(--r))}}
   .yehey{font-family:var(--card);font-size:clamp(3.4rem,16vw,6rem);font-weight:700;color:#E8547A;line-height:1;margin:4px 0 6px;animation:pop .6s ease-out}
@@ -807,6 +851,13 @@
 
 <div id="printArea" aria-hidden="true"></div>
 
+<div id="bye" class="busy bye hidden" role="status" aria-live="polite">
+  <div class="busy-card">
+    <div class="bye-stage"><div class="bye-pop"></div><div class="bye-frog"></div><div class="bye-wave">\uD83D\uDC4B</div></div>
+    <p class="busy-msg" id="byeMsg"></p>
+  </div>
+</div>
+
 <div id="busy" class="busy hidden" role="status" aria-live="polite">
   <div class="busy-card">
     <div class="breath"><div class="busy-frog"></div></div>
@@ -834,7 +885,7 @@ const PRACTICE_URL = 'https://markjumilpadillausa.github.io/sbra/';
 
 const SBRA = 'School-based Reading Assessment';
 const APP_CREATED = 'September 25, 2026';
-const APP_VERSION = '2.4';
+const APP_VERSION = '2.8';
 const APP_UPDATED = 'September 26, 2026';
 const STORE_KEY = 'baluyanAssess_v1';
 const DRAFT_KEY = 'baluyanAssess_draft_v2';
@@ -1162,15 +1213,45 @@ async function adminLogin(pin){
   }
 }
 
+/* A happy goodbye: Froggy jumps and waves while stars pop around */
+function goodbye(text, then){
+  const box = $('bye');
+  box.querySelector('.bye-frog').innerHTML = FROG_SVG;
+  $('byeMsg').textContent = text;
+  const pop = box.querySelector('.bye-pop'); pop.innerHTML = '';
+  const icons = ['\u2B50', '\uD83C\uDF1F', '\uD83D\uDC9A', '\u2728', '\uD83D\uDC9B'];
+  for (let i = 0; i < 16; i++){
+    const e = document.createElement('span'); e.textContent = icons[i % icons.length];
+    const ang = (i / 16) * Math.PI * 2, d = 110 + Math.random() * 70;
+    e.style.setProperty('--x', Math.cos(ang) * d + 'px'); e.style.setProperty('--y', Math.sin(ang) * d + 'px');
+    e.style.animationDelay = (Math.random() * 0.25) + 's'; pop.appendChild(e);
+  }
+  box.classList.remove('hidden');
+  try { SFX.win(); } catch(e){}
+  setTimeout(() => { box.classList.add('hidden'); then(); }, 1900);
+}
+
 function logout(){
-  if (!$('viewTeacher').classList.contains('hidden')){ recCancel(); TV = null; LSess = null; PR = null; FG = null; show('viewLogin'); return; }
-  if (!$('viewAdviser').classList.contains('hidden')){ REV = null; show('viewLogin'); return; }
+  if (!$('viewTeacher').classList.contains('hidden')){
+    const name = TV && TV.learner ? TV.learner.first : '';
+    recCancel(); TV = null; LSess = null; PR = null; FG = null;
+    goodbye(`Great job today${name && !/^LRN/.test(name) ? ', ' + name : ''}! See you next time.`, () => show('viewLogin'));
+    return;
+  }
+  if (!$('viewAdviser').classList.contains('hidden')){
+    const name = REV && REV.data ? REV.data.reviewer : '';
+    REV = null;
+    goodbye(`Thank you for helping our readers${name ? ', ' + name : ''}! See you next time.`, () => show('viewLogin'));
+    return;
+  }
   const n = pendingCount();
   S.session = null; S.pin = null; persist();
   $('adminBackNote').classList.add('hidden');
   $('printArea').innerHTML = ''; $('printPreview').innerHTML = '';
-  show('viewLogin');
-  if (n) setMsg($('adminMsg'), n + ' item(s) are still waiting to sync. They will sync the next time you sign in with internet.', 'err');
+  goodbye('Thank you for leading our readers today! See you next time.', () => {
+    show('viewLogin');
+    if (n) setMsg($('adminMsg'), n + ' item(s) are still waiting to sync. They will sync the next time you sign in with internet.', 'err');
+  });
 }
 
 function enterAdmin(){
@@ -2063,12 +2144,27 @@ async function teacherLogin(raw){
   const lrn = String(raw || '').replace(/\D/g, '');
   if (lrn.length !== 12){ setMsg(m, 'Enter the 12 digit LRN.', 'err'); return; }
   setMsg(m, '');
+  // Show the learner's saved page right away, then refresh it in the background
+  const cached = S.tvCache && S.tvCache[lrn];
+  if (cached){
+    showTeacher(cached.learner, cached.list);
+    callApi({ action: 'teacherView', lrn }).then(res => {
+      if (!res || !res.ok) return;
+      S.tvCache[lrn] = { learner: res.learner, list: res.assessments || [], at: nowIso() }; persist();
+      if (TV && TV.learner.lrn === lrn){ TV.learner = res.learner; TV.list = res.assessments || []; if (!$('viewTeacher').classList.contains('hidden')) renderTeacher(); }
+    }).catch(() => {});
+    return;
+  }
   const h = busy('Hello, reader! Finding your reading page.', () => teacherLogin(raw));
   try {
     const res = await callApi({ action: 'teacherView', lrn });
     h.done(); if (h.cancelled) return;
     if (!res || !res.ok){ setMsg(m, (res && res.error) || 'No learner found.', 'err'); return; }
-    setMsg(m, ''); showTeacher(res.learner, res.assessments || []);
+    setMsg(m, '');
+    S.tvCache = S.tvCache || {};
+    const keys = Object.keys(S.tvCache); if (keys.length > 20) delete S.tvCache[keys[0]];
+    S.tvCache[lrn] = { learner: res.learner, list: res.assessments || [], at: nowIso() }; persist();
+    showTeacher(res.learner, res.assessments || []);
   } catch(e){
     h.done(); if (h.cancelled) return;
     const l = Object.values(S.learners).find(x => x.lrn === lrn);
@@ -2235,6 +2331,7 @@ function practiceHtml(){
     <div class="pgrid">
       <div class="pcol listen">
         <h3>1. Listen and Watch</h3>
+        ${wordPic(x.word) ? `<div class="ppic" aria-hidden="true">${wordPic(x.word)}</div>` : ''}
         ${wordStageHtml(x.word, true)}
         <button type="button" class="btn primary" id="modelPlay">\uD83D\uDD0A Listen to My Teacher</button>
         <p class="sub" id="modelBy"></p>
@@ -2251,7 +2348,7 @@ function practiceHtml(){
         <p class="msg" id="pracMsg"></p>
       </div>
     </div>
-    <div class="nb-tip">\u270F\uFE0F <b>Write it in your notebook.</b> Write the word <b>${esc(x.word)}</b> in your vocabulary notebook. Say each sound as you write the letters. Then draw a small picture beside it.</div>
+    <div class="nb-tip">\u270F\uFE0F Write <b>${esc(x.word)}</b> in your vocabulary notebook.</div>
     <div class="pnav">
       <button type="button" class="btn" id="pBack"${PR.idx === 0 ? ' disabled' : ''}>Back</button>
       <button type="button" class="btn" id="pNext"${PR.idx >= list.length - 1 ? ' disabled' : ''}>Next</button>
@@ -2601,7 +2698,8 @@ const GI = {};
 function openGame(gid, level){
   const g = GAME(gid); if (!g || !isUnlocked(g)) return;
   stopGame();
-  FG = { gid, g, level, L: g.letters ? FROG_ORDER[level - 1] : '', raf: 0, timers: [], busy: false, askHtml: null, wrongLine: null };
+  FG = { gid, g, level, L: g.letters ? FROG_ORDER[level - 1] : '', raf: 0, timers: [], busy: false, askHtml: null, wrongLine: null, pic: '', picWord: '' };
+  if (g.letters && (g.base || gid) !== 'listen'){ const lp = letterPic(FG.L); if (lp){ FG.pic = lp.emoji; FG.picWord = lp.word; } }
   $('gBubbles').innerHTML = ''; $('gTongue').innerHTML = '';
   $('gFrog').innerHTML = FROG_SVG; $('gFrog').className = 'g-frog';
   $('gFrog').style.display = (gid === 'frog' || g.base === 'hunt') ? '' : 'none';
@@ -2610,16 +2708,146 @@ function openGame(gid, level){
   const impl = GI[g.base || gid];
   $('gAsk').innerHTML = `${esc(g.title)}, Level ${level}`;
   gOverlay(`<div class="g-card"><div class="frog-mini">${g.icon}</div><h2>${esc(g.title)}</h2><p class="sub">${g.cat ? esc(g.cat.category) + ', ' : ''}Level ${level}</p>
-    ${impl.big ? `<div class="big">${impl.big()}</div>` : ''}<p>${impl.intro()}</p>
+    ${impl.big ? `<div class="big">${impl.big()}</div>` : ''}${introPic(g)}<p>${impl.intro()}</p>${howSteps(g)}
     <button type="button" class="btn primary" id="gGo">Play</button></div>`);
-  $('gGo').onclick = () => { actx(); gOverlay(''); impl.start(); };
+  $('gGo').onclick = () => { actx(); gOverlay(''); impl.start(); later(howTo, 650); };
 }
+/* "S is for sun" under the big letter, for the letter games */
+function introPic(g){
+  const base = g.base || g.id;
+  if (!g.letters || base === 'listen') return '';
+  const p = letterPic(FG.L); if (!p) return '';
+  return `<div class="picline"><span class="picbig">${p.emoji}</span><span><b>${FG.L.toUpperCase()}</b> is for <b>${esc(p.word)}</b></span></div>`;
+}
+/* Simple picture steps that show how to play, for learners who cannot read yet */
+function howSteps(g){
+  const base = g.base || g.id;
+  const steps = {
+    frog: [['\uD83D\uDC40', 'Look'], ['\uD83D\uDC46', 'Tap'], ['\u2B50', 'Star']],
+    mama: [['\uD83D\uDC40', 'Look'], ['\uD83D\uDC46', 'Tap the baby'], ['\u2B50', 'Star']],
+    listen: [['\uD83D\uDC42', 'Listen'], ['\uD83D\uDC46', 'Tap the fish'], ['\u2B50', 'Star']],
+    safari: [['\uD83D\uDC42', 'Listen'], ['\uD83D\uDC46', 'Tap the letter'], ['\u2B50', 'Star']],
+    memory: [['\uD83D\uDC46', 'Flip two'], ['\uD83D\uDD0D', 'Find the pair'], ['\u2B50', 'Star']],
+    mirror: [['\uD83D\uDC40', 'Look closely'], ['\uD83D\uDC46', 'Tap'], ['\u2B50', 'Star']],
+    trace: [['\uD83D\uDC40', 'Look'], ['\u270D\uFE0F', 'Trace'], ['\u2B50', 'Star']],
+    build: [['\uD83D\uDC42', 'Listen'], ['\uD83E\uDDF1', 'Build'], ['\u2B50', 'Star']],
+    hunt: [['\uD83D\uDC40', 'Read'], ['\uD83D\uDC46', 'Tap'], ['\u2B50', 'Star']],
+    choose: [['\uD83D\uDC42', 'Listen'], ['\uD83D\uDC46', 'Tap the word'], ['\u2B50', 'Star']]
+  }[base];
+  if (!steps) return '';
+  return `<div class="howrow">${steps.map(x => `<span class="hstep"><span class="hicon">${x[0]}</span><span>${esc(x[1])}</span></span>`).join('<span class="harrow">\u2192</span>')}</div>`;
+}
+
+/* A friendly finger shows what to do at the start of each game: it moves to the right answer and taps (or traces). */
+function demoTarget(){
+  const base = FG.g.base || FG.gid, root = $('gBubbles');
+  if (FG.items){ const b = FG.items.find(x => x.target && !x.caught); return b && b.el; }
+  if (base === 'mama') return root.querySelector(`.baby[data-ch="${FG.cur}"]`);
+  if (base === 'safari') return root.querySelector(`.choice[data-ch="${FG.cur}"]`);
+  if (base === 'mirror') return root.querySelector(`.tile[data-ch="${FG.cur}"]`);
+  if (base === 'memory') return root.querySelector('.mcard');
+  if (base === 'choose') return [...root.querySelectorAll('.wordc')].find(b => b.dataset.w === FG.cur);
+  if (base === 'build'){ const need = FG.parts && FG.parts[0]; return need && [...root.querySelectorAll('.part')].find(b => b.textContent.toLowerCase() === need.t.toLowerCase()); }
+  if (base === 'trace') return $('tInk');
+  return null;
+}
+function howTo(){
+  if (!FG) return;
+  const f = FG, base = FG.g.base || FG.gid, trace = base === 'trace';
+  const stage = $('gStage'), st = stage.getBoundingClientRect();
+  const old = stage.querySelector('.hand'); if (old) old.remove();
+  const hand = document.createElement('div');
+  hand.className = 'hand';
+  hand.innerHTML = `<span class="ripple"></span><span class="finger">\uD83D\uDC46</span><span class="hand-tip">${trace ? 'Trace like this!' : 'Tap like this!'}</span>`;
+  hand.style.left = (st.width / 2 - 16) + 'px'; hand.style.top = (st.height - 70) + 'px';
+  stage.appendChild(hand);
+  const point = el => {
+    if (!el || FG !== f) return false;
+    const r = el.getBoundingClientRect();
+    if (trace){ hand.style.left = (st.width * 0.38) + 'px'; hand.style.top = (st.height * 0.3) + 'px'; return true; }
+    const x = r.left - st.left + r.width / 2;
+    hand.style.left = (x - 16) + 'px'; hand.style.top = (r.top - st.top + r.height / 2 - 4) + 'px';
+    hand.classList.toggle('left', x > st.width - 170);   // keep the label on screen
+    return true;
+  };
+  const tap = () => { hand.classList.remove('tap'); void hand.offsetWidth; hand.classList.add('tap'); };
+  const T = (fn, ms) => f.timers.push(setTimeout(() => { if (FG === f) fn(); }, ms));
+  T(() => { if (!point(demoTarget())) hand.remove(); }, 60);
+  if (trace){
+    // the finger slides down across the letter, like tracing
+    T(() => { hand.classList.add('drag'); hand.style.top = (st.height * 0.62) + 'px'; }, 750);
+    T(() => { hand.classList.remove('drag'); hand.style.left = (st.width * 0.55) + 'px'; hand.style.top = (st.height * 0.3) + 'px'; }, 1500);
+    T(() => { hand.classList.add('drag'); hand.style.top = (st.height * 0.62) + 'px'; }, 2150);
+  } else {
+    T(tap, 750);
+    T(() => point(demoTarget()), 1250);
+    T(tap, 1900);
+  }
+  T(() => { hand.style.opacity = '0'; }, 2700);
+  T(() => hand.remove(), 3100);
+  // the demo never blocks the learner: any real tap removes it
+  stage.addEventListener('pointerdown', () => hand.remove(), { once: true, capture: true });
+}
+
 function later(fn, ms){ if (!FG) return; const f = FG; const t = setTimeout(() => { if (FG === f) fn(); }, ms); f.timers.push(t); }
 function stopGame(){ if (!FG) return; cancelAnimationFrame(FG.raf); FG.timers.forEach(clearTimeout); }
 function gOverlay(html){ const o = $('gOverlay'); if (html){ o.innerHTML = html; o.classList.remove('hidden'); } else { o.classList.add('hidden'); o.innerHTML = ''; } }
 function stageSize(){ const r = $('gStage').getBoundingClientRect(); return { w: r.width, h: r.height }; }
 function dots(total, got){ return `<span class="g-dots">${Array.from({ length: total }, (_, i) => `<i class="${i < got ? 'on' : ''}"></i>`).join('')}</span>`; }
-function setAsk(html, total, got){ $('gAsk').innerHTML = `<span class="lvl">Level ${FG.level}</span> ${html}${total ? dots(total, got) : ''}`; }
+function setAsk(html, total, got){ $('gAsk').innerHTML = `<span class="lvl">Level ${FG.level}</span> ${html}${FG.pic ? ` <span class="askpic" title="${esc(FG.picWord || '')}">${FG.pic}</span>` : ''}${total ? dots(total, got) : ''}`; }
+
+/* Picture helpers: a picture for each letter (S is for sun), and pictures for common words */
+function letterPic(L){ const p = PICS[String(L).toLowerCase()]; return p ? { word: p[0][0], emoji: p[0][1] } : null; }
+const WORD_PIC = {
+  cat: '\uD83D\uDC31', bat: '\uD83E\uDD87', rat: '\uD83D\uDC00', dog: '\uD83D\uDC36', fox: '\uD83E\uDD8A', box: '\uD83D\uDCE6', sun: '\u2600\uFE0F',
+  bus: '\uD83D\uDE8C', cup: '\uD83E\uDD64', bed: '\uD83D\uDECF\uFE0F', hen: '\uD83D\uDC14', pen: '\uD83D\uDD8A\uFE0F', jet: '\u2708\uFE0F', net: '\uD83E\uDD45',
+  van: '\uD83D\uDE90', map: '\uD83D\uDDFA\uFE0F', cap: '\uD83E\uDDE2', bag: '\uD83D\uDC5C', flag: '\uD83D\uDEA9', fish: '\uD83D\uDC1F', ship: '\uD83D\uDEA2',
+  shop: '\uD83C\uDFEA', chick: '\uD83D\uDC24', chair: '\uD83E\uDE91', cheese: '\uD83E\uDDC0', cherry: '\uD83C\uDF52', church: '\u26EA', peach: '\uD83C\uDF51',
+  beach: '\uD83C\uDFD6\uFE0F', thumb: '\uD83D\uDC4D', tooth: '\uD83E\uDDB7', teeth: '\uD83E\uDDB7', egg: '\uD83E\uDD5A', ant: '\uD83D\uDC1C', apple: '\uD83C\uDF4E',
+  ball: '\u26BD', lion: '\uD83E\uDD81', zebra: '\uD83E\uDD93', web: '\uD83D\uDD78\uFE0F', ink: '\uD83D\uDD8B\uFE0F', leg: '\uD83E\uDDB5',
+  gum: '\uD83C\uDF6C', jam: '\uD83C\uDF53', kit: '\uD83E\uDDF0', ox: '\uD83D\uDC02', yak: '\uD83D\uDC03', ten: '\uD83D\uDD1F', six: '6\uFE0F\u20E3', five: '5\uFE0F\u20E3',
+  nine: '9\uFE0F\u20E3', three: '3\uFE0F\u20E3', one: '1\uFE0F\u20E3', two: '2\uFE0F\u20E3', four: '4\uFE0F\u20E3', eight: '8\uFE0F\u20E3', zero: '0\uFE0F\u20E3',
+  mom: '\uD83D\uDC69', dad: '\uD83D\uDC68', baby: '\uD83D\uDC76', ham: '\uD83C\uDF56', nut: '\uD83E\uDD5C', mug: '\u2615', bug: '\uD83D\uDC1B',
+  bun: '\uD83C\uDF5E', hut: '\uD83D\uDED6', tub: '\uD83D\uDEC1', pup: '\uD83D\uDC36', cub: '\uD83D\uDC3B', log: '\uD83E\uDEB5', fog: '\uD83C\uDF2B\uFE0F',
+  hog: '\uD83D\uDC16', pot: '\uD83C\uDF72', dot: '\uD83D\uDD35', hot: '\uD83D\uDD25', pan: '\uD83C\uDF73', man: '\uD83D\uDC68', can: '\uD83E\uDD6B',
+  fin: '\uD83E\uDD88', pin: '\uD83D\uDCCC', tin: '\uD83E\uDD6B', win: '\uD83C\uDFC6', lip: '\uD83D\uDC44', lips: '\uD83D\uDC44',
+  kid: '\uD83E\uDDD2', lid: '\uD83E\uDED9', bib: '\uD83D\uDC76', tag: '\uD83C\uDFF7\uFE0F', vet: '\uD83E\uDE7A',
+  car: '\uD83D\uDE97', star: '\u2B50', jar: '\uD83E\uDED9', shark: '\uD83E\uDD88', farm: '\uD83D\uDE9C', barn: '\uD83D\uDED6', park: '\uD83C\uDFDE\uFE0F',
+  bird: '\uD83D\uDC26', girl: '\uD83D\uDC67', shirt: '\uD83D\uDC55', skirt: '\uD83D\uDC57', turtle: '\uD83D\uDC22', nurse: '\uD83D\uDC69\u200D\u2695\uFE0F',
+  burger: '\uD83C\uDF54', corn: '\uD83C\uDF3D', fork: '\uD83C\uDF74', horn: '\uD83D\uDCEF', horse: '\uD83D\uDC34', storm: '\u26C8\uFE0F', cow: '\uD83D\uDC04',
+  owl: '\uD83E\uDD89', crown: '\uD83D\uDC51', clown: '\uD83E\uDD21', flower: '\uD83C\uDF38', house: '\uD83C\uDFE0', mouse: '\uD83D\uDC2D', cloud: '\u2601\uFE0F',
+  mouth: '\uD83D\uDC44', snow: '\u2744\uFE0F', bowl: '\uD83E\uDD63', window: '\uD83E\uDE9F', pillow: '\uD83D\uDECF\uFE0F', rainbow: '\uD83C\uDF08', arrow: '\u27A1\uFE0F',
+  bee: '\uD83D\uDC1D', seed: '\uD83C\uDF31', jeep: '\uD83D\uDE99', queen: '\uD83D\uDC78', deer: '\uD83E\uDD8C',
+  tea: '\uD83C\uDF75', sea: '\uD83C\uDF0A', leaf: '\uD83C\uDF43', bean: '\uD83E\uDED8', eagle: '\uD83E\uDD85', peanut: '\uD83E\uDD5C', meat: '\uD83E\uDD69',
+  mail: '\uD83D\uDCEC', nail: '\uD83D\uDC85', sail: '\u26F5', chain: '\u26D3\uFE0F', brain: '\uD83E\uDDE0', daisy: '\uD83C\uDF3C', play: '\u26F9\uFE0F',
+  hay: '\uD83C\uDF3E', birthday: '\uD83C\uDF82', crayon: '\uD83D\uDD8D\uFE0F', toad: '\uD83D\uDC38', toast: '\uD83C\uDF5E',
+  coach: '\uD83D\uDE8C', goal: '\uD83E\uDD45', raincoat: '\uD83E\uDDE5', boot: '\uD83D\uDC62', zoo: '\uD83E\uDD92', broom: '\uD83E\uDDF9',
+  noodle: '\uD83C\uDF5C', noodles: '\uD83C\uDF5C', poodle: '\uD83D\uDC29', balloon: '\uD83C\uDF88', raccoon: '\uD83E\uDD9D',
+  kangaroo: '\uD83E\uDD98', bamboo: '\uD83C\uDF8B', ice: '\uD83E\uDDCA', mice: '\uD83D\uDC2D', circle: '\u2B55', dance: '\uD83D\uDC83',
+  fence: '\uD83E\uDEA7', prince: '\uD83E\uDD34', juice: '\uD83E\uDDC3', circus: '\uD83C\uDFAA', bicycle: '\uD83D\uDEB2', giraffe: '\uD83E\uDD92', orange: '\uD83C\uDF4A',
+  bridge: '\uD83C\uDF09', cabbage: '\uD83E\uDD6C', knot: '\uD83E\uDEA2', knight: '\uD83E\uDD3A', knock: '\uD83D\uDEAA', lamb: '\uD83D\uDC11', ghost: '\uD83D\uDC7B',
+  castle: '\uD83C\uDFF0', island: '\uD83C\uDFDD\uFE0F', cookie: '\uD83C\uDF6A', snake: '\uD83D\uDC0D', whale: '\uD83D\uDC33',
+  grape: '\uD83C\uDF47', grapes: '\uD83C\uDF47', plate: '\uD83C\uDF7D\uFE0F', skate: '\u26F8\uFE0F', game: '\uD83C\uDFAE', bike: '\uD83D\uDEB2',
+  smile: '\uD83D\uDE0A', hive: '\uD83D\uDC1D', stone: '\uD83E\uDEA8', rose: '\uD83C\uDF39', nose: '\uD83D\uDC43', globe: '\uD83C\uDF0D',
+  phone: '\uD83D\uDCF1', cone: '\uD83C\uDF66', smoke: '\uD83D\uDCA8', mango: '\uD83E\uDD6D', banana: '\uD83C\uDF4C', coconut: '\uD83E\uDD65',
+  bread: '\uD83C\uDF5E', milk: '\uD83E\uDD5B', chicken: '\uD83D\uDC14', lemon: '\uD83C\uDF4B', pineapple: '\uD83C\uDF4D', watermelon: '\uD83C\uDF49',
+  tomato: '\uD83C\uDF45', potato: '\uD83E\uDD54', onion: '\uD83E\uDDC5', garlic: '\uD83E\uDDC4', eggplant: '\uD83C\uDF46', sandwich: '\uD83E\uDD6A', candy: '\uD83C\uDF6C',
+  water: '\uD83D\uDCA7', soup: '\uD83C\uDF72', butter: '\uD83E\uDDC8', salt: '\uD83E\uDDC2', school: '\uD83C\uDFEB', teacher: '\uD83E\uDDD1\u200D\uD83C\uDFEB',
+  book: '\uD83D\uDCD5', paper: '\uD83D\uDCC4', ruler: '\uD83D\uDCCF', scissors: '\u2702\uFE0F', notebook: '\uD83D\uDCD3', clock: '\u23F0',
+  mountain: '\u26F0\uFE0F', volcano: '\uD83C\uDF0B', river: '\uD83C\uDFDE\uFE0F', doctor: '\uD83E\uDDD1\u200D\u2695\uFE0F', farmer: '\uD83E\uDDD1\u200D\uD83C\uDF3E',
+  police: '\uD83D\uDC6E', bakery: '\uD83E\uDD50', hospital: '\uD83C\uDFE5', carabao: '\uD83D\uDC03', grass: '\uD83C\uDF3F', clam: '\uD83E\uDDAA', crab: '\uD83E\uDD80',
+  drum: '\uD83E\uDD41', dress: '\uD83D\uDC57', swim: '\uD83C\uDFCA', tent: '\u26FA', hand: '\u270B', lamp: '\uD83D\uDCA1', gift: '\uD83C\uDF81',
+  mask: '\uD83C\uDFAD', plant: '\uD83E\uDEB4', ring: '\uD83D\uDC8D', king: '\uD83E\uDD34', song: '\uD83C\uDFB5',
+  bell: '\uD83D\uDD14', shell: '\uD83D\uDC1A', hill: '\u26F0\uFE0F', pumpkin: '\uD83C\uDF83', penguin: '\uD83D\uDC27', dolphin: '\uD83D\uDC2C', robin: '\uD83D\uDC26',
+  rabbit: '\uD83D\uDC07', robot: '\uD83E\uDD16', carrot: '\uD83E\uDD55', parrot: '\uD83E\uDD9C', rocket: '\uD83D\uDE80', basket: '\uD83E\uDDFA', bucket: '\uD83E\uDEA3',
+  ticket: '\uD83C\uDF9F\uFE0F', helmet: '\u26D1\uFE0F', magnet: '\uD83E\uDDF2', trumpet: '\uD83C\uDFBA', planet: '\uD83E\uDE90', kitten: '\uD83D\uDC31',
+  mitten: '\uD83E\uDDE4', garden: '\uD83C\uDF3B', ladybug: '\uD83D\uDC1E', lollipop: '\uD83C\uDF6D', laptop: '\uD83D\uDCBB', teapot: '\uD83E\uDED6', football: '\uD83C\uDFC8',
+  basketball: '\uD83C\uDFC0', snowball: '\u2603\uFE0F', waterfall: '\uD83C\uDF0A', bank: '\uD83C\uDFE6', sink: '\uD83D\uDEB0',
+  drink: '\uD83E\uDD64', jump: '\uD83E\uDD38', pump: '\u26FD', gym: '\uD83C\uDFCB\uFE0F', jeepney: '\uD83D\uDE8C', tricycle: '\uD83D\uDEFA', market: '\uD83C\uDFEC',
+  family: '\uD83D\uDC6A', mother: '\uD83D\uDC69', father: '\uD83D\uDC68', sister: '\uD83D\uDC67', brother: '\uD83D\uDC66', grandma: '\uD83D\uDC75', grandpa: '\uD83D\uDC74',
+  sofa: '\uD83D\uDECB\uFE0F', door: '\uD83D\uDEAA'
+};
+function wordPic(w){ return WORD_PIC[String(w || '').toLowerCase()] || ''; }
 function gWrong(el, line){
   SFX.no();
   if (el){ el.classList.remove('no'); void el.offsetWidth; el.classList.add('no'); }
@@ -2706,14 +2934,18 @@ GI.frog = {
     say(askLine());
   }
 };
+/* The name of a tapped letter, said out loud: "Big S" or "Small S" */
+function letterSay(ch){ ch = String(ch || ''); const U = ch.toUpperCase(); return (ch === U ? 'Big ' : 'Small ') + U; }
+
 function mouthPoint(){
   const st = $('gStage').getBoundingClientRect(), f = $('gFrog').getBoundingClientRect();
   return { x: f.left - st.left + f.width * 0.5, y: f.top - st.top + f.height * (96 / 170) };
 }
 function frogTap(b){
   if (!FG || FG.busy || b.caught) return;
-  if (!b.target){ gWrong(b.el, FG.wrongLine ? FG.wrongLine() : `Oops, not that one. Let's look for ${FG.L.toUpperCase()}.`); return; }
+  if (!b.target){ gWrong(b.el, FG.wrongLine ? FG.wrongLine() : `That is ${letterSay(b.ch)}. Let's look for ${FG.L.toUpperCase()}.`); return; }
   FG.busy = true; b.caught = true; SFX.yes();
+  if (!FG.g.base) say(letterSay(b.ch) + '!');
   const frog = $('gFrog'); frog.classList.add('open');
   const bw = b.w || FG.size, bh = b.el.offsetHeight || FG.size;
   const m = mouthPoint(), t = { x: b.x + bw / 2, y: b.y + bh / 2 };
@@ -2752,6 +2984,7 @@ GI.mama = {
 };
 function mamaRound(){
   const cur = FG.cur = FG.rounds[FG.round];
+  const lp = letterPic(cur); FG.pic = lp ? lp.emoji : ''; FG.picWord = lp ? lp.word : '';
   const opts = shuffle([cur].concat(otherLetters([cur], 2, learned(Math.max(FG.level, 3)))));
   $('gBubbles').innerHTML = `<div class="mama" id="mama">${duckSvg()}<span class="dtag">${cur.toUpperCase()}</span></div>
     <div class="babies">${opts.map(o => `<button type="button" class="baby" data-ch="${o}" aria-label="Baby duck ${o}">${duckSvg()}<span class="dtag">${o}</span></button>`).join('')}</div>`;
@@ -2759,12 +2992,12 @@ function mamaRound(){
   FG.busy = false;
   $('gBubbles').querySelectorAll('.baby').forEach(el => el.onclick = () => {
     if (FG.busy) return;
-    if (el.dataset.ch !== cur){ gWrong(el, `That baby is ${el.dataset.ch}. Find baby ${cur}.`); return; }
+    if (el.dataset.ch !== cur){ gWrong(el, `That baby is ${letterSay(el.dataset.ch)}. Find baby small ${cur.toUpperCase()}.`); return; }
     FG.busy = true; SFX.yes();
     const a = el.getBoundingClientRect(), m = $('mama').getBoundingClientRect();
     el.style.transition = 'transform .8s ease'; el.style.zIndex = 5;
     el.style.transform = `translate(${m.left + m.width * 0.25 - a.left}px,${m.top + m.height * 0.45 - a.top}px) scale(.7)`;
-    say('You found her!');
+    say(`${letterSay(cur)}! You found Mama ${cur.toUpperCase()}!`);
     later(() => { FG.round++; if (FG.round >= FG.rounds.length) gWin(); else mamaRound(); }, 1300);
   });
   say(GI.mama.line());
@@ -2793,14 +3026,14 @@ function fishEl(it, size){
 }
 function listenTap(b){
   if (!FG || b.caught) return;
-  if (!b.target){ gWrong(b.el, `Oops. Listen again. Catch the letter ${FG.L.toUpperCase()}.`); return; }
+  if (!b.target){ gWrong(b.el, `That is ${letterSay(b.ch)}. Listen again. Catch the letter ${FG.L.toUpperCase()}.`); return; }
   b.caught = true; SFX.yes();
   b.el.style.transition = 'transform .6s ease, opacity .6s ease';
   b.el.style.transform = `translate(${b.x}px,${b.y - 80}px) scale(1.3)`; b.el.style.opacity = '0';
   later(() => b.el.remove(), 650);
   FG.left--;
   setAsk('Listen, then catch the fish', FG.total, FG.total - FG.left);
-  say(FG.left > 0 ? `Yes! ${FG.L.toUpperCase()}. Catch one more.` : `Yes! ${FG.L.toUpperCase()}.`);
+  say(FG.left > 0 ? `Yes! ${letterSay(b.ch)}. Catch one more.` : `Yes! ${letterSay(b.ch)}.`);
   if (FG.left <= 0) later(gWin, 900);
 }
 
@@ -2825,9 +3058,9 @@ function safariRound(){
   $('pic').onclick = sayAgain;
   $('gBubbles').querySelectorAll('.choice').forEach(el => el.onclick = () => {
     if (FG.busy) return;
-    if (el.dataset.ch !== ch){ gWrong(el, `Not quite. Listen again. ${word}.`); return; }
+    if (el.dataset.ch !== ch){ gWrong(el, `That is ${el.dataset.ch.toUpperCase()}. Listen again. ${word}.`); return; }
     FG.busy = true; SFX.yes(); el.classList.add('right'); $('pic').classList.add('happy');
-    say(ch === 'x' ? `Yes! ${word} ends with ${ch}.` : `Yes! ${word} starts with ${ch}.`);
+    say(ch === 'x' ? `Yes! ${word} ends with ${ch.toUpperCase()}.` : `Yes! ${word} starts with ${ch.toUpperCase()}.`);
     later(() => { FG.round++; if (FG.round >= FG.rounds.length) gWin(); else safariRound(); }, 1600);
   });
   say(GI.safari.line());
@@ -2851,12 +3084,13 @@ GI.memory = {
 function memoryFlip(el){
   if (!FG || FG.lock || el.classList.contains('up')) return;
   el.classList.add('up'); FG.open.push(el); tone(520, 0.08, 'triangle', 0.12);
+  say(letterSay(el.textContent.trim()));
   if (FG.open.length < 2) return;
   const [a, b] = FG.open; FG.open = [];
   if (a.dataset.k === b.dataset.k){
     a.classList.add('done'); b.classList.add('done'); SFX.yes();
     FG.matched++; setAsk('Find the pairs', FG.pairs, FG.matched);
-    say(`${a.dataset.k.toUpperCase()} and ${a.dataset.k}!`);
+    say(`Big ${a.dataset.k.toUpperCase()} and small ${a.dataset.k.toUpperCase()}. A match!`);
     if (FG.matched >= FG.pairs) later(gWin, 900);
   } else {
     FG.lock = true;
@@ -2876,6 +3110,7 @@ GI.mirror = {
 };
 function mirrorRound(){
   const set = MIRROR_SETS[FG.level - 1], cur = FG.cur = FG.rounds[FG.round];
+  const lp = letterPic(cur); FG.pic = lp ? lp.emoji : ''; FG.picWord = lp ? lp.word : '';
   const others = set.filter(x => x !== cur);
   const tiles = shuffle([cur, cur, cur].concat(Array.from({ length: 5 }, () => others[Math.floor(Math.random() * others.length)])));
   FG.left = 3;
@@ -2883,8 +3118,9 @@ function mirrorRound(){
   setAsk(`Tap every <b>${cur}</b>`, 3, 0);
   $('gBubbles').querySelectorAll('.tile').forEach(el => el.onclick = () => {
     if (el.classList.contains('right')) return;
-    if (el.dataset.ch !== cur){ gWrong(el, `Look closely. That is ${el.dataset.ch}. Find ${cur}.`); return; }
+    if (el.dataset.ch !== cur){ gWrong(el, `Look closely. That is small ${el.dataset.ch.toUpperCase()}. Find small ${cur.toUpperCase()}.`); return; }
     el.classList.add('right'); SFX.yes(); FG.left--;
+    say(`Small ${cur.toUpperCase()}!`);
     setAsk(`Tap every <b>${cur}</b>`, 3, 3 - FG.left);
     if (FG.left <= 0){
       FG.round++;
@@ -2956,6 +3192,7 @@ function passTrace(){
 /* =========================================================
    PHONICS COLORS AND SOUND IT OUT ANIMATION
    ========================================================= */
+const CAR_SVG = '<svg viewBox="0 0 64 36" width="36" height="21" aria-hidden="true"><path d="M14 15 L22 5 H42 L51 15 Z" fill="#E8412C"/><rect x="3" y="14" width="57" height="13" rx="5" fill="#E8412C"/><path d="M24 8 H31 V15 H18 Z" fill="#CDEBFF"/><path d="M34 8 H41 L47 15 H34 Z" fill="#CDEBFF"/><rect x="56" y="17" width="5" height="4" rx="1.5" fill="#FFD447"/><rect x="2" y="17" width="3" height="4" rx="1" fill="#C62828"/><circle cx="17" cy="28" r="6" fill="#263238"/><circle cx="47" cy="28" r="6" fill="#263238"/><circle cx="17" cy="28" r="2.4" fill="#B0BEC5"/><circle cx="47" cy="28" r="2.4" fill="#B0BEC5"/></svg>';
 const CH_LABEL = { vow: 'vowel', team: 'vowel team', dig: 'two letters, one sound', magic: 'magic e', sil: 'silent letter', soft: 'soft c or g', dbl: 'double letters', end: 'word ending' };
 function chunkWord(w){
   const word = String(w || '');
@@ -3010,7 +3247,7 @@ function wordStageHtml(w, big){
   return `<div class="wstage${big ? ' big' : ''}">
     <div class="wword">${ch.map((c, i) => `<span class="ch ${c.c}" data-i="${i}">${c.t === ' ' ? '&nbsp;' : esc(c.t)}</span>`).join('')}</div>
     ${big ? `<div class="sline">${sline}</div>` : ''}
-    <div class="road"><span class="car" aria-hidden="true"><svg viewBox="0 0 64 36" width="36" height="21" aria-hidden="true"><path d="M14 15 L22 5 H42 L51 15 Z" fill="#E8412C"/><rect x="3" y="14" width="57" height="13" rx="5" fill="#E8412C"/><path d="M24 8 H31 V15 H18 Z" fill="#CDEBFF"/><path d="M34 8 H41 L47 15 H34 Z" fill="#CDEBFF"/><rect x="56" y="17" width="5" height="4" rx="1.5" fill="#FFD447"/><rect x="2" y="17" width="3" height="4" rx="1" fill="#C62828"/><circle cx="17" cy="28" r="6" fill="#263238"/><circle cx="47" cy="28" r="6" fill="#263238"/><circle cx="17" cy="28" r="2.4" fill="#B0BEC5"/><circle cx="47" cy="28" r="2.4" fill="#B0BEC5"/></svg></span></div>
+    <div class="road"><span class="car" aria-hidden="true">${CAR_SVG}</span></div>
     ${big && kinds.length ? `<div class="wlegend">${kinds.map(k => `<span class="ch ${k}">\u25CF</span> ${CH_LABEL[k]}`).join('<span class="gap"></span>')}</div>` : ''}
   </div>`;
 }
@@ -3040,7 +3277,7 @@ const BANK_GROUPS = ['Letters and Sounds', 'CVC Words', 'Word Families', 'Sight 
 let BK = null;
 async function loadBank(auth, el){
   const keep = BK && BK.el === el ? BK : null;
-  BK = { awGrade: keep ? keep.awGrade : '', awCat: keep ? keep.awCat : '', auth, el, data: keep ? keep.data : null, ks: keep ? keep.ks : '', group: keep ? keep.group : 'Letters and Sounds', status: keep ? keep.status : '', q: keep ? keep.q : '', rec: null, drafts: {}, audio: keep ? keep.audio : {}, preview: keep ? keep.preview : '' };
+  BK = { awGrade: keep ? keep.awGrade : '', awCat: keep ? keep.awCat : '', auth, el, data: keep ? keep.data : null, ks: keep ? keep.ks : '', group: keep ? keep.group : '', status: keep ? keep.status : '', q: keep ? keep.q : '', rec: null, drafts: {}, audio: keep ? keep.audio : {}, preview: keep ? keep.preview : '' };
   if (!BK.data) el.innerHTML = loaderHtml('Getting the word bank ready.');
   try {
     const res = await callApi(Object.assign({ action: 'modelBank' }, auth));
@@ -3074,10 +3311,12 @@ function renderBank(){
   const recorded = d.words.filter(w => w.hasAudio).length;
   const pv = BK.preview && d.words.find(w => w.id === BK.preview);
   const byCat = lists.map(l => ({ name: l.category, group: l.group, items: l.words.map(w => byKey[w.toLowerCase()]).filter(pass) })).filter(c => c.items.length);
+  BK.open = BK.open || {};
+  const folded = !q && !BK.status;   // long lists show 8 words first so the page opens fast
   el.innerHTML = `<div class="panel">
     <h2>Word Bank</h2>
     <p class="sub">${d.words.length} words. ${recorded} recorded by teachers. ${d.words.length - recorded} still need a teacher's voice.</p>
-    <p class="hint">${head ? 'Listen to each teacher recording, then tap Approve or Redo with your feedback. Teachers see your feedback here. Learners hear a teacher\'s voice only after you approve it. Until then, the device voice sounds out and reads the word.' : 'Tap Record on any word no one has recorded yet. How to record: sound out each colored part slowly, then say the whole word. Example: b, oa, t, boat. Once you record a word, it is yours, and other teachers can listen to it. Every recorded word gives you 1 star. Learners hear your voice after the School Head approves it. Until then, the device voice teaches the word.'}</p>
+    <p class="hint">${head ? 'Listen to each teacher recording, then tap Approve or Redo with your feedback. Teachers see your feedback here. Learners hear a teacher\'s voice only after you approve it. Until then, the device voice sounds out and reads the word.' : 'Tap Record on any word no one has recorded yet. How to record: say the whole word clearly and a little slowly, like a teacher reading to the class. The page shows each sound part first, then plays your voice for the whole word. Once you record a word, it is yours, and other teachers can listen to it. Every recorded word gives you 1 star. Learners hear your voice after the School Head approves it. Until then, the device voice teaches the word.'}</p>
     ${!head ? `<p><span class="star">\u2605 ${me ? me.stars : 0}</span> Your stars from recording words</p>` : ''}
     <div class="tablewrap"><table class="stable"><thead><tr><th>Teacher</th><th>Words Added</th><th>Recorded</th><th>Approved</th><th>Waiting</th><th>Redo</th><th>Stars</th></tr></thead>
       <tbody>${d.teachers.map(t => `<tr><td>${esc(t.name)}</td><td>${t.added || 0}</td><td>${t.recorded}</td><td>${t.approved}</td><td>${t.pending}</td><td>${t.redo}</td><td class="star">\u2605 ${t.stars}</td></tr>`).join('') || '<tr><td colspan="7">No words added or recorded yet. Be the first!</td></tr>'}</tbody></table></div>
@@ -3106,7 +3345,8 @@ function renderBank(){
     <p class="hint" style="text-align:center">Each sound part lights up as the car passes under it. Then the recording plays while the whole word glows. ${pv.hasAudio ? '' : 'No recording yet, so the device voice reads it for now.'}</p></div>` : ''}
   <div class="panel">${byCat.length ? byCat.map(c => `
     <h3 class="bk-cat">${esc(c.name)} <span class="sub">${esc(c.group)}, ${c.items.length} words</span></h3>
-    ${c.items.map(w => bankRow(w, head)).join('')}`).join('') : '<p class="hint">No words match. Try another group or search.</p>'}</div>`;
+    ${(folded && !BK.open[c.name] ? c.items.slice(0, 8) : c.items).map(w => bankRow(w, head)).join('')}
+    ${folded && !BK.open[c.name] && c.items.length > 8 ? `<button type="button" class="btn small" data-more="${esc(c.name)}" style="margin:8px 0">Show all ${c.items.length} words</button>` : ''}`).join('') : '<p class="hint">No words match. Try another group or search.</p>'}</div>`;
   const fillCats = () => {
     const g = $('awGrade').value; BK.awGrade = g; const ks = ['K','1','2','3'].indexOf(g) >= 0 ? '1' : '2';
     $('awCat').innerHTML = `<option value="">${esc(gradeLabel(g))} Words (new list)</option>` +
@@ -3180,9 +3420,18 @@ async function bankAudio(id){
   return (BK.audio[id] = `data:${res.mime};base64,${res.audio}`);
 }
 function bankUpdate(w){ BK.data.words = BK.data.words.map(x => x.id === w.id ? w : x); delete BK.audio[w.id]; }
-async function bankRefreshTeachers(){ try { const res = await callApi(Object.assign({ action: 'modelBank' }, BK.auth)); if (res && res.ok){ BK.data = res; renderBank(); } } catch(e){} }
+async function bankRefreshTeachers(){
+  try {
+    const res = await callApi(Object.assign({ action: 'modelBank' }, BK.auth));
+    if (res && res.ok){
+      BK.data = res; renderBank();
+      if (REV && REV.data){ const me = res.teachers.find(t => t.name === res.me); REV.data.myStars = me ? me.stars : 0; const h = REV.el.querySelector('h1 .star'); if (h) h.textContent = '\u2605 ' + REV.data.myStars; }
+    }
+  } catch(e){}
+}
 async function bankClick(e){
   const b = e.target.closest('button'); if (!b || !BK) return;
+  if (b.dataset.more){ BK.open[b.dataset.more] = true; renderBank(); return; }
   const m = t => setMsg($('bkMsg'), t, 'err');
   const id = b.dataset.show || b.dataset.listen || b.dataset.rec || b.dataset.save || b.dataset.again || b.dataset.cancel || b.dataset.approve || b.dataset.redo || b.dataset.clear || b.dataset.delword;
   const w = id && BK.data.words.find(x => x.id === id); if (!w) return;
@@ -3328,7 +3577,10 @@ function playWord(stage, src, word){
   const data = chunks.map(c => all[+c.dataset.i]);
   const sps = [...stage.querySelectorAll('.sline .sp')], eq = stage.querySelector('.sline .eq');
   const car = stage.querySelector('.car'), road = stage.querySelector('.road');
-  // The car is drawn facing right, so it always drives forward (left to right)
+  const kind = MOVERS[Math.floor(Math.random() * MOVERS.length)];
+  car.innerHTML = moverHtml(kind); car.dataset.kind = kind;
+  const bounce = () => { const mv = car.querySelector('.mv'); if (!mv || (kind !== 'frog' && kind !== 'ball')) return; mv.classList.remove('hop'); void mv.offsetWidth; mv.classList.add('hop'); };
+  // Every mover is drawn facing right, so it always goes forward (left to right)
   const carTo = x => { car.style.transform = `translateX(${Math.max(0, x)}px)`; };
   const light = i => {
     chunks.forEach(x => x.classList.remove('on'));
@@ -3337,58 +3589,53 @@ function playWord(stage, src, word){
     sps.forEach(x => x.classList.toggle('on', x.dataset.i === c.dataset.i));
     if (eq) eq.classList.remove('on');
     const r = road.getBoundingClientRect(), e = c.getBoundingClientRect();
-    carTo(e.left - r.left + e.width / 2 - 16);
+    carTo(e.left - r.left + e.width / 2 - 18); bounce();
   };
   const blend = () => { chunks.forEach(x => x.classList.remove('on')); sps.forEach(x => x.classList.remove('on')); if (eq) eq.classList.add('on'); stage.classList.add('blend'); carTo(road.getBoundingClientRect().width - 36); T(() => { stage.classList.remove('blend'); if (eq) eq.classList.remove('on'); }, 1800); };
   stage.classList.remove('blend'); chunks.forEach(c => c.classList.remove('on')); sps.forEach(x => x.classList.remove('on'));
   car.style.transition = 'none'; carTo(0); void car.offsetWidth; car.style.transition = '';
 
-  // 1. Approved teacher recording: the parts light up while the teacher sounds them, then the word glows
-  if (src){
-    const a = actx();
-    const timed = dur => { const partEnd = dur * 0.65; chunks.forEach((c, i) => T(() => light(i), 1000 * i * partEnd / chunks.length)); T(blend, 1000 * partEnd); };
-    if (a && window.fetch){
-      fetch(src).then(r => r.arrayBuffer()).then(buf => a.decodeAudioData(buf)).then(audio => {
-        if (stage._run !== run) return;
-        const node = a.createBufferSource(); node.buffer = audio; node.connect(a.destination); node.start(); stage._node = node;
-        timed(audio.duration);
-      }).catch(() => { const el = new Audio(src); stage._el = el; el.play().catch(() => {}); timed(Math.max(2, chunks.length * 0.7)); });
-    } else { const el = new Audio(src); stage._el = el; el.play().catch(() => {}); timed(Math.max(2, chunks.length * 0.7)); }
-    return;
-  }
-
-  // 2. Device voice: sound each part slowly, then say the whole word
+  // Each part lights up with its sound written below it, silently (no robotic letter sounds).
+  // At the end the whole word is read: the approved teacher's voice, or the device voice if there is none yet.
   const letter = /^[A-Z][a-z]$/.test(word);
-  if (!window.speechSynthesis){ chunks.forEach((c, i) => T(() => light(i), 250 + i * 650)); T(blend, 250 + chunks.length * 650); return; }
-  try { speechSynthesis.cancel(); } catch(e){}
-  const steps = letter
-    ? [{ text: word[0] + '.', i: 0 }, { text: (PHON[word[1]] || word[1]) + '.', i: 1 }]
-    : data.map((c, i) => ({ text: chunkSound(c), i }));
-  const finalText = letter ? `${word[0]} says ${PHON[word[1]] || word[1]}.` : word;
-  stage._utts = [];   // keeps each spoken part alive so the device reports when it finishes
-  const next = k => {
-    if (stage._run !== run) return;
-    if (k >= steps.length){
-      // All the sounds first, then the whole word
-      T(() => { blend(); const u = voiceUtter(finalText, 0.85); stage._utts.push(u); try { speechSynthesis.resume(); } catch(e){} speechSynthesis.speak(u); }, 350);
-      return;
+  const per = 750;
+  chunks.forEach((c, i) => T(() => { light(i); tone(520 + i * 60, 0.07, 'sine', 0.05); }, 300 + i * per));
+  T(() => {
+    blend();
+    if (src){
+      const a = actx();
+      if (a && window.fetch){
+        fetch(src).then(r => r.arrayBuffer()).then(buf => a.decodeAudioData(buf)).then(audio => {
+          if (stage._run !== run) return;
+          const node = a.createBufferSource(); node.buffer = audio; node.connect(a.destination); node.start(); stage._node = node;
+        }).catch(() => { const el = new Audio(src); stage._el = el; safePlay(el, () => say(word)); });
+      } else { const el = new Audio(src); stage._el = el; safePlay(el, () => say(word)); }
+    } else {
+      try { speechSynthesis.cancel(); } catch(e){}
+      const u = voiceUtter(letter ? word[0] : word, 0.8);
+      stage._utts = [u];
+      try { speechSynthesis.resume(); } catch(e){}
+      speechSynthesis.speak(u);
     }
-    light(steps[k].i);
-    if (!steps[k].text){ T(() => next(k + 1), 550); return; }
-    let moved = false;
-    const go = () => { if (moved) return; moved = true; T(() => next(k + 1), 250); };
-    const u = voiceUtter(steps[k].text, 0.7); u.onend = go; u.onerror = go; stage._utts.push(u);
-    try { speechSynthesis.resume(); } catch(e){}
-    speechSynthesis.speak(u);
-    T(go, 1900);   // keeps going even if the device voice does not report back
-  };
-  T(() => next(0), 450);
+  }, 300 + chunks.length * per + 150);
 }
+
+/* The friend that moves under the word. A new one is picked each time so it stays fun. */
+const MOVERS = ['car', 'frog', 'slide', 'ball'];
+function moverHtml(kind){
+  if (kind === 'frog') return `<span class="mv mfrog">${FROG_SVG}</span>`;
+  if (kind === 'slide') return `<span class="mv mslide"><span class="mfrog">${FROG_SVG}</span><svg viewBox="0 0 60 12" class="leafboard" aria-hidden="true"><ellipse cx="30" cy="6" rx="29" ry="5" fill="#4CAF6A"/><path d="M4 6 H56" stroke="#2E7D4A" stroke-width="1.5"/></svg></span>`;
+  if (kind === 'ball') return `<span class="mv"><svg viewBox="0 0 40 40" width="30" height="30" aria-hidden="true"><circle cx="20" cy="20" r="18" fill="#FFD447"/><path d="M4 16 Q20 26 36 16" stroke="#E8412C" stroke-width="4" fill="none"/><path d="M6 27 Q20 35 34 27" stroke="#1E63D6" stroke-width="4" fill="none"/></svg></span>`;
+  return `<span class="mv">${CAR_SVG}</span>`;
+}
+
+/* Plays a sound safely on old and new phones */
+function safePlay(el, onFail){ try { const pr = el.play(); if (pr && pr.catch) pr.catch(() => { if (onFail) onFail(); }); } catch(e){ if (onFail) onFail(); } }
 
 /* A word said aloud: approved teacher voice if this device has it, or the device voice */
 function speakWord(w){
   const m = S.modelCache && S.modelCache[String(w).toLowerCase()];
-  if (m && m.src){ try { new Audio(m.src).play().catch(() => say(w)); return; } catch(e){} }
+  if (m && m.src){ try { safePlay(new Audio(m.src), () => say(w)); return; } catch(e){} }
   say(w);
 }
 
@@ -3403,9 +3650,10 @@ function busy(message, retry){
   $('busyMsg').textContent = message;
   $('busySub').textContent = '';
   $('busyBtns').classList.add('hidden');
-  box.classList.remove('hidden');
   const h = { cancelled: false, timers: [] };
   const at = (ms, f) => h.timers.push(setTimeout(f, ms));
+  box.classList.add('hidden');
+  at(400, () => box.classList.remove('hidden'));   // quick answers never show the loading screen
   at(3000, () => { $('busySub').textContent = "Let's breathe with Froggy. Breathe in slowly..."; });
   [7000, 15000, 23000].forEach(ms => at(ms, () => { $('busySub').textContent = '...and breathe out.'; }));
   [11000, 19000].forEach(ms => at(ms, () => { $('busySub').textContent = 'Breathe in slowly...'; }));
@@ -3473,7 +3721,7 @@ function buildRound(){
   const tiles = shuffle(parts.map(p => ({ t: p.t, c: p.c })).concat(decoys.map(t => ({ t, c: '' }))));
   FG.pos = 0; FG.parts = parts; FG.busy = false;
   $('gBubbles').innerHTML = `<div class="build">
-    <button type="button" class="pic hear" id="bHear" aria-label="Hear the word again">\uD83D\uDD0A</button>
+    <button type="button" class="pic hear${wordPic(w) ? ' haspic' : ''}" id="bHear" aria-label="Hear the word again">${wordPic(w) || '\uD83D\uDD0A'}${wordPic(w) ? '<span class="spk">\uD83D\uDD0A</span>' : ''}</button>
     <div class="slots">${parts.map((p, i) => `<span class="slot" data-i="${i}"></span>`).join('')}</div>
     <div class="choices wrap">${tiles.map((t, k) => `<button type="button" class="choice part" data-k="${k}">${esc(t.t)}</button>`).join('')}</div></div>`;
   setAsk('Build the word you hear', FG.list.length, FG.round);
@@ -3531,7 +3779,7 @@ function chooseRound(){
   const similar = pool.filter(x => x[0] === w[0] || x.length === w.length);
   const opts = shuffle([w].concat(shuffle(similar.length >= 2 ? similar : pool).slice(0, 2)));
   FG.busy = false;
-  $('gBubbles').innerHTML = `<div class="safari"><button type="button" class="pic" id="cHear" aria-label="Hear the word again">\uD83D\uDD0A</button>
+  $('gBubbles').innerHTML = `<div class="safari"><button type="button" class="pic${wordPic(w) ? ' haspic' : ''}" id="cHear" aria-label="Hear the word again">${wordPic(w) || '\uD83D\uDD0A'}${wordPic(w) ? '<span class="spk">\uD83D\uDD0A</span>' : ''}</button>
     <div class="choices wrap">${opts.map(o => `<button type="button" class="choice wordc" data-w="${esc(o)}">${esc(o)}</button>`).join('')}</div></div>`;
   setAsk('Tap the word you hear', FG.list.length, FG.round);
   $('cHear').onclick = () => speakWord(w);
@@ -3698,25 +3946,25 @@ function renderReview(){
   if (!REV.view) REV.view = isAdviser ? 'results' : 'practice';
   const tabs = isAdviser ? `<div class="rtabs"><button type="button" class="ltab" data-rview="results" aria-selected="${REV.view === 'results'}">Reading Assessment Results</button><button type="button" class="ltab" data-rview="practice" aria-selected="${REV.view === 'practice'}">Practice Review</button><button type="button" class="ltab" data-rview="bank" aria-selected="${REV.view === 'bank'}">Word Bank</button><button type="button" class="ltab" data-rview="rank" aria-selected="${REV.view === 'rank'}">Star Rankings</button><button type="button" class="ltab" data-rview="act" aria-selected="${REV.view === 'act'}">Learner Activity</button></div>` : '';
   if (isAdviser && REV.view === 'act'){
-    el.innerHTML = `<h1>Hello, ${esc(d.reviewer)}</h1>` + tabs + '<div id="actHost"></div>';
+    el.innerHTML = `<h1>Hello, ${esc(d.reviewer)} <span class="star">\u2605 ${d.myStars || 0}</span></h1>` + tabs + '<div id="actHost"></div>';
     el.querySelectorAll('[data-rview]').forEach(b => b.onclick = () => { REV.view = b.dataset.rview; renderReview(); });
     loadActivity(REV.auth, $('actHost'));
     return;
   }
   if (isAdviser && REV.view === 'rank'){
-    el.innerHTML = `<h1>Hello, ${esc(d.reviewer)}</h1>` + tabs + '<div id="rankHost"></div>';
+    el.innerHTML = `<h1>Hello, ${esc(d.reviewer)} <span class="star">\u2605 ${d.myStars || 0}</span></h1>` + tabs + '<div id="rankHost"></div>';
     el.querySelectorAll('[data-rview]').forEach(b => b.onclick = () => { REV.view = b.dataset.rview; renderReview(); });
     loadStandings(REV.auth, $('rankHost'));
     return;
   }
   if (isAdviser && REV.view === 'bank'){
-    el.innerHTML = `<h1>Hello, ${esc(d.reviewer)}</h1>` + tabs + '<div id="bankHost"></div>';
+    el.innerHTML = `<h1>Hello, ${esc(d.reviewer)} <span class="star">\u2605 ${d.myStars || 0}</span></h1>` + tabs + '<div id="bankHost"></div>';
     el.querySelectorAll('[data-rview]').forEach(b => b.onclick = () => { if (BK && BK.rec) BK.rec.ctl.cancel(); REV.view = b.dataset.rview; renderReview(); });
     loadBank(REV.auth, $('bankHost'));
     return;
   }
   if (isAdviser && REV.view === 'results'){
-    el.innerHTML = `<h1>Hello, ${esc(d.reviewer)}</h1>` + tabs + resultsViewHtml();
+    el.innerHTML = `<h1>Hello, ${esc(d.reviewer)} <span class="star">\u2605 ${d.myStars || 0}</span></h1>` + tabs + resultsViewHtml();
     el.querySelectorAll('[data-rview]').forEach(b => b.onclick = () => { REV.view = b.dataset.rview; renderReview(); });
     bindResultsView();
     return;
@@ -3728,7 +3976,7 @@ function renderReview(){
     .sort((a, b) => String(b.submittedAt || b.week).localeCompare(String(a.submittedAt || a.week)));
   const waiting = d.items.filter(x => x.status === 'submitted').length;
   const summary = d.summary.filter(x => !REV.grade || String(x.grade) === REV.grade).sort((a, b) => b.stars - a.stars || a.learnerName.localeCompare(b.learnerName));
-  el.innerHTML = (isAdviser ? `<h1>Hello, ${esc(d.reviewer)}</h1>` : '') + tabs + `
+  el.innerHTML = (isAdviser ? `<h1>Hello, ${esc(d.reviewer)} <span class="star">\u2605 ${d.myStars || 0}</span></h1><p class="sub">You earn a star for every word you add to the Word Bank and every word you record.</p>` : '') + tabs + `
   <div class="panel">
     <h2>Practice Review</h2>
     <p class="sub">Signed in as ${esc(d.reviewer)}. ${waiting} recording(s) waiting for review.</p>
@@ -4302,7 +4550,11 @@ function goHome(e){
   show('viewLogin');
 }
 
+/* Wakes the server as soon as the page opens, so the first sign in is quicker */
+function warmUp(){ if (serverAvailable() && navigator.onLine !== false) callApi({ action: 'ping' }).catch(() => {}); }
+
 function init(){
+  warmUp();
   $('siteFoot').innerHTML = `<b>${SBRA}</b>, Baluyan Elementary School<br>First created on ${APP_CREATED}. Version ${APP_VERSION}, updated ${APP_UPDATED}.<br>Developer: <b>MARK JUMIL T. PADILLA</b>`;
   $('homeLink').addEventListener('click', goHome);
   $('adminBack').addEventListener('click', () => { if (S.session === 'admin' && S.pin) enterAdmin(); });
