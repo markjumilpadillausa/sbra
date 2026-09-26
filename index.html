@@ -33,6 +33,37 @@
   .home-note{background:var(--gold-soft);border:1px solid var(--gold);border-radius:10px;padding:10px 14px;margin-bottom:14px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
   .rtabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
   .tag.red{background:#FCE8EA;color:#8E1C24}
+  /* Friendly loading */
+  .busy{position:fixed;inset:0;z-index:50;background:rgba(250,252,247,.94);display:flex;align-items:center;justify-content:center;padding:20px}
+  .busy-card{max-width:420px;text-align:center}
+  .breath{width:170px;height:170px;margin:0 auto 14px;border-radius:50%;background:radial-gradient(circle,#E4F3E8 55%,#FFF4D6 100%);display:flex;align-items:center;justify-content:center;animation:breathe 8s ease-in-out infinite}
+  .breath.small{width:90px;height:90px;margin:0 auto 6px}
+  .busy-frog{width:62%}
+  .busy-frog svg{display:block;width:100%;height:auto}
+  @keyframes breathe{0%,100%{transform:scale(.88)}50%{transform:scale(1.12)}}
+  @media (prefers-reduced-motion:reduce){.breath{animation:none}}
+  .busy-msg{font-size:1.25rem;font-weight:700;color:var(--ink);margin:4px 0}
+  .busy-sub{color:var(--muted);min-height:1.5em;margin:4px 0 12px}
+  .mini-load{text-align:center;color:var(--muted)}
+  /* Word practice games */
+  .gsection{border-left:6px solid var(--gold)}
+  .chipbar{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
+  .chipbar .ltab{font-size:.85rem;padding:7px 12px}
+  .build{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4vh;padding:16px}
+  .pic.hear{width:min(30vw,120px);height:min(30vw,120px);font-size:min(14vw,60px)}
+  .slots{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+  .slot{min-width:min(18vw,90px);height:min(20vw,96px);border-bottom:5px solid var(--ink);display:flex;align-items:flex-end;justify-content:center;font-family:var(--card);font-weight:700;font-size:clamp(2.4rem,10vw,4rem)}
+  .choices.wrap{flex-wrap:wrap}
+  .choice.part{width:auto;min-width:min(20vw,110px);padding:0 16px}
+  .choice.part.used{visibility:hidden}
+  .choice.wordc{width:auto;min-width:min(26vw,160px);padding:0 18px;font-size:clamp(2rem,8vw,3.2rem);height:min(22vw,110px)}
+  .bub.pill{border-radius:999px;font-weight:700}
+  /* Standings */
+  .adj{display:flex;gap:8px;flex-wrap:wrap;align-items:flex-end}
+  .adj label{margin:0}
+  .journey{display:flex;gap:16px;align-items:center;border-left:6px solid var(--gold)}
+  .badge-big{font-size:3.6rem;line-height:1}
+  .top10{font-weight:700;color:#8A5A00;background:var(--gold-soft);display:inline-block;padding:4px 10px;border-radius:8px}
   .btn.danger{background:var(--margin);border-color:var(--margin);color:#fff}
   /* Phonics colors */
   .wstage{display:inline-block;text-align:center}
@@ -53,7 +84,14 @@
   @keyframes blendGlow{0%{transform:scale(1)}30%{transform:scale(1.08);text-shadow:0 0 18px #FFD447}100%{transform:scale(1)}}
   .road{display:none;position:relative;height:30px;margin:4px auto 0;border-bottom:4px dashed #C9D3C0;max-width:100%}
   .wstage.big .road{display:block}
-  .car{position:absolute;left:0;bottom:-2px;font-size:26px;line-height:1;transition:transform .45s ease}
+  .car{position:absolute;left:0;bottom:-3px;line-height:0;transition:transform .45s ease}
+  .car svg{display:block}
+  .sline{font-family:var(--ui);font-size:clamp(1.1rem,3.6vw,1.6rem);margin-top:8px;color:var(--muted);letter-spacing:.02em}
+  .sline .sp,.sline .eq{display:inline-block;padding:0 4px;border-radius:6px;transition:background .2s,color .2s}
+  .sline .sp.on{background:#FFF1B8;color:#1d2b36;font-weight:700}
+  .sline .eq{color:var(--ink);font-weight:700}
+  .sline .eq.on{background:#E4F3E8}
+  .ch.pun{color:#1d2b36}
   .wlegend{margin-top:10px;font-size:.85rem;color:var(--muted);line-height:1.8}
   .wlegend .ch{font-size:1rem}
   .wlegend .gap{display:inline-block;width:12px}
@@ -67,6 +105,10 @@
   .bw-draft audio{height:36px}
   .bw-judge input{flex:1;min-width:200px;margin:0;padding:8px}
   .fb{margin-top:4px;background:var(--gold-soft);border-radius:6px;padding:4px 8px;font-size:.88rem}
+  .added-by{margin-top:3px;font-size:.8rem;color:var(--muted);font-style:italic}
+  .addword{margin-top:14px;border:2px dashed var(--gold);border-radius:12px;padding:12px 14px;background:#FFFDF3}
+  .addword #awWord{font-size:1.2rem;font-family:var(--card)}
+  .lstars{font-weight:700;white-space:nowrap}
   @media (max-width:640px){.bw-row{grid-template-columns:1fr}.bw-actions{justify-content:flex-start}}
   /* Practice card: two columns */
   .pgrid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:6px}
@@ -461,7 +503,7 @@
       <form id="adviserForm" class="panel" autocomplete="off">
         <h2>Adviser</h2>
         <p>See your learners' reading assessment results, listen to their practice recordings, and give stars or a redo.</p>
-        <label>Email<input id="advEmail" type="email"></label>
+        <label>DepEd Email<input id="advEmail" type="email" placeholder="name@deped.gov.ph"></label>
         <label>PIN<input id="advPin" type="password" inputmode="numeric"></label>
         <button class="btn primary" type="submit">Sign In</button>
         <p class="msg" id="advLoginMsg"></p>
@@ -493,7 +535,7 @@
           <div id="gradeBars"></div>
         </div>
       </div>
-      <h3>Top Readers</h3>
+      <h3>Top 10 Readers</h3>
       <p class="hint">Learners earn one star for every practice word read correctly, every reading assessment task finished, and every game level passed.</p>
       <ol class="board" id="boardList"></ol>
     </div>
@@ -508,6 +550,8 @@
       <button class="tab" role="tab" type="button" data-tab="print" aria-selected="false">Printables</button>
       <button class="tab" role="tab" type="button" data-tab="practice" aria-selected="false">Practice Review</button>
       <button class="tab" role="tab" type="button" data-tab="bank" aria-selected="false">Word Bank</button>
+      <button class="tab" role="tab" type="button" data-tab="stars" aria-selected="false">Stars and Rankings</button>
+      <button class="tab" role="tab" type="button" data-tab="activity" aria-selected="false">Sign In Activity</button>
       <button class="tab" role="tab" type="button" disabled>Numeracy <small>(Coming Soon)</small></button>
     </nav>
 
@@ -587,7 +631,7 @@
             <label>Last Name<input id="nLast"></label>
             <label>First Name<input id="nFirst"></label>
             <label>LRN (Optional)<input id="nLrn" inputmode="numeric" maxlength="12"></label>
-            <label id="nAdviserWrap" class="hidden">Adviser<select id="nAdviser"></select></label>
+            <label>Section<select id="nSection"></select></label>
           </div>
           <button class="btn primary" type="submit">Add Learner</button>
           <p class="msg" id="addMsg"></p>
@@ -596,7 +640,7 @@
 
       <div class="panel">
         <h2>Advisers</h2>
-        <p class="hint">Results are emailed to the adviser of each grade. When a grade has two or more advisers, choose each learner's adviser in the Learner List. Give each adviser a PIN so they can sign in and review practice recordings.</p>
+        <p class="hint">Every new adviser starts with the PIN <b>admin</b>. They sign in with their DepEd email and admin, then the system asks them to make their own 4 number PIN. If an adviser forgets it, tap <b>Reset PIN</b> and then Save Advisers, and their PIN goes back to admin. Results are emailed to the adviser of each grade. When a grade has two or more advisers, choose each learner's adviser in the Learner List. Give each adviser a PIN so they can sign in and review practice recordings.</p>
         <div id="adviserList"></div>
         <div class="print-btns" style="margin-top:10px">
           <button id="addAdviser" class="btn" type="button">Add Adviser</button>
@@ -614,7 +658,7 @@
 
       <div class="panel">
         <h2>Upload LRNs</h2>
-        <p class="hint">Copy from Excel or Google Sheets and paste below, one learner per line in this order: LRN, Last name, First name, Grade. Names already on the list get their LRN. New names are added. In Excel, set the LRN column to Text first so the numbers stay complete.</p>
+        <p class="hint">Copy from Excel or Google Sheets and paste below, one learner per line in this order: LRN, Last name, First name, Grade, Section (Section is needed only for Grade 4: Diamond or Emerald). Names already on the list get their LRN. New names are added. In Excel, set the LRN column to Text first so the numbers stay complete.</p>
         <textarea id="lrnPaste" rows="6" placeholder="LRN	Last name	First name	Grade"></textarea>
         <div class="fields" style="margin-top:10px">
           <label>Grade for New Names Without a Grade<select id="uGrade"></select></label>
@@ -648,7 +692,7 @@
     <div id="tab-records" class="hidden">
       <div class="panel">
         <h2>Recorded Assessments</h2>
-        <div class="toolbar"><label>Show<select id="rFilter"></select></label><label id="rAdviserWrap" class="hidden">Adviser<select id="rAdviser"></select></label></div>
+        <div class="toolbar"><label>Show<select id="rFilter"></select></label><label id="rAdviserWrap" class="hidden">Section<select id="rAdviser"></select></label></div>
         <div class="print-btns">
           <button type="button" class="btn" id="bulkPrint">Print These Results</button>
           <button type="button" class="btn primary" id="bulkSend">Email These Results to the Adviser</button>
@@ -675,6 +719,12 @@
 
     <!-- Word Bank -->
     <div id="tab-bank" class="hidden"><div id="bankAdmin"></div></div>
+
+    <!-- Stars and Rankings -->
+    <div id="tab-stars" class="hidden"><div id="starsAdmin"></div></div>
+
+    <!-- Sign In Activity -->
+    <div id="tab-activity" class="hidden"><div id="actAdmin"></div></div>
 
     <!-- Printables -->
     <div id="tab-print" class="hidden">
@@ -757,6 +807,18 @@
 
 <div id="printArea" aria-hidden="true"></div>
 
+<div id="busy" class="busy hidden" role="status" aria-live="polite">
+  <div class="busy-card">
+    <div class="breath"><div class="busy-frog"></div></div>
+    <p class="busy-msg" id="busyMsg"></p>
+    <p class="busy-sub" id="busySub"></p>
+    <div class="print-btns hidden" id="busyBtns" style="justify-content:center">
+      <button type="button" class="btn primary" id="busyRetry">Try Again</button>
+      <button type="button" class="btn" id="busyCancel">Cancel</button>
+    </div>
+  </div>
+</div>
+
 <script>
 /* =========================================================
    SETTINGS
@@ -772,7 +834,7 @@ const PRACTICE_URL = 'https://markjumilpadillausa.github.io/sbra/';
 
 const SBRA = 'School-based Reading Assessment';
 const APP_CREATED = 'September 25, 2026';
-const APP_VERSION = '2.1';
+const APP_VERSION = '2.4';
 const APP_UPDATED = 'September 26, 2026';
 const STORE_KEY = 'baluyanAssess_v1';
 const DRAFT_KEY = 'baluyanAssess_draft_v2';
@@ -875,6 +937,12 @@ function shuffled(arr, seedStr){ const r = rng(seedStr), a = arr.slice(); for (l
 function letterSeq(code, task){ return shuffled(LETTERS, code + '|' + task); }
 function wordSeq(code, pattern, n){ return shuffled(Array.from({ length: n }, (_, i) => i), code + '|' + pattern); }
 function advisersOf(grade){ return S.adviserList.filter(a => String(a.grade) === String(grade)); }
+/* Sections: Kindergarten to Grade 3 Section A, Grade 4 Diamond and Emerald, Grades 5 and 6 Section A */
+const SECTIONS = { K: ['A'], '1': ['A'], '2': ['A'], '3': ['A'], '4': ['Diamond', 'Emerald'], '5': ['A'], '6': ['A'] };
+function sectionsOf(g){ return SECTIONS[String(g)] || []; }
+function secOf(l){ const list = sectionsOf(l.grade); return (l && l.section) || (list.length === 1 ? list[0] : ''); }
+function classLabel(grade, section){ return gradeLabel(grade) + (section ? (section.length === 1 ? ', Section ' + section : ', ' + section) : ''); }
+function secOptions(g, cur){ const list = sectionsOf(g); return (list.length > 1 ? '<option value="">Choose</option>' : '') + list.map(x => `<option${x === cur ? ' selected' : ''}>${esc(x)}</option>`).join(''); }
 function adviserById(id){ return S.adviserList.find(a => a.id === id); }
 function findDuplicate(last, first, exceptId){
   return Object.values(S.learners).find(x => x.id !== exceptId && norm(x.last) === norm(last) && norm(x.first) === norm(first));
@@ -995,7 +1063,7 @@ async function flush(){
     for (const k of stKeys){
       const st = q.stars[k]; if (!st) continue;
       const res = await callApi({ action: 'earnStar', lrn: st.lrn, key: st.key, earnedAt: st.earnedAt });
-      if (res && res.ok){ delete q.stars[k]; S.rewards[st.lrn] = { practice: res.practice, tasks: res.tasks, games: res.games, frog: res.frog || [], progress: res.progress || { frog: res.frog || [] } }; }
+      if (res && res.ok){ delete q.stars[k]; S.rewards[st.lrn] = Object.assign({}, S.rewards[st.lrn] || {}, { practice: res.practice, tasks: res.tasks, games: res.games, bonus: res.bonus || 0, bonusList: res.bonusList || [], frog: res.frog || [], progress: res.progress || { frog: res.frog || [] } }, res.weekStars != null ? { weekStars: res.weekStars, lastWeekStars: res.lastWeekStars, top10Week: res.top10Week } : {}); }
       else if (res && res.error){ delete q.stars[k]; }
     }
     if (stKeys.length && TV && $('viewGame').classList.contains('hidden') && !$('viewTeacher').classList.contains('hidden')) renderTeacher();
@@ -1070,15 +1138,18 @@ function setDock(){
 async function adminLogin(pin){
   const m = $('adminMsg');
   if (!pin){ setMsg(m, 'Enter the PIN.', 'err'); return; }
-  setMsg(m, 'Checking the PIN');
+  setMsg(m, '');
+  const h = busy('Checking your PIN. Getting your school page ready.', () => adminLogin(pin));
   try {
     const res = await callApi({ action: 'adminLogin', pin });
+    h.done(); if (h.cancelled) return;
     if (!res || !res.ok){ setMsg(m, (res && res.error) || 'Sign in failed.', 'err'); return; }
     S.pin = pin; S.pinHash = hash(pin); S.wordBank = res.wordBank || [];
     mergeServer(res); S.session = 'admin'; S.lastSync = nowIso(); persist();
     setMsg(m, ''); $('adminPin').value = '';
     enterAdmin(); flush();
   } catch(e){
+    h.done(); if (h.cancelled) return;
     if (S.pinHash && S.pinHash === hash(pin)){
       S.pin = pin; S.session = 'admin'; persist();
       setMsg(m, ''); $('adminPin').value = '';
@@ -1117,11 +1188,13 @@ function enterAdmin(){
 function selectTab(name){
   currentTab = name;
   document.querySelectorAll('.tab[data-tab]').forEach(b => b.setAttribute('aria-selected', b.dataset.tab === name ? 'true' : 'false'));
-  ['assess','learners','records','print','practice','bank'].forEach(t => $('tab-' + t).classList.toggle('hidden', t !== name));
+  ['assess','learners','records','print','practice','bank','stars','activity'].forEach(t => $('tab-' + t).classList.toggle('hidden', t !== name));
+  if (name === 'activity') loadActivity({ pin: S.pin }, $('actAdmin'));
+  if (name === 'stars') loadStandings({ pin: S.pin }, $('starsAdmin'));
   if (name === 'bank') loadBank({ pin: S.pin }, $('bankAdmin'));
   if (name === 'practice') loadReview({ pin: S.pin }, $('revAdmin'));
   if (name === 'records') renderRecords();
-  if (name === 'learners'){ renderLearners(); renderAdvisers(); }
+  if (name === 'learners'){ renderLearners(); renderAdvisers(); loadLearnerStars(); }
   if (name === 'print') renderPreview();
   setDock();
 }
@@ -1533,14 +1606,49 @@ function renderLearners(){
   $('learnerList').innerHTML = list.length ? list.map(l => `
     <div class="row">
       <div><div class="nm">${esc(learnerName(l))}</div>
-        <div class="sub">${gradeLabel(l.grade)} ${recordOf(l.id) ? '<span class="tag ok">Assessed</span>' : ''} ${S.queue.learners[l.id] ? '<span class="tag">Waiting to sync</span>' : ''}</div></div>
+        <div class="sub">${classLabel(l.grade, secOf(l))}${sectionsOf(l.grade).length > 1 && !l.section ? ' <span class="tag red">No section yet</span>' : ''} ${recordOf(l.id) ? '<span class="tag ok">Assessed</span>' : ''} ${S.queue.learners[l.id] ? '<span class="tag">Waiting to sync</span>' : ''}</div></div>
       <div class="rec-btns" style="align-items:flex-end">
-        ${advisersOf(l.grade).length > 1 ? `<label class="lrn-in">Adviser<select data-adv="${esc(l.id)}"><option value="">Choose</option>${advisersOf(l.grade).map(a => `<option value="${esc(a.id)}"${a.id === l.adviserId ? ' selected' : ''}>${esc(a.name || a.email)}</option>`).join('')}</select></label>` : ''}
+        ${sectionsOf(l.grade).length > 1 ? `<label class="lrn-in">Section<select data-sec="${esc(l.id)}">${secOptions(l.grade, l.section || '')}</select></label>` : ''}
         <label class="lrn-in">LRN<input data-id="${esc(l.id)}" value="${esc(l.lrn || '')}" inputmode="numeric" maxlength="12" placeholder="12 digits"></label>
+        <span class="lstars star" title="Total stars">\u2605 ${LSTARS ? (LSTARS[l.id] || 0) : '\u2026'}</span>
+        <button type="button" class="btn small" data-ladd="${esc(l.id)}">Add Star</button>
+        <button type="button" class="btn small" data-lsub="${esc(l.id)}">Deduct Star</button>
         <button type="button" class="btn small" data-reset="${esc(l.id)}">Reset Stars</button>
         <button type="button" class="btn small" data-del="${esc(l.id)}">Delete</button>
       </div>
-    </div>`).join('') : '<p class="hint">No learners yet. Add a learner above or paste a class list with LRNs.</p>';
+    </div>
+    ${LADJ && LADJ.id === l.id ? `<div class="adj" style="padding:0 0 10px">
+      <label>${LADJ.sign > 0 ? 'Stars to Add' : 'Stars to Deduct'}<select id="ladjN">${[1,2,3,4,5,10].map(n => `<option>${n}</option>`).join('')}</select></label>
+      <label style="flex:1">Reason (the learner will see it)<input id="ladjWhy" maxlength="120" placeholder="${LADJ.sign > 0 ? 'Example: Read aloud in class' : 'Example: Correction'}"></label>
+      <button type="button" class="btn small primary" id="ladjSave">${LADJ.sign > 0 ? 'Add' : 'Deduct'}</button>
+      <button type="button" class="btn small" id="ladjCancel">Cancel</button></div>` : ''}`).join('') : '<p class="hint">No learners yet. Add a learner above or paste a class list with LRNs.</p>';
+  bindLearnerAdj();
+}
+
+/* Star totals for the learner list, and adding or deducting stars */
+let LSTARS = null, LADJ = null;
+async function loadLearnerStars(){
+  if (!S.pin || navigator.onLine === false || !serverAvailable()) return;
+  try {
+    const res = await callApi({ action: 'starStandings', pin: S.pin });
+    if (res && res.ok){ LSTARS = {}; res.overall.forEach(r => { LSTARS[r.learnerId] = r.stars; }); renderLearners(); }
+  } catch(e){}
+}
+function bindLearnerAdj(){
+  if (!$('ladjSave')) return;
+  $('ladjCancel').onclick = () => { LADJ = null; renderLearners(); };
+  $('ladjSave').onclick = async () => {
+    const why = $('ladjWhy').value.trim(), n = +$('ladjN').value * LADJ.sign;
+    if (!why){ setMsg($('listMsg'), 'Type a short reason first.', 'err'); return; }
+    setMsg($('listMsg'), 'Saving');
+    try {
+      const res = await callApi({ action: 'adjustStars', pin: S.pin, learnerId: LADJ.id, amount: n, reason: why });
+      if (!res || !res.ok){ setMsg($('listMsg'), (res && res.error) || 'Not saved.', 'err'); return; }
+      const l = S.learners[LADJ.id];
+      setMsg($('listMsg'), `${n > 0 ? 'Added' : 'Deducted'} ${Math.abs(n)} star${Math.abs(n) === 1 ? '' : 's'} ${n > 0 ? 'to' : 'from'} ${l ? l.first + ' ' + l.last : 'the learner'}.`, 'good');
+      LADJ = null; loadLearnerStars();
+    } catch(e){ setMsg($('listMsg'), 'No internet. Try again when you are online.', 'err'); }
+  };
 }
 
 function addLearner(e){
@@ -1554,7 +1662,9 @@ function addLearner(e){
     setMsg(m, text, 'err'); tell(text); return;
   }
   if (lrn && lrn.length !== 12){ setMsg(m, 'LRN must be 12 digits.', 'err'); return; }
-  const l = { id: uid(), lrn: '', last, first, grade, updatedAt: nowIso(), adviserId: advisersOf(grade).length > 1 ? $('nAdviser').value : '' };
+  const section = $('nSection').value;
+  if (sectionsOf(grade).length > 1 && !section){ setMsg(m, 'Choose the section.', 'err'); return; }
+  const l = { id: uid(), lrn: '', last, first, grade, section, updatedAt: nowIso(), adviserId: '' };
   S.learners[l.id] = l;
   if (lrn){ const err = setLrn(l.id, lrn); if (err){ delete S.learners[l.id]; setMsg(m, err, 'err'); tell(err); return; } }
   S.queue.learners[l.id] = true; persist();
@@ -1574,6 +1684,7 @@ function importLrns(){
     if (n === 0 && !/\d/.test(c[0] || '')) return; // header row
     if (/e\+/i.test(c[0] || '')){ problems.push(`Line ${n + 1}: the LRN was shortened by Excel. Set the column to Text and copy again.`); return; }
     const lrn = (c[0] || '').replace(/\D/g, ''), last = c[1] || '', first = c[2] || '', grade = parseGrade(c[3]);
+    const secIn = String(c[4] || '').trim();
     if (!last || !first){ problems.push(`Line ${n + 1}: missing name.`); return; }
     const key = norm(last) + '|' + norm(first);
     if (seen[key]){ problems.push(`Line ${n + 1}: ${first} ${last} appears twice in the pasted list.`); return; }
@@ -1588,6 +1699,7 @@ function importLrns(){
       l = { id: uid(), lrn: '', last, first, grade: g, updatedAt: nowIso() };
       S.learners[l.id] = l; S.queue.learners[l.id] = true; isNew = true; added++;
     }
+    if (secIn){ const sx = sectionsOf(l.grade).find(y => y.toLowerCase() === secIn.toLowerCase()); if (sx && l.section !== sx){ l.section = sx; l.updatedAt = nowIso(); S.queue.learners[l.id] = true; } }
     const before = l.lrn;
     const err = setLrn(l.id, lrn);
     if (err) problems.push(`Line ${n + 1} (${first} ${last}): ${err}`);
@@ -1605,11 +1717,12 @@ function renderAdvisers(){
   const opts = g => GRADES.map(x => `<option value="${x[0]}"${x[0] === String(g) ? ' selected' : ''}>${x[1]}</option>`).join('');
   $('adviserList').innerHTML = advDraft.length ? advDraft.map((a, i) => `
     <div class="adv-row adv4">
-      <select data-i="${i}" data-f="grade" aria-label="Grade">${opts(a.grade)}</select>
+      <div class="pin-cell"><select data-i="${i}" data-f="grade" aria-label="Grade">${opts(a.grade)}</select>
+        <select data-i="${i}" data-f="section" aria-label="Section">${secOptions(a.grade, a.section || (sectionsOf(a.grade).length === 1 ? sectionsOf(a.grade)[0] : ''))}</select></div>
       <input data-i="${i}" data-f="name" placeholder="Adviser name" value="${esc(a.name || '')}" aria-label="Adviser name">
       <input data-i="${i}" data-f="email" type="email" placeholder="Email" value="${esc(a.email || '')}" aria-label="Adviser email">
-      <div class="pin-cell"><input data-i="${i}" data-f="pin" inputmode="numeric" maxlength="8" placeholder="PIN" value="${esc(a.pin || '')}" aria-label="Adviser PIN">
-        <button type="button" class="btn small" data-gen="${i}" title="Make a new random PIN">New PIN</button></div>
+      <div class="pin-cell"><span class="sub">${a.resetPin || !a.pin || a.pin === 'admin' ? 'PIN: admin (default)' : 'PIN: changed by adviser'}</span>
+        ${a.email && a.pin && a.pin !== 'admin' && !a.resetPin ? `<button type="button" class="btn small" data-resetpin="${i}">Reset PIN</button>` : ''}</div>
       <button type="button" class="btn small" data-rm="${i}">Remove</button>
     </div>`).join('') : '<p class="hint">No advisers yet. Tap Add Adviser.</p>';
   renderAdviserSelect();
@@ -1619,7 +1732,8 @@ function renderAdvisers(){
 let showPins = false;
 function signinMessage(a){
   const link = PRACTICE_URL || 'the School-based Reading Assessment link';
-  return `Good day${a.name ? ', ' + a.name : ''}.\n\nHere is your sign in for the School-based Reading Assessment.\n\nLink: ${link}\nChoose: Adviser\nEmail: ${a.email}\nPIN: ${a.pin}\n\nPlease keep your PIN private and log out when you finish, especially on a shared device.\n\nSchool Head\nBaluyan Elementary School`;
+  const first = !a.pin || a.pin === 'admin';
+  return `Good day${a.name ? ', ' + a.name : ''}.\n\nHere is your sign in for the School-based Reading Assessment.\n\nLink: ${link}\nChoose: Adviser\nEmail: ${a.email}\nPIN: ${first ? 'admin' : a.pin}\n\n${first ? 'The first time you sign in, the system will ask you to make your own 4 number PIN. ' : ''}Please keep your PIN private and log out when you finish, especially on a shared device.\n\nSchool Head\nBaluyan Elementary School`;
 }
 function renderSigninList(){
   const el = $('signinList'); if (!el) return;
@@ -1627,10 +1741,10 @@ function renderSigninList(){
   $('togglePins').textContent = showPins ? 'Hide PINs' : 'Show PINs';
   el.innerHTML = list.length ? list.map((a, i) => `
     <div class="signin-row">
-      <div><b>${esc(a.name || 'No name')}</b>, ${gradeLabel(a.grade)}</div>
+      <div><b>${esc(a.name || 'No name')}</b>, ${classLabel(a.grade, a.section || (sectionsOf(a.grade).length === 1 ? sectionsOf(a.grade)[0] : ''))}</div>
       <div class="sub">Email: ${esc(a.email)}</div>
-      <div class="sub">PIN: <span class="pinv">${a.pin ? (showPins ? esc(a.pin) : '\u2022'.repeat(a.pin.length)) : '<span style="color:var(--margin)">No PIN yet</span>'}</span></div>
-      ${a.pin ? `<button type="button" class="btn small" data-msg="${i}" style="margin-top:6px">Show Message</button><textarea class="hidden" rows="11" readonly data-msgbox="${i}">${esc(signinMessage(a))}</textarea>` : ''}
+      <div class="sub">PIN: <span class="pinv">${!a.pin || a.pin === 'admin' ? 'admin' : (showPins ? esc(a.pin) : '\u2022'.repeat(a.pin.length))}</span> ${!a.pin || a.pin === 'admin' ? '<span class="tag">Default, not yet changed</span>' : '<span class="tag ok">Changed by adviser</span>'}</div>
+      <button type="button" class="btn small" data-msg="${i}" style="margin-top:6px">Show Message</button><textarea class="hidden" rows="11" readonly data-msgbox="${i}">${esc(signinMessage(a))}</textarea>
     </div>`).join('') : '<p class="hint">No advisers with an email yet. Add them above, then tap Save Advisers.</p>';
 }
 function weakPin(p){
@@ -1646,28 +1760,17 @@ function randomPin(){
 }
 
 function renderAdviserSelect(){
-  const g = $('nGrade').value, list = advisersOf(g);
-  $('nAdviserWrap').classList.toggle('hidden', list.length < 2);
-  $('nAdviser').innerHTML = '<option value="">Choose</option>' + list.map(a => `<option value="${esc(a.id)}">${esc(a.name || a.email)}</option>`).join('');
+  const g = $('nGrade').value;
+  $('nSection').innerHTML = g ? secOptions(g, '') : '<option value="">Choose the grade first</option>';
 }
 
 function saveAdvisers(){
   let bad = '';
-  const list = advDraft.map(a => ({ id: a.id || uid(), grade: String(a.grade || ''), name: (a.name || '').trim(), email: (a.email || '').trim(), pin: String(a.pin || '').trim() }))
+  const list = advDraft.map(a => ({ id: a.id || uid(), grade: String(a.grade || ''), section: a.section || (sectionsOf(a.grade).length === 1 ? sectionsOf(a.grade)[0] : ''),
+      name: (a.name || '').trim(), email: (a.email || '').trim(), pin: a.resetPin ? 'admin' : (a.pin || 'admin'), resetPin: !!a.resetPin }))
     .filter(a => a.grade && (a.name || a.email));
+  list.forEach(a => { if (!bad && sectionsOf(a.grade).length > 1 && !a.section) bad = 'Choose the section for ' + (a.name || a.email) + '.'; });
   list.forEach(a => { if (a.email && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(a.email)) bad = 'Check the email for ' + (a.name || gradeLabel(a.grade)) + '.'; });
-  // PIN rules: numbers only, 4 to 8 digits, not easy to guess, not the School Head PIN
-  list.forEach(a => {
-    if (bad || !a.email) return;
-    const who = a.name || a.email;
-    if (!a.pin) bad = who + ' needs a PIN to sign in. Tap New PIN.';
-    else if (!/^\d{4,8}$/.test(a.pin)) bad = 'The PIN of ' + who + ' must be 4 to 8 numbers.';
-    else if (weakPin(a.pin)) bad = 'The PIN of ' + who + ' is too easy to guess. Tap New PIN.';
-    else if (S.pin && a.pin === String(S.pin)) bad = 'The PIN of ' + who + ' is the same as your School Head PIN. Tap New PIN.';
-  });
-  // One adviser handling two grades must use the same PIN for both
-  const byEmail = {};
-  list.forEach(a => { if (!a.email) return; const k = a.email.toLowerCase(); if (byEmail[k] && byEmail[k] !== a.pin) bad = bad || a.email + ' appears more than once with different PINs. Use one PIN for this adviser.'; byEmail[k] = byEmail[k] || a.pin; });
   if (bad){ setMsg($('advMsg'), bad, 'err'); return; }
   S.adviserList = list; advDraft = null; S.advisersUpdated = nowIso(); S.queue.advisers = true; persist();
   renderAdvisers(); renderLearners(); renderRecords();
@@ -1703,17 +1806,17 @@ function deleteRecord(id){
    RECORDS, PRINTING RESULTS, EMAIL
    ========================================================= */
 function renderAdviserFilter(){
-  const g = $('rFilter').value, list = g ? advisersOf(g) : [];
+  const g = $('rFilter').value, list = g ? sectionsOf(g) : [];
   const cur = $('rAdviser').value;
   $('rAdviserWrap').classList.toggle('hidden', list.length < 2);
-  $('rAdviser').innerHTML = '<option value="">All advisers</option>' + list.map(a => `<option value="${esc(a.id)}">${esc(a.name || a.email)}</option>`).join('');
-  if (list.some(a => a.id === cur)) $('rAdviser').value = cur;
+  $('rAdviser').innerHTML = '<option value="">All sections</option>' + list.map(x => `<option>${esc(x)}</option>`).join('');
+  if (list.indexOf(cur) >= 0) $('rAdviser').value = cur;
 }
 function filteredRecords(){
   const g = $('rFilter').value;
   const adv = !$('rAdviserWrap').classList.contains('hidden') ? $('rAdviser').value : '';
   return Object.values(S.assessments).filter(a => !g || String(a.grade) === g)
-    .filter(a => { if (!adv) return true; const l = S.learners[a.learnerId]; return l && l.adviserId === adv; })
+    .filter(a => { if (!adv) return true; const l = S.learners[a.learnerId]; return l && secOf(l) === adv; })
     .sort((a, b) => gradeOrder(a.grade) - gradeOrder(b.grade) || norm(a.learnerName).localeCompare(norm(b.learnerName)));
 }
 
@@ -1866,8 +1969,8 @@ function recipientsFor(list){
   const grade = list[0].grade; const all = advisersOf(grade);
   let chosen = all;
   if (all.length > 1){
-    const ids = {}; list.forEach(a => { const l = S.learners[a.learnerId]; if (l && l.adviserId) ids[l.adviserId] = true; });
-    const picked = all.filter(x => ids[x.id]);
+    const secs = {}; list.forEach(a => { const l = S.learners[a.learnerId]; if (l) secs[secOf(l)] = true; });
+    const picked = all.filter(x => x.section && secs[x.section]);
     if (picked.length) chosen = picked;
   }
   chosen = chosen.filter(x => x.email);
@@ -1959,12 +2062,15 @@ async function teacherLogin(raw){
   const m = $('teacherMsg');
   const lrn = String(raw || '').replace(/\D/g, '');
   if (lrn.length !== 12){ setMsg(m, 'Enter the 12 digit LRN.', 'err'); return; }
-  setMsg(m, 'Looking up the learner');
+  setMsg(m, '');
+  const h = busy('Hello, reader! Finding your reading page.', () => teacherLogin(raw));
   try {
     const res = await callApi({ action: 'teacherView', lrn });
+    h.done(); if (h.cancelled) return;
     if (!res || !res.ok){ setMsg(m, (res && res.error) || 'No learner found.', 'err'); return; }
     setMsg(m, ''); showTeacher(res.learner, res.assessments || []);
   } catch(e){
+    h.done(); if (h.cancelled) return;
     const l = Object.values(S.learners).find(x => x.lrn === lrn);
     if (l){
       setMsg(m, '');
@@ -1984,6 +2090,7 @@ function showTeacher(learner, list){
   show('viewTeacher');
   loadPractice();
   loadRewards();
+  loadWordLists();
 }
 
 function tasksPanel(){
@@ -2057,7 +2164,7 @@ function renderTeacher(){
   const body = $('teacherBody'); const { learner } = TV;
   const stars = myRewards().total;
   const head = `<h1>${esc(learner.last)}, ${esc(learner.first)}</h1>
-    <p class="sub">${[gradeLabel(learner.grade), learner.lrn ? 'LRN ' + esc(learner.lrn) : ''].filter(Boolean).join(', ')}${stars != null ? ` <span class="star">\u2605 ${stars}</span>` : ''}</p>
+    <p class="sub">${[learner.grade ? classLabel(learner.grade, learner.section || secOf(learner)) : '', learner.lrn ? 'LRN ' + esc(learner.lrn) : ''].filter(Boolean).join(', ')}${stars != null ? ` <span class="star">\u2605 ${stars}</span>` : ''}</p>
     <div class="ltabs" role="tablist">${LTABS.map(t => `<button type="button" class="ltab" role="tab" data-ltab="${t[0]}" aria-selected="${TV.tab === t[0]}">${t[1]}</button>`).join('')}</div>`;
   let main = '';
   if (TV.tab === 'practice') main = practiceHtml();
@@ -2082,7 +2189,7 @@ const STOP_SVG = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true
 
 async function loadPractice(){
   const lrn = TV.learner.lrn;
-  PR = { lrn, items: null, idx: 0, drafts: {}, msg: 'Loading your practice words.' };
+  PR = { lrn, items: null, idx: 0, drafts: {}, msg: 'Getting your practice words ready.' };
   renderTeacher();
   try {
     const res = await callApi({ action: 'learnerPractice', lrn });
@@ -2109,7 +2216,7 @@ function practiceList(){
 }
 
 function practiceHtml(){
-  if (!PR || !PR.items) return `<div class="panel"><p class="${PR && PR.msg && !/Loading/.test(PR.msg) ? 'msg err' : 'hint'}">${esc(PR ? PR.msg : '')}</p></div>`;
+  if (!PR || !PR.items) return PR && /ready/.test(PR.msg) ? loaderHtml(PR.msg) : `<div class="panel"><p class="msg err">${esc(PR ? PR.msg : '')}</p></div>`;
   const list = practiceList();
   if (!list.length){
     const stars = PR.items.reduce((s, x) => s + (x.stars || 0), 0);
@@ -2231,13 +2338,14 @@ function notebookHtml(){
   const keys = Object.keys(weeks).sort().reverse();
   const tag = x => x.status === 'correct' ? '\u2605 ' : '';
   const note = x => x.status === 'redo' ? ' (Redo)' : x.status === 'submitted' ? ' (Waiting)' : '';
-  return `<div class="panel">
+  return journeyHtml() + `<div class="panel">
     <h2>My Vocabulary Notebook</h2>
     <div class="stats">
       <div class="stat"><b class="star">\u2605 ${myRewards().total}</b><span>Total Stars</span></div>
       <div class="stat"><b>${myRewards().practice}</b><span>Stars From Practice</span></div>
       <div class="stat"><b>${myRewards().tasks}</b><span>Stars From Reading Assessment Tasks</span></div>
       <div class="stat"><b>${myRewards().games}</b><span>Stars From Games</span></div>
+      ${myRewards().bonus ? `<div class="stat"><b>${myRewards().bonus > 0 ? '+' : ''}${myRewards().bonus}</b><span>Stars From the School Head</span></div>` : ''}
       <div class="stat"><b>${PR.items.filter(x => x.status === 'correct').length}</b><span>Words Learned</span></div>
       <div class="stat"><b>${PR.items.filter(x => x.status !== 'new').length}</b><span>Words Practiced</span></div>
     </div>
@@ -2260,7 +2368,7 @@ async function loadRewards(){
   const lrn = TV && TV.learner.lrn; if (!lrn) return;
   try {
     const res = await callApi({ action: 'learnerRewards', lrn });
-    if (res && res.ok){ S.rewards[lrn] = { practice: res.practice, tasks: res.tasks, games: res.games, frog: res.frog || [], progress: res.progress || { frog: res.frog || [] } }; persist(); }
+    if (res && res.ok){ S.rewards[lrn] = Object.assign({}, S.rewards[lrn] || {}, { practice: res.practice, tasks: res.tasks, games: res.games, bonus: res.bonus || 0, bonusList: res.bonusList || [], frog: res.frog || [], progress: res.progress || { frog: res.frog || [] } }, res.weekStars != null ? { weekStars: res.weekStars, lastWeekStars: res.lastWeekStars, top10Week: res.top10Week } : {}); persist(); }
   } catch(e){}
   if (TV && TV.learner.lrn === lrn && $('viewGame').classList.contains('hidden')) renderTeacher();
 }
@@ -2288,7 +2396,8 @@ function pickVoice(){
   try {
     const vs = (window.speechSynthesis && speechSynthesis.getVoices()) || [];
     const en = vs.filter(v => /^en/i.test(v.lang));
-    const prefer = [/Rosa.*Natural/i, /en-PH/i, /Jenny.*Natural/i, /Aria.*Natural/i, /Natural/i, /Google US English/i, /Samantha/i, /Karen/i, /Moira/i, /Tessa/i, /Zira/i, /female/i];
+    // Online neural voices first (Microsoft Edge "Natural", Google), then good device voices
+    const prefer = [/Rosa.*Online.*Natural/i, /Ava.*Natural/i, /Emma.*Natural/i, /Jenny.*Natural/i, /Aria.*Natural/i, /Natural/i, /Google US English/i, /Google UK English Female/i, /en-PH/i, /Samantha/i, /Karen/i, /Moira/i, /Tessa/i, /Zira/i, /female/i];
     for (const re of prefer){ const v = en.find(x => re.test(x.name) || re.test(x.lang)); if (v){ VOICE = v; return; } }
     VOICE = en[0] || null;
   } catch(e){}
@@ -2303,7 +2412,7 @@ function say(text){
     String(text).split(/(?<=[.!?])\s+/).forEach(part => {
       const u = new SpeechSynthesisUtterance(part);
       if (VOICE){ u.voice = VOICE; u.lang = VOICE.lang; } else u.lang = 'en-US';
-      u.rate = 0.8; u.pitch = 1.15; u.volume = 0.9;
+      u.rate = 0.88; u.pitch = 1.05; u.volume = 1;
       speechSynthesis.speak(u);
     });
   } catch(e){}
@@ -2333,23 +2442,24 @@ function myRewards(){
   const lrn = TV ? TV.learner.lrn : '';
   const base = S.rewards[lrn] || {};
   const prog = {};
+  Object.keys(base.progress || {}).forEach(k => { prog[k] = (base.progress[k] || []).slice(); });
   GAMES.forEach(g => { prog[g.id] = (((base.progress && base.progress[g.id]) || (g.id === 'frog' ? base.frog : null)) || []).slice(); });
-  const r = { practice: base.practice || 0, tasks: base.tasks || 0, games: base.games || 0, progress: prog };
+  const r = { practice: base.practice || 0, tasks: base.tasks || 0, games: base.games || 0, bonus: base.bonus || 0, progress: prog };
   if (PR && PR.items && PR.lrn === lrn) r.practice = PR.items.reduce((t, x) => t + (x.stars || 0), 0);
   Object.values(S.queue.stars).forEach(q => {
     if (q.lrn !== lrn) return;
-    const m = q.key.match(/^([a-z]+)\|(\d+)$/);
-    if (m && prog[m[1]]){ const n = +m[2]; if (prog[m[1]].indexOf(n) < 0){ prog[m[1]].push(n); r.games++; } }
+    const m = q.key.match(/^([a-z0-9.]+)\|(\d+)$/);
+    if (m){ const n = +m[2]; prog[m[1]] = prog[m[1]] || []; if (prog[m[1]].indexOf(n) < 0){ prog[m[1]].push(n); r.games++; } }
     else if (q.key.indexOf('task|') === 0) r.tasks++;
   });
   r.frog = prog.frog;
-  r.total = r.practice + r.tasks + r.games;
+  r.total = r.practice + r.tasks + r.games + r.bonus;
   return r;
 }
 
 function earnStar(key){
   const lrn = TV && TV.learner.lrn; if (!lrn) return false;
-  const m = key.match(/^([a-z]+)\|(\d+)$/);
+  const m = key.match(/^([a-z0-9.]+)\|(\d+)$/);
   if (m){ const p = myRewards().progress[m[1]] || []; if (p.indexOf(+m[2]) >= 0) return false; }
   else {
     const done = S.earnedKeys[lrn] = S.earnedKeys[lrn] || [];
@@ -2411,7 +2521,7 @@ const GAMES = [
   { id: 'mirror', title: 'Mirror Letters', blurb: 'Look closely at letters that look alike.', levels: MIRROR_SETS.length, unlock: 'frog', icon: '<span class="emo mir">b d</span>' },
   { id: 'trace', title: 'Trace with Froggy', blurb: 'Trace the letter with your finger.', levels: 26, letters: true, icon: '<span class="emo">\u270F\uFE0F</span>' }
 ];
-const GAME = id => GAMES.find(g => g.id === id);
+const GAME = id => GAMES.find(g => g.id === id) || wordGame(id);
 function passedOf(id){ return myRewards().progress[id] || []; }
 function nextOf(id){ const g = GAME(id), p = passedOf(id); for (let n = 1; n <= g.levels; n++) if (p.indexOf(n) < 0) return n; return g.levels + 1; }
 function isUnlocked(g){ return !g.unlock || passedOf(g.unlock).length >= GAME(g.unlock).levels; }
@@ -2419,6 +2529,7 @@ function levelLabel(g, n){
   if (g.letters){ const L = FROG_ORDER[n - 1]; return L.toUpperCase() + L; }
   if (g.id === 'memory') return MEMORY_SETS[n - 1].join(' ');
   if (g.id === 'mirror') return MIRROR_SETS[n - 1].length > 4 ? 'All' : MIRROR_SETS[n - 1].join(' ');
+  if (g.word) return 'Set ' + n;
   return String(n);
 }
 function shuffle(a){ a = a.slice(); for (let i = a.length - 1; i > 0; i--){ const j = Math.floor(Math.random() * (i + 1)); const t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
@@ -2429,41 +2540,59 @@ function otherLetters(not, n, pool){
 function learned(level){ return FROG_ORDER.slice(0, level); }
 
 /* ---------- Games tab ---------- */
+function gameCardHtml(g){
+  const p = passedOf(g.id), next = nextOf(g.id), open = isUnlocked(g), done = next > g.levels;
+  const pct = Math.round(100 * p.length / g.levels);
+  let grid = '';
+  if (TV.openLv === g.id){
+    const btn = n => { const isDone = p.indexOf(n) >= 0, isNow = n === next;
+      return `<button type="button" class="lv${isDone ? ' done' : ''}${isNow ? ' now' : ''}" data-game="${g.id}" data-level="${n}"${(!isDone && !isNow) || !open ? ' disabled' : ''} aria-label="Level ${n}">${levelLabel(g, n)}<small>${isDone ? '\u2605' : 'Level ' + n}</small></button>`; };
+    if (g.letters){
+      let start = 0;
+      grid = FROG_GROUPS.map((size, gi) => { const h = `<div class="lv-group">Group ${gi + 1}</div><div class="lv-grid">${Array.from({ length: size }, (_, j) => btn(start + j + 1)).join('')}</div>`; start += size; return h; }).join('');
+    } else grid = `<div class="lv-grid">${Array.from({ length: g.levels }, (_, i) => btn(i + 1)).join('')}</div>`;
+  }
+  return `<div class="panel game-card">
+    <div class="gc-head"><div class="gc-frog">${g.icon}</div>
+      <div style="flex:1"><h2>${esc(g.title)}</h2><p>${esc(g.blurb)}</p>
+        <p class="sub">${!open ? "Finish all levels of Froggy's Letters to open this game." : done ? 'You finished all ' + g.levels + ' levels!' : 'Level ' + next + ' of ' + g.levels}</p>
+        <div class="bar"><i style="width:${pct}%"></i></div></div></div>
+    <div class="print-btns" style="margin-top:10px">
+      <button type="button" class="btn primary" data-game="${g.id}" data-level="${done ? 1 : next}"${open ? '' : ' disabled'}>${done ? 'Play Again' : p.length ? 'Continue' : 'Play'}</button>
+      <button type="button" class="btn" data-lvtoggle="${g.id}"${open ? '' : ' disabled'}>${TV.openLv === g.id ? 'Hide Levels' : 'Choose a Level'}</button>
+    </div>${grid}
+  </div>`;
+}
 function gamesHtml(){
   const r = myRewards();
+  const cats = wordCats();
+  const groups = [...new Set(cats.map(c => c.group))];
+  if (!TV.wgroup || groups.indexOf(TV.wgroup) < 0) TV.wgroup = groups[0] || '';
+  const inGroup = cats.filter(c => c.group === TV.wgroup);
+  if (!TV.wcat || !inGroup.some(c => wslug(c.category) === TV.wcat)) TV.wcat = inGroup[0] ? wslug(inGroup[0].category) : '';
+  const cur = inGroup.find(c => wslug(c.category) === TV.wcat);
   return `<div class="panel">
       <div class="stats">
         <div class="stat"><b class="star">\u2605 ${r.total}</b><span>My Stars</span></div>
         <div class="stat"><b>${r.games}</b><span>Stars From Games</span></div>
       </div>
-    </div>` + GAMES.map(g => {
-      const p = passedOf(g.id), next = nextOf(g.id), open = isUnlocked(g), done = next > g.levels;
-      const pct = Math.round(100 * p.length / g.levels);
-      let grid = '';
-      if (TV.openLv === g.id){
-        const btn = n => { const isDone = p.indexOf(n) >= 0, isNow = n === next;
-          return `<button type="button" class="lv${isDone ? ' done' : ''}${isNow ? ' now' : ''}" data-game="${g.id}" data-level="${n}"${(!isDone && !isNow) || !open ? ' disabled' : ''} aria-label="Level ${n}">${levelLabel(g, n)}<small>${isDone ? '\u2605' : 'Level ' + n}</small></button>`; };
-        if (g.letters){
-          let start = 0;
-          grid = FROG_GROUPS.map((size, gi) => { const h = `<div class="lv-group">Group ${gi + 1}</div><div class="lv-grid">${Array.from({ length: size }, (_, j) => btn(start + j + 1)).join('')}</div>`; start += size; return h; }).join('');
-        } else grid = `<div class="lv-grid">${Array.from({ length: g.levels }, (_, i) => btn(i + 1)).join('')}</div>`;
-      }
-      return `<div class="panel game-card">
-        <div class="gc-head"><div class="gc-frog">${g.icon}</div>
-          <div style="flex:1"><h2>${esc(g.title)}</h2><p>${esc(g.blurb)}</p>
-            <p class="sub">${!open ? "Finish all levels of Froggy's Letters to open this game." : done ? 'You finished all ' + g.levels + ' levels!' : 'Level ' + next + ' of ' + g.levels}</p>
-            <div class="bar"><i style="width:${pct}%"></i></div></div></div>
-        <div class="print-btns" style="margin-top:10px">
-          <button type="button" class="btn primary" data-game="${g.id}" data-level="${done ? 1 : next}"${open ? '' : ' disabled'}>${done ? 'Play Again' : p.length ? 'Continue' : 'Play'}</button>
-          <button type="button" class="btn" data-lvtoggle="${g.id}"${open ? '' : ' disabled'}>${TV.openLv === g.id ? 'Hide Levels' : 'Choose a Level'}</button>
-        </div>${grid}
-      </div>`;
-    }).join('');
+    </div>
+    <div class="panel gsection"><h2>Letter Practice</h2><p class="sub">Games to learn the letters and their sounds.</p></div>
+    ${GAMES.map(gameCardHtml).join('')}
+    <div class="panel gsection"><h2>Word Practice</h2>
+      ${cats.length ? `<p class="sub">Choose a word group, then a family or pattern. Each set has 5 words.</p>
+      <div class="chipbar">${groups.map(g => `<button type="button" class="ltab" data-wgroup="${esc(g)}" aria-selected="${g === TV.wgroup}">${esc(g)}</button>`).join('')}</div>
+      <div class="chipbar">${inGroup.map(c => `<button type="button" class="ltab" data-wcat="${wslug(c.category)}" aria-selected="${wslug(c.category) === TV.wcat}">${esc(c.category)}</button>`).join('')}</div>`
+      : '<p class="hint">Connect to the internet once to load the word games.</p>'}
+    </div>
+    ${cur ? WORD_GAMES.map(w => gameCardHtml(wordGame(`w.${w.id}.${wslug(cur.category)}`))).join('') : ''}`;
 }
 function bindGames(){
   const body = $('teacherBody');
   body.querySelectorAll('[data-game][data-level]').forEach(b => b.onclick = () => openGame(b.dataset.game, +b.dataset.level));
   body.querySelectorAll('[data-lvtoggle]').forEach(b => b.onclick = () => { TV.openLv = TV.openLv === b.dataset.lvtoggle ? '' : b.dataset.lvtoggle; renderTeacher(); });
+  body.querySelectorAll('[data-wgroup]').forEach(b => b.onclick = () => { TV.wgroup = b.dataset.wgroup; TV.wcat = ''; renderTeacher(); });
+  body.querySelectorAll('[data-wcat]').forEach(b => b.onclick = () => { TV.wcat = b.dataset.wcat; renderTeacher(); });
 }
 
 /* ---------- Shared game shell ---------- */
@@ -2472,15 +2601,15 @@ const GI = {};
 function openGame(gid, level){
   const g = GAME(gid); if (!g || !isUnlocked(g)) return;
   stopGame();
-  FG = { gid, g, level, L: g.letters ? FROG_ORDER[level - 1] : '', raf: 0, timers: [], busy: false };
+  FG = { gid, g, level, L: g.letters ? FROG_ORDER[level - 1] : '', raf: 0, timers: [], busy: false, askHtml: null, wrongLine: null };
   $('gBubbles').innerHTML = ''; $('gTongue').innerHTML = '';
   $('gFrog').innerHTML = FROG_SVG; $('gFrog').className = 'g-frog';
-  $('gFrog').style.display = gid === 'frog' ? '' : 'none';
-  $('gStage').dataset.game = gid;
+  $('gFrog').style.display = (gid === 'frog' || g.base === 'hunt') ? '' : 'none';
+  $('gStage').dataset.game = g.base === 'hunt' ? 'frog' : (g.base || gid);
   show('viewGame');
-  const impl = GI[gid];
+  const impl = GI[g.base || gid];
   $('gAsk').innerHTML = `${esc(g.title)}, Level ${level}`;
-  gOverlay(`<div class="g-card"><div class="frog-mini">${g.icon}</div><h2>${esc(g.title)}</h2><p class="sub">Level ${level}</p>
+  gOverlay(`<div class="g-card"><div class="frog-mini">${g.icon}</div><h2>${esc(g.title)}</h2><p class="sub">${g.cat ? esc(g.cat.category) + ', ' : ''}Level ${level}</p>
     ${impl.big ? `<div class="big">${impl.big()}</div>` : ''}<p>${impl.intro()}</p>
     <button type="button" class="btn primary" id="gGo">Play</button></div>`);
   $('gGo').onclick = () => { actx(); gOverlay(''); impl.start(); };
@@ -2496,7 +2625,7 @@ function gWrong(el, line){
   if (el){ el.classList.remove('no'); void el.offsetWidth; el.classList.add('no'); }
   if (line) say(line);
 }
-function sayAgain(){ if (FG && GI[FG.gid].line) say(GI[FG.gid].line()); }
+function sayAgain(){ if (!FG) return; const impl = GI[FG.g.base || FG.gid]; if (FG.g.base && FG.cur){ speakWord(FG.cur); return; } if (impl.line) say(impl.line()); }
 
 function gWin(){
   if (!FG) return;
@@ -2583,10 +2712,11 @@ function mouthPoint(){
 }
 function frogTap(b){
   if (!FG || FG.busy || b.caught) return;
-  if (!b.target){ gWrong(b.el, `Oops, not that one. Let's look for ${FG.L.toUpperCase()}.`); return; }
+  if (!b.target){ gWrong(b.el, FG.wrongLine ? FG.wrongLine() : `Oops, not that one. Let's look for ${FG.L.toUpperCase()}.`); return; }
   FG.busy = true; b.caught = true; SFX.yes();
   const frog = $('gFrog'); frog.classList.add('open');
-  const m = mouthPoint(), t = { x: b.x + FG.size / 2, y: b.y + FG.size / 2 };
+  const bw = b.w || FG.size, bh = b.el.offsetHeight || FG.size;
+  const m = mouthPoint(), t = { x: b.x + bw / 2, y: b.y + bh / 2 };
   const svg = $('gTongue'); const t0 = performance.now(), OUT = 190, BACK = 260; const f = FG;
   const draw = (x, y) => { svg.innerHTML = `<line x1="${m.x}" y1="${m.y}" x2="${x}" y2="${y}" stroke="#E8547A" stroke-width="12" stroke-linecap="round"/><circle cx="${x}" cy="${y}" r="10" fill="#E8547A"/>`; };
   const step = now => {
@@ -2595,14 +2725,15 @@ function frogTap(b){
     if (e < OUT){ const p = e / OUT; draw(m.x + (t.x - m.x) * p, m.y + (t.y - m.y) * p); requestAnimationFrame(step); return; }
     if (e < OUT + BACK){
       const p = (e - OUT) / BACK; const x = t.x + (m.x - t.x) * p, y = t.y + (m.y - t.y) * p;
-      draw(x, y); b.el.style.transform = `translate(${x - FG.size / 2}px,${y - FG.size / 2}px) scale(${1 - 0.7 * p})`;
+      draw(x, y); b.el.style.transform = `translate(${x - bw / 2}px,${y - bh / 2}px) scale(${1 - 0.7 * p})`;
       requestAnimationFrame(step); return;
     }
     svg.innerHTML = ''; b.el.remove();
     frog.classList.remove('open'); frog.classList.remove('chomp'); void frog.offsetWidth; frog.classList.add('chomp');
     SFX.gulp();
     FG.left--; FG.busy = false;
-    setAsk(`Tap <b>${FG.L.toUpperCase()} ${FG.L}</b>`, FG.total, FG.total - FG.left);
+    setAsk(FG.askHtml ? FG.askHtml() : `Tap <b>${FG.L.toUpperCase()} ${FG.L}</b>`, FG.total, FG.total - FG.left);
+    if (FG.g.base) speakWord(b.ch);
     if (FG.left <= 0) later(gWin, 450);
   };
   requestAnimationFrame(step);
@@ -2836,6 +2967,7 @@ function chunkWord(w){
   while (i < lw.length){
     const rest = lw.slice(i), ch = lw[i];
     if (ch === ' '){ out.push({ t: ' ', c: 'sp' }); i++; continue; }
+    if (ch === "'"){ out.push({ t: "'", c: 'pun' }); i++; continue; }
     if (i === lw.length - 1 && magicV >= 0 && ch === 'e'){ out.push({ t: word[i], c: 'magic sil' }); i++; continue; }
     if (i === magicV){ out.push({ t: word[i], c: 'magic' }); i++; continue; }
     if (i === 0 && /^(kn|wr|gn)/.test(lw)){ out.push({ t: word[0], c: 'sil' }); i++; continue; }
@@ -2853,41 +2985,35 @@ function chunkWord(w){
   }
   return out;
 }
+const SND_SYM = { c: 'k', ck: 'k', q: 'kw', qu: 'kw', x: 'ks', ph: 'f', wh: 'w', tch: 'ch', dge: 'j', igh: '\u012B', ai: '\u0101', ay: '\u0101', ee: '\u0113', ea: '\u0113', ie: '\u0113', ei: '\u0113',
+  oa: '\u014D', ow: '\u014D', oo: 'oo', ou: 'ow', oi: 'oi', oy: 'oi', ue: 'oo', ew: 'oo', ar: 'ar', er: 'er', ir: 'er', ur: 'er', or: 'or', ing: 'ing', ed: 'd' };
+const LONG_SYM = { a: '\u0101', e: '\u0113', i: '\u012B', o: '\u014D', u: '\u016B' };
+const OW_SOUND = ['cow','how','now','wow','owl','town','down','gown','crown','brown','clown','frown','towel','flower','power','shower','growl','howl','vowel','crowd','allow'];
+/* The sound of one colored part, written between slashes. Silent letters have no sound. */
+function chunkSym(c, word){
+  const t = c.t.toLowerCase();
+  if (c.c === 'sp' || c.c === 'pun') return null;
+  if (/sil/.test(c.c)) return '';
+  if (c.c === 'magic') return LONG_SYM[t] || t;
+  if (c.c === 'soft') return t === 'c' ? 's' : 'j';
+  if (c.c === 'dbl') return SND_SYM[t[0]] || t[0];
+  if (t === 'ow' && OW_SOUND.indexOf(String(word).toLowerCase()) >= 0) return 'ow';
+  return SND_SYM[t] != null ? SND_SYM[t] : t;
+}
 function wordStageHtml(w, big){
   const ch = chunkWord(w);
   const kinds = [...new Set(ch.map(c => c.c.split(' ')[0]).filter(k => CH_LABEL[k]))];
+  const letter = /^[A-Z][a-z]$/.test(w);
+  const sline = letter
+    ? `<span class="sp" data-i="0">${esc(w[0])}</span> <span class="sp" data-i="1">says /${esc(w[1])}/</span>`
+    : ch.map((c, i) => { const y = chunkSym(c, w); return y ? `<span class="sp" data-i="${i}">/${esc(y)}/</span>` : ''; }).filter(Boolean).join(' ') + ` <span class="eq">= ${esc(w)}</span>`;
   return `<div class="wstage${big ? ' big' : ''}">
-    <div class="wword">${ch.map(c => `<span class="ch ${c.c}">${c.t === ' ' ? '&nbsp;' : esc(c.t)}</span>`).join('')}</div>
-    <div class="road"><span class="car" aria-hidden="true">\uD83D\uDE97</span></div>
+    <div class="wword">${ch.map((c, i) => `<span class="ch ${c.c}" data-i="${i}">${c.t === ' ' ? '&nbsp;' : esc(c.t)}</span>`).join('')}</div>
+    ${big ? `<div class="sline">${sline}</div>` : ''}
+    <div class="road"><span class="car" aria-hidden="true"><svg viewBox="0 0 64 36" width="36" height="21" aria-hidden="true"><path d="M14 15 L22 5 H42 L51 15 Z" fill="#E8412C"/><rect x="3" y="14" width="57" height="13" rx="5" fill="#E8412C"/><path d="M24 8 H31 V15 H18 Z" fill="#CDEBFF"/><path d="M34 8 H41 L47 15 H34 Z" fill="#CDEBFF"/><rect x="56" y="17" width="5" height="4" rx="1.5" fill="#FFD447"/><rect x="2" y="17" width="3" height="4" rx="1" fill="#C62828"/><circle cx="17" cy="28" r="6" fill="#263238"/><circle cx="47" cy="28" r="6" fill="#263238"/><circle cx="17" cy="28" r="2.4" fill="#B0BEC5"/><circle cx="47" cy="28" r="2.4" fill="#B0BEC5"/></svg></span></div>
     ${big && kinds.length ? `<div class="wlegend">${kinds.map(k => `<span class="ch ${k}">\u25CF</span> ${CH_LABEL[k]}`).join('<span class="gap"></span>')}</div>` : ''}
   </div>`;
 }
-/* Each sound part lights up while a little car drives under it. Then the whole word is read. */
-function playWord(stage, src, word){
-  if (!stage) return;
-  (stage._t || []).forEach(clearTimeout); stage._t = [];
-  const T = (f, ms) => stage._t.push(setTimeout(f, ms));
-  const chunks = [...stage.querySelectorAll('.ch')].filter(c => c.textContent.trim() && !c.closest('.wlegend'));
-  const car = stage.querySelector('.car'), road = stage.querySelector('.road');
-  const carTo = x => { car.style.transform = `translateX(${Math.max(0, x)}px)`; };
-  stage.classList.remove('blend'); chunks.forEach(c => c.classList.remove('on'));
-  car.style.transition = 'none'; carTo(0); void car.offsetWidth; car.style.transition = '';
-  const per = 650;
-  chunks.forEach((c, i) => T(() => {
-    chunks.forEach(x => x.classList.remove('on')); c.classList.add('on');
-    const r = road.getBoundingClientRect(), e = c.getBoundingClientRect();
-    carTo(e.left - r.left + e.width / 2 - 16);
-    tone(440 + i * 70, 0.09, 'triangle', 0.08);
-  }, 250 + i * per));
-  T(() => {
-    chunks.forEach(x => x.classList.remove('on')); stage.classList.add('blend');
-    carTo(road.getBoundingClientRect().width - 36);
-    if (src){ try { const a = new Audio(src); a.play().catch(() => say(word)); } catch(e){ say(word); } }
-    else say(/^[A-Z][a-z]$/.test(word) ? word[0] : word);
-  }, 250 + chunks.length * per);
-  T(() => stage.classList.remove('blend'), 250 + chunks.length * per + 1600);
-}
-
 /* Simple microphone recorder, used in the Word Bank */
 async function micRecord(onDone, onError){
   if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia || !window.MediaRecorder){ onError(micHelp()); return null; }
@@ -2914,8 +3040,8 @@ const BANK_GROUPS = ['Letters and Sounds', 'CVC Words', 'Word Families', 'Sight 
 let BK = null;
 async function loadBank(auth, el){
   const keep = BK && BK.el === el ? BK : null;
-  BK = { auth, el, data: keep ? keep.data : null, ks: keep ? keep.ks : '', group: keep ? keep.group : 'Letters and Sounds', status: keep ? keep.status : '', q: keep ? keep.q : '', rec: null, drafts: {}, audio: keep ? keep.audio : {}, preview: keep ? keep.preview : '' };
-  if (!BK.data) el.innerHTML = '<div class="panel"><p class="hint">Loading the word bank.</p></div>';
+  BK = { awGrade: keep ? keep.awGrade : '', awCat: keep ? keep.awCat : '', auth, el, data: keep ? keep.data : null, ks: keep ? keep.ks : '', group: keep ? keep.group : 'Letters and Sounds', status: keep ? keep.status : '', q: keep ? keep.q : '', rec: null, drafts: {}, audio: keep ? keep.audio : {}, preview: keep ? keep.preview : '' };
+  if (!BK.data) el.innerHTML = loaderHtml('Getting the word bank ready.');
   try {
     const res = await callApi(Object.assign({ action: 'modelBank' }, auth));
     if (!res || !res.ok){ el.innerHTML = `<div class="panel"><p class="msg err">${esc((res && res.error) || 'Could not load the word bank.')}</p></div>`; return; }
@@ -2938,19 +3064,34 @@ function statusTag(w){
 }
 function renderBank(){
   const d = BK.data, el = BK.el, head = d.role === 'head';
-  const words = bankFiltered();
-  const groups = BANK_GROUPS.filter(g => d.words.some(w => w.group === g));
+  const byKey = {}; d.words.forEach(w => { byKey[w.word.toLowerCase()] = w; });
+  const q = BK.q.trim().toLowerCase();
+  const pass = w => w && (!q || w.word.toLowerCase().indexOf(q) >= 0) && (!BK.status || (BK.status === 'none' ? !w.hasAudio : BK.status === 'mine' ? w.mine : w.status === BK.status));
+  if (BK.lastAdded){ const nw = d.words.find(x => x.word === BK.lastAdded); if (nw){ BK.group = nw.group; BK.q = ''; BK.status = ''; } BK.lastAdded = ''; }
+  const lists = (d.lists || []).filter(l => (!BK.ks || String(l.ks).split(',').indexOf(BK.ks) >= 0) && (!BK.group || l.group === BK.group));
+  const groups = [...new Set((d.lists || []).map(l => l.group))];
   const me = d.teachers.find(t => t.name === d.me);
   const recorded = d.words.filter(w => w.hasAudio).length;
   const pv = BK.preview && d.words.find(w => w.id === BK.preview);
-  const byCat = []; words.forEach(w => { let c = byCat[byCat.length - 1]; if (!c || c.name !== w.category){ c = { name: w.category, group: w.group, items: [] }; byCat.push(c); } c.items.push(w); });
+  const byCat = lists.map(l => ({ name: l.category, group: l.group, items: l.words.map(w => byKey[w.toLowerCase()]).filter(pass) })).filter(c => c.items.length);
   el.innerHTML = `<div class="panel">
     <h2>Word Bank</h2>
     <p class="sub">${d.words.length} words. ${recorded} recorded by teachers. ${d.words.length - recorded} still need a teacher's voice.</p>
-    <p class="hint">${head ? 'Listen to each teacher recording, then tap Approve or Redo with your feedback. Teachers see your feedback here.' : 'Tap Record on any word no one has recorded yet. Once you record a word, it is yours, and other teachers can listen to it. Every recorded word gives you 1 star. Learners hear these recordings when they practice.'}</p>
+    <p class="hint">${head ? 'Listen to each teacher recording, then tap Approve or Redo with your feedback. Teachers see your feedback here. Learners hear a teacher\'s voice only after you approve it. Until then, the device voice sounds out and reads the word.' : 'Tap Record on any word no one has recorded yet. How to record: sound out each colored part slowly, then say the whole word. Example: b, oa, t, boat. Once you record a word, it is yours, and other teachers can listen to it. Every recorded word gives you 1 star. Learners hear your voice after the School Head approves it. Until then, the device voice teaches the word.'}</p>
     ${!head ? `<p><span class="star">\u2605 ${me ? me.stars : 0}</span> Your stars from recording words</p>` : ''}
-    <div class="tablewrap"><table class="stable"><thead><tr><th>Teacher</th><th>Recorded</th><th>Approved</th><th>Waiting</th><th>Redo</th><th>Stars</th></tr></thead>
-      <tbody>${d.teachers.map(t => `<tr><td>${esc(t.name)}</td><td>${t.recorded}</td><td>${t.approved}</td><td>${t.pending}</td><td>${t.redo}</td><td class="star">\u2605 ${t.stars}</td></tr>`).join('') || '<tr><td colspan="6">No recordings yet. Be the first!</td></tr>'}</tbody></table></div>
+    <div class="tablewrap"><table class="stable"><thead><tr><th>Teacher</th><th>Words Added</th><th>Recorded</th><th>Approved</th><th>Waiting</th><th>Redo</th><th>Stars</th></tr></thead>
+      <tbody>${d.teachers.map(t => `<tr><td>${esc(t.name)}</td><td>${t.added || 0}</td><td>${t.recorded}</td><td>${t.approved}</td><td>${t.pending}</td><td>${t.redo}</td><td class="star">\u2605 ${t.stars}</td></tr>`).join('') || '<tr><td colspan="7">No words added or recorded yet. Be the first!</td></tr>'}</tbody></table></div>
+    <div class="addword">
+      <h3 style="margin-top:0">Add a Word</h3>
+      <p class="hint">Type or paste <b>one English word</b>, choose the grade level, then tap Add Word. You earn 1 star for every new word. If the word is already in the bank, you will be told, and it will not be added again.</p>
+      <div class="fields">
+        <label>Word<input id="awWord" autocomplete="off" autocapitalize="off" spellcheck="true" maxlength="24" placeholder="Example: bicycle"></label>
+        <label>Grade Level<select id="awGrade">${(d.grades || []).map(g => `<option value="${g}"${g === BK.awGrade ? ' selected' : ''}>${gradeLabel(g)}</option>`).join('')}</select></label>
+        <label>Put It In<select id="awCat"></select></label>
+      </div>
+      <button type="button" class="btn primary" id="awAdd">Add Word</button>
+      <p class="msg" id="awMsg"></p>
+    </div>
     <div class="fields" style="margin-top:12px">
       <label>Key Stage<select id="bkKs"><option value="">Both</option><option value="1"${BK.ks === '1' ? ' selected' : ''}>Key Stage 1</option><option value="2"${BK.ks === '2' ? ' selected' : ''}>Key Stage 2</option></select></label>
       <label>Group<select id="bkGroup"><option value="">All Groups</option>${groups.map(g => `<option${g === BK.group ? ' selected' : ''}>${esc(g)}</option>`).join('')}</select></label>
@@ -2964,8 +3105,38 @@ function renderBank(){
     <div class="print-btns" style="justify-content:center"><button type="button" class="btn primary" id="bkPlayPv">\u25B6 Play</button></div>
     <p class="hint" style="text-align:center">Each sound part lights up as the car passes under it. Then the recording plays while the whole word glows. ${pv.hasAudio ? '' : 'No recording yet, so the device voice reads it for now.'}</p></div>` : ''}
   <div class="panel">${byCat.length ? byCat.map(c => `
-    <h3 class="bk-cat">${esc(c.name)} <span class="sub">${esc(c.group)}</span></h3>
+    <h3 class="bk-cat">${esc(c.name)} <span class="sub">${esc(c.group)}, ${c.items.length} words</span></h3>
     ${c.items.map(w => bankRow(w, head)).join('')}`).join('') : '<p class="hint">No words match. Try another group or search.</p>'}</div>`;
+  const fillCats = () => {
+    const g = $('awGrade').value; BK.awGrade = g; const ks = ['K','1','2','3'].indexOf(g) >= 0 ? '1' : '2';
+    $('awCat').innerHTML = `<option value="">${esc(gradeLabel(g))} Words (new list)</option>` +
+      (d.lists || []).filter(l => String(l.ks).split(',').indexOf(ks) >= 0 && l.category !== 'Letters').map(l => `<option${l.category === BK.awCat ? ' selected' : ''}>${esc(l.category)}</option>`).join('');
+  };
+  if ($('awGrade')){
+    fillCats();
+    $('awGrade').onchange = fillCats;
+    $('awCat').onchange = e => { BK.awCat = e.target.value; };
+    $('awWord').onkeydown = e => { if (e.key === 'Enter') $('awAdd').click(); };
+    $('awWord').onpaste = () => setTimeout(() => { const v = $('awWord').value.trim(); if (/\s/.test(v)) setMsg($('awMsg'), 'You pasted more than one word. Please keep one word only.', 'err'); }, 0);
+    $('awAdd').onclick = async () => {
+      const m = $('awMsg'); const word = $('awWord').value.trim().replace(/[.,!?;:"]+$/g, '');
+      if (!word){ setMsg(m, 'Type the word first.', 'err'); return; }
+      if (/\s/.test(word)){ setMsg(m, 'Please type one word only.', 'err'); return; }
+      const have = d.words.find(x => x.word.toLowerCase() === word.toLowerCase());
+      if (have){ setMsg(m, `"${have.word}" is already in the word bank (${have.category}). It was not added again.`, 'err'); return; }
+      $('awAdd').disabled = true; setMsg(m, 'Adding the word');
+      try {
+        const res = await callApi(Object.assign({ action: 'addBankWord', word, grade: $('awGrade').value, category: $('awCat').value }, BK.auth));
+        $('awAdd').disabled = false;
+        if (!res || !res.ok){ setMsg(m, (res && res.error) || 'Not added.', 'err'); return; }
+        BK.preview = res.word.id; BK.lastAdded = res.word.word;
+        await bankRefreshTeachers();
+        setMsg($('awMsg'), `Added "${res.word.word}". Thank you! You earned a star. Here is how learners will read it.`, 'good');
+        const pvStage = BK.el.querySelector('.bk-preview .wstage');
+        if (pvStage){ BK.el.querySelector('.bk-preview').scrollIntoView({ behavior: 'smooth', block: 'center' }); actx(); playWord(pvStage, '', res.word.word); }
+      } catch(e){ $('awAdd').disabled = false; setMsg(m, 'No internet. Try again when you are online.', 'err'); }
+    };
+  }
   $('bkKs').onchange = e => { BK.ks = e.target.value; renderBank(); };
   $('bkGroup').onchange = e => { BK.group = e.target.value; renderBank(); };
   $('bkStatus').onchange = e => { BK.status = e.target.value; renderBank(); };
@@ -2984,6 +3155,7 @@ function bankRow(w, head){
     <div class="bw-meta">${statusTag(w)} <span class="sub">KS ${esc(String(w.ks).replace(',', ' and '))}</span>
       <div class="sub">${w.hasAudio ? 'Recorded by ' + esc(w.recordedBy) + ', ' + esc(fmtDateTime(w.recordedAt)) : ''}${w.reviewedAt && w.status !== 'pending' ? '. ' + (w.status === 'approved' ? 'Approved' : 'Sent back') + ' ' + esc(fmtDateTime(w.reviewedAt)) : ''}</div>
       ${w.feedback ? `<div class="fb"><b>School Head's feedback:</b> ${esc(w.feedback)}</div>` : ''}
+      ${w.addedBy ? `<div class="added-by">Added by ${esc(w.addedBy)}, ${esc(fmtDateTime(w.addedAt))}</div>` : ''}
     </div>
     <div class="bw-actions">
       ${w.hasAudio ? `<button type="button" class="btn small" data-listen="${esc(w.id)}" aria-label="Listen">\uD83D\uDD0A Listen</button>` : ''}
@@ -2998,6 +3170,7 @@ function bankRow(w, head){
       <button type="button" class="btn small primary" data-approve="${esc(w.id)}">Approve</button>
       <button type="button" class="btn small" data-redo="${esc(w.id)}">Redo</button>
       <button type="button" class="btn small" data-clear="${esc(w.id)}">Remove Recording</button></div>` : ''}
+    ${head && w.custom ? `<div class="bw-judge"><button type="button" class="btn small" data-delword="${esc(w.id)}">Remove This Word</button></div>` : ''}
   </div>`;
 }
 async function bankAudio(id){
@@ -3011,7 +3184,7 @@ async function bankRefreshTeachers(){ try { const res = await callApi(Object.ass
 async function bankClick(e){
   const b = e.target.closest('button'); if (!b || !BK) return;
   const m = t => setMsg($('bkMsg'), t, 'err');
-  const id = b.dataset.show || b.dataset.listen || b.dataset.rec || b.dataset.save || b.dataset.again || b.dataset.cancel || b.dataset.approve || b.dataset.redo || b.dataset.clear;
+  const id = b.dataset.show || b.dataset.listen || b.dataset.rec || b.dataset.save || b.dataset.again || b.dataset.cancel || b.dataset.approve || b.dataset.redo || b.dataset.clear || b.dataset.delword;
   const w = id && BK.data.words.find(x => x.id === id); if (!w) return;
   actx();
   if (b.dataset.show){ BK.preview = id; renderBank(); BK.el.querySelector('.bk-preview').scrollIntoView({ behavior: 'smooth', block: 'center' }); const src = w.hasAudio ? await bankAudio(id).catch(() => '') : ''; playWord(BK.el.querySelector('.bk-preview .wstage'), src, w.word); return; }
@@ -3041,6 +3214,16 @@ async function bankClick(e){
       const res = await callApi(Object.assign({ action: 'judgeModel', id, verdict: b.dataset.approve ? 'approved' : 'redo', feedback: fb ? fb.value.trim() : '' }, BK.auth));
       if (!res || !res.ok){ m((res && res.error) || 'Not saved.'); return; }
       bankUpdate(res.word); bankRefreshTeachers(); setMsg($('bkMsg'), b.dataset.approve ? `"${w.word}" approved.` : `"${w.word}" sent back for redo. The teacher will see your feedback.`, 'good');
+    } catch(err){ m('No internet. Try again when you are online.'); }
+    return;
+  }
+  if (b.dataset.delword){
+    if (!ask(`Remove the word "${w.word}" added by ${w.addedBy}? This also removes its recording.`)) return;
+    try {
+      const res = await callApi(Object.assign({ action: 'deleteBankWord', id }, BK.auth));
+      if (!res || !res.ok){ m((res && res.error) || 'Not removed.'); return; }
+      if (BK.preview === id) BK.preview = '';
+      bankRefreshTeachers();
     } catch(err){ m('No internet. Try again when you are online.'); }
     return;
   }
@@ -3102,15 +3285,365 @@ async function resetLearners(ids, opts, msgEl){
 }
 
 /* =========================================================
+   SOUND IT OUT: the device voice sounds each part, then says the word.
+   An approved teacher recording replaces the device voice.
+   ========================================================= */
+const PHON = { b: 'buh', c: 'kuh', d: 'duh', f: 'fff', g: 'guh', h: 'huh', j: 'juh', k: 'kuh', l: 'lll', m: 'mmm', n: 'nnn', p: 'puh',
+  q: 'kwuh', r: 'rrr', s: 'sss', t: 'tuh', v: 'vvv', w: 'wuh', x: 'ks', y: 'yuh', z: 'zzz',
+  a: 'ah', e: 'eh', i: 'ih', o: 'aw', u: 'uh',
+  ai: 'ay', ay: 'ay', ee: 'ee', ea: 'ee', oa: 'oh', ow: 'oh', oo: 'oo', ou: 'ow', oi: 'oy', oy: 'oy', ie: 'ee', ei: 'ee', ue: 'oo', ew: 'oo',
+  ar: 'ar', er: 'er', ir: 'er', or: 'or', ur: 'er',
+  sh: 'shh', ch: 'ch', th: 'th', wh: 'wuh', ph: 'fff', ck: 'kuh', ng: 'ng', nk: 'nk', qu: 'kwuh', tch: 'ch', igh: 'eye', dge: 'juh', ing: 'ing', ed: 'd' };
+const LONG_V = { a: 'ay', e: 'ee', i: 'eye', o: 'oh', u: 'you' };
+function chunkSound(c){
+  const t = c.t.toLowerCase();
+  if (/sil/.test(c.c)) return '';
+  if (c.c === 'magic') return LONG_V[t] || t;
+  if (c.c === 'soft') return t === 'c' ? 'sss' : 'juh';
+  if (c.c === 'dbl') return PHON[t[0]] || t;
+  return PHON[t] || t;
+}
+function voiceUtter(text, rate){
+  const u = new SpeechSynthesisUtterance(text);
+  if (!VOICE) pickVoice();
+  if (VOICE){ u.voice = VOICE; u.lang = VOICE.lang; } else u.lang = 'en-US';
+  u.rate = rate || 0.85; u.pitch = 1.05; u.volume = 1;
+  return u;
+}
+function stopWord(stage){
+  if (!stage) return;
+  (stage._t || []).forEach(clearTimeout); stage._t = [];
+  stage._run = (stage._run || 0) + 1;
+  try { if (stage._node) stage._node.stop(); } catch(e){}
+  try { if (stage._el) stage._el.pause(); } catch(e){}
+  try { speechSynthesis.cancel(); } catch(e){}
+}
+function playWord(stage, src, word){
+  if (!stage) return;
+  stopWord(stage);
+  const run = stage._run;
+  const T = (f, ms) => stage._t.push(setTimeout(() => { if (stage._run === run) f(); }, ms));
+  const all = chunkWord(word);
+  const chunks = [...stage.querySelectorAll('.wword .ch')].filter(c => { const k = all[+c.dataset.i]; return k && k.c !== 'sp' && k.c !== 'pun'; });
+  const data = chunks.map(c => all[+c.dataset.i]);
+  const sps = [...stage.querySelectorAll('.sline .sp')], eq = stage.querySelector('.sline .eq');
+  const car = stage.querySelector('.car'), road = stage.querySelector('.road');
+  // The car is drawn facing right, so it always drives forward (left to right)
+  const carTo = x => { car.style.transform = `translateX(${Math.max(0, x)}px)`; };
+  const light = i => {
+    chunks.forEach(x => x.classList.remove('on'));
+    const c = chunks[i]; if (!c) return;
+    c.classList.add('on');
+    sps.forEach(x => x.classList.toggle('on', x.dataset.i === c.dataset.i));
+    if (eq) eq.classList.remove('on');
+    const r = road.getBoundingClientRect(), e = c.getBoundingClientRect();
+    carTo(e.left - r.left + e.width / 2 - 16);
+  };
+  const blend = () => { chunks.forEach(x => x.classList.remove('on')); sps.forEach(x => x.classList.remove('on')); if (eq) eq.classList.add('on'); stage.classList.add('blend'); carTo(road.getBoundingClientRect().width - 36); T(() => { stage.classList.remove('blend'); if (eq) eq.classList.remove('on'); }, 1800); };
+  stage.classList.remove('blend'); chunks.forEach(c => c.classList.remove('on')); sps.forEach(x => x.classList.remove('on'));
+  car.style.transition = 'none'; carTo(0); void car.offsetWidth; car.style.transition = '';
+
+  // 1. Approved teacher recording: the parts light up while the teacher sounds them, then the word glows
+  if (src){
+    const a = actx();
+    const timed = dur => { const partEnd = dur * 0.65; chunks.forEach((c, i) => T(() => light(i), 1000 * i * partEnd / chunks.length)); T(blend, 1000 * partEnd); };
+    if (a && window.fetch){
+      fetch(src).then(r => r.arrayBuffer()).then(buf => a.decodeAudioData(buf)).then(audio => {
+        if (stage._run !== run) return;
+        const node = a.createBufferSource(); node.buffer = audio; node.connect(a.destination); node.start(); stage._node = node;
+        timed(audio.duration);
+      }).catch(() => { const el = new Audio(src); stage._el = el; el.play().catch(() => {}); timed(Math.max(2, chunks.length * 0.7)); });
+    } else { const el = new Audio(src); stage._el = el; el.play().catch(() => {}); timed(Math.max(2, chunks.length * 0.7)); }
+    return;
+  }
+
+  // 2. Device voice: sound each part slowly, then say the whole word
+  const letter = /^[A-Z][a-z]$/.test(word);
+  if (!window.speechSynthesis){ chunks.forEach((c, i) => T(() => light(i), 250 + i * 650)); T(blend, 250 + chunks.length * 650); return; }
+  try { speechSynthesis.cancel(); } catch(e){}
+  const steps = letter
+    ? [{ text: word[0] + '.', i: 0 }, { text: (PHON[word[1]] || word[1]) + '.', i: 1 }]
+    : data.map((c, i) => ({ text: chunkSound(c), i }));
+  const finalText = letter ? `${word[0]} says ${PHON[word[1]] || word[1]}.` : word;
+  stage._utts = [];   // keeps each spoken part alive so the device reports when it finishes
+  const next = k => {
+    if (stage._run !== run) return;
+    if (k >= steps.length){
+      // All the sounds first, then the whole word
+      T(() => { blend(); const u = voiceUtter(finalText, 0.85); stage._utts.push(u); try { speechSynthesis.resume(); } catch(e){} speechSynthesis.speak(u); }, 350);
+      return;
+    }
+    light(steps[k].i);
+    if (!steps[k].text){ T(() => next(k + 1), 550); return; }
+    let moved = false;
+    const go = () => { if (moved) return; moved = true; T(() => next(k + 1), 250); };
+    const u = voiceUtter(steps[k].text, 0.7); u.onend = go; u.onerror = go; stage._utts.push(u);
+    try { speechSynthesis.resume(); } catch(e){}
+    speechSynthesis.speak(u);
+    T(go, 1900);   // keeps going even if the device voice does not report back
+  };
+  T(() => next(0), 450);
+}
+
+/* A word said aloud: approved teacher voice if this device has it, or the device voice */
+function speakWord(w){
+  const m = S.modelCache && S.modelCache[String(w).toLowerCase()];
+  if (m && m.src){ try { new Audio(m.src).play().catch(() => say(w)); return; } catch(e){} }
+  say(w);
+}
+
+/* =========================================================
+   FRIENDLY LOADING SCREEN (calm breathing with Froggy)
+   ========================================================= */
+let BUSY = null;
+function busy(message, retry){
+  if (BUSY) BUSY.done();
+  const box = $('busy');
+  box.querySelector('.busy-frog').innerHTML = FROG_SVG;
+  $('busyMsg').textContent = message;
+  $('busySub').textContent = '';
+  $('busyBtns').classList.add('hidden');
+  box.classList.remove('hidden');
+  const h = { cancelled: false, timers: [] };
+  const at = (ms, f) => h.timers.push(setTimeout(f, ms));
+  at(3000, () => { $('busySub').textContent = "Let's breathe with Froggy. Breathe in slowly..."; });
+  [7000, 15000, 23000].forEach(ms => at(ms, () => { $('busySub').textContent = '...and breathe out.'; }));
+  [11000, 19000].forEach(ms => at(ms, () => { $('busySub').textContent = 'Breathe in slowly...'; }));
+  at(10000, () => { $('busyMsg').textContent = 'Almost there. Thank you for waiting.'; });
+  at(25000, () => {
+    $('busyMsg').textContent = 'The internet seems slow right now.';
+    $('busySub').textContent = 'That is okay. You did nothing wrong. You can keep waiting or try again.';
+    $('busyBtns').classList.remove('hidden');
+  });
+  h.done = () => { h.timers.forEach(clearTimeout); box.classList.add('hidden'); if (BUSY === h) BUSY = null; };
+  $('busyRetry').onclick = () => { h.cancelled = true; h.done(); if (retry) retry(); };
+  $('busyCancel').onclick = () => { h.cancelled = true; h.done(); };
+  BUSY = h;
+  return h;
+}
+function loaderHtml(text){
+  return `<div class="panel mini-load"><div class="breath small"><div class="busy-frog">${FROG_SVG}</div></div><p>${esc(text)}</p></div>`;
+}
+
+/* =========================================================
+   WORD PRACTICE GAMES (by word family and pattern)
+   ========================================================= */
+const WORD_GAMES = [
+  { id: 'build', title: 'Build the Word', blurb: 'Listen, then build the word with its sound parts.', icon: '<span class="emo">\uD83E\uDDF1</span>' },
+  { id: 'hunt', title: 'Word Hunt', blurb: 'Help Froggy catch the words from this group.', icon: FROG_SVG },
+  { id: 'choose', title: 'Listen and Choose', blurb: 'Listen, then tap the word you hear.', icon: '<span class="emo">\uD83D\uDC42</span>' }
+];
+function wslug(t){ return String(t).toLowerCase().replace(/[^a-z0-9]/g, ''); }
+function wordCats(){
+  const lists = S.wordLists || [];
+  const ks = keyStage(TV && TV.learner.grade) || 1;
+  return lists.filter(x => String(x.ks).split(',').indexOf(String(ks)) >= 0 && x.words.length >= 3);
+}
+function wordGame(id){
+  const m = String(id).match(/^w\.(build|hunt|choose)\.([a-z0-9]+)$/); if (!m) return null;
+  const cat = (S.wordLists || []).find(x => wslug(x.category) === m[2]); if (!cat) return null;
+  const base = WORD_GAMES.find(x => x.id === m[1]);
+  return { id, base: m[1], title: base.title, blurb: base.blurb, icon: base.icon, cat, words: cat.words, levels: Math.max(1, Math.ceil(cat.words.length / 5)), word: true };
+}
+async function loadWordLists(){
+  const lrn = TV && TV.learner.lrn; if (!lrn) return;
+  try {
+    const res = await callApi({ action: 'wordLists', lrn });
+    if (res && res.ok){ S.wordLists = res.lists; persist(); if (TV && TV.tab === 'games' && $('viewGame').classList.contains('hidden')) renderTeacher(); }
+  } catch(e){}
+}
+function levelWords(){ const n = FG.level; return FG.g.words.slice((n - 1) * 5, n * 5); }
+function huntLine(cat){
+  let m = cat.match(/Word Family \((\w+)\)/); if (m) return `Catch the words that end with ${m[1]}.`;
+  m = cat.match(/^Short (\w)$/); if (m) return `Catch the words with short ${m[1]}.`;
+  return `Catch the words from ${cat}.`;
+}
+
+/* Build the Word */
+GI.build = {
+  intro: () => 'Listen to the word. Then tap the sound parts in order to build it.',
+  line: () => `Build the word, ${FG.cur}.`,
+  start(){ FG.list = levelWords(); FG.round = 0; buildRound(); }
+};
+function buildRound(){
+  const w = FG.cur = FG.list[FG.round];
+  const parts = chunkWord(w).filter(c => c.t.trim());
+  const decoys = shuffle([...new Set(FG.g.words.filter(x => x !== w).flatMap(x => chunkWord(x).map(c => c.t)))])
+    .filter(t => t.trim() && !parts.some(p => p.t.toLowerCase() === t.toLowerCase())).slice(0, 2);
+  const tiles = shuffle(parts.map(p => ({ t: p.t, c: p.c })).concat(decoys.map(t => ({ t, c: '' }))));
+  FG.pos = 0; FG.parts = parts; FG.busy = false;
+  $('gBubbles').innerHTML = `<div class="build">
+    <button type="button" class="pic hear" id="bHear" aria-label="Hear the word again">\uD83D\uDD0A</button>
+    <div class="slots">${parts.map((p, i) => `<span class="slot" data-i="${i}"></span>`).join('')}</div>
+    <div class="choices wrap">${tiles.map((t, k) => `<button type="button" class="choice part" data-k="${k}">${esc(t.t)}</button>`).join('')}</div></div>`;
+  setAsk('Build the word you hear', FG.list.length, FG.round);
+  $('bHear').onclick = () => speakWord(w);
+  $('gBubbles').querySelectorAll('.part').forEach(el => el.onclick = () => {
+    if (FG.busy || el.disabled) return;
+    const t = tiles[+el.dataset.k], need = parts[FG.pos];
+    if (t.t.toLowerCase() !== need.t.toLowerCase()){ gWrong(el, 'Listen again. ' + w + '.'); return; }
+    const slot = $('gBubbles').querySelector(`.slot[data-i="${FG.pos}"]`);
+    slot.innerHTML = `<span class="ch ${need.c}">${esc(need.t)}</span>`; slot.classList.add('full');
+    el.disabled = true; el.classList.add('used'); tone(520 + FG.pos * 80, 0.1, 'triangle', 0.12);
+    FG.pos++;
+    if (FG.pos >= parts.length){
+      FG.busy = true; SFX.yes(); speakWord(w);
+      later(() => { FG.round++; if (FG.round >= FG.list.length) gWin(); else buildRound(); }, 1500);
+    }
+  });
+  later(() => say(`Build the word. ${w}.`), 300);
+}
+
+/* Word Hunt (Froggy catches the words that belong) */
+GI.hunt = {
+  intro: () => huntLine(FG.g.cat.category) + ' Tap each one, and Froggy will eat it.',
+  line: () => huntLine(FG.g.cat.category),
+  start(){
+    const targets = shuffle(levelWords()).slice(0, 4);
+    const others = shuffle((S.wordLists || []).filter(x => x.group !== FG.g.cat.group).flatMap(x => x.words))
+      .filter(x => FG.g.words.indexOf(x) < 0).slice(0, 5);
+    FG.total = targets.length; FG.left = targets.length;
+    FG.askHtml = () => 'Catch the words';
+    FG.wrongLine = () => `Oops, that word is not in this group. ${huntLine(FG.g.cat.category)}`;
+    setAsk('Catch the words', FG.total, 0);
+    floatStart(shuffle(targets.map(ch => ({ ch, target: true })).concat(others.map(ch => ({ ch, target: false })))), pillEl, frogTap, 0.34);
+    say(huntLine(FG.g.cat.category));
+  }
+};
+function pillEl(it, size){
+  const el = document.createElement('button');
+  el.type = 'button'; el.className = 'bub pill'; el.textContent = it.ch;
+  const w = Math.max(size * 1.3, it.ch.length * size * 0.36 + size * 0.5);
+  el.style.width = w + 'px'; el.style.height = (size * 0.8) + 'px'; el.style.fontSize = (size * 0.36) + 'px';
+  el.setAttribute('aria-label', 'Word ' + it.ch); el.offsetWidthGuess = w;
+  return el;
+}
+
+/* Listen and Choose */
+GI.choose = {
+  intro: () => 'Listen to the word. Then tap the word you hear. Tap the speaker to hear it again.',
+  line: () => `Tap the word, ${FG.cur}.`,
+  start(){ FG.list = levelWords(); FG.round = 0; chooseRound(); }
+};
+function chooseRound(){
+  const w = FG.cur = FG.list[FG.round];
+  const pool = FG.g.words.filter(x => x !== w);
+  const similar = pool.filter(x => x[0] === w[0] || x.length === w.length);
+  const opts = shuffle([w].concat(shuffle(similar.length >= 2 ? similar : pool).slice(0, 2)));
+  FG.busy = false;
+  $('gBubbles').innerHTML = `<div class="safari"><button type="button" class="pic" id="cHear" aria-label="Hear the word again">\uD83D\uDD0A</button>
+    <div class="choices wrap">${opts.map(o => `<button type="button" class="choice wordc" data-w="${esc(o)}">${esc(o)}</button>`).join('')}</div></div>`;
+  setAsk('Tap the word you hear', FG.list.length, FG.round);
+  $('cHear').onclick = () => speakWord(w);
+  $('gBubbles').querySelectorAll('.wordc').forEach(el => el.onclick = () => {
+    if (FG.busy) return;
+    if (el.dataset.w !== w){ gWrong(el, 'Listen again. ' + w + '.'); return; }
+    FG.busy = true; el.classList.add('right'); SFX.yes();
+    later(() => { FG.round++; if (FG.round >= FG.list.length) gWin(); else chooseRound(); }, 1300);
+  });
+  later(() => speakWord(w), 300);
+}
+
+/* =========================================================
+   STAR STANDINGS AND WEEKLY RANKINGS (School Head and advisers)
+   ========================================================= */
+let SD = null;
+function weekLabel(w){
+  const a = new Date(w.start + 'T12:00:00'), b = new Date(w.end + 'T12:00:00');
+  const m = d => d.toLocaleDateString('en-US', { month: 'long', day: 'numeric' });
+  return `Week ${w.week}: ${m(a)} to ${m(b)}, ${b.getFullYear()}`;
+}
+async function loadStandings(auth, el){
+  const keep = SD && SD.el === el ? SD : null;
+  SD = { auth, el, data: keep ? keep.data : null, week: keep ? keep.week : '', grade: keep ? keep.grade : '', adj: '' };
+  if (!SD.data) el.innerHTML = loaderHtml('Counting the stars.');
+  try {
+    const res = await callApi(Object.assign({ action: 'starStandings' }, auth));
+    if (!res || !res.ok){ el.innerHTML = `<div class="panel"><p class="msg err">${esc((res && res.error) || 'Could not load the standings.')}</p></div>`; return; }
+    SD.data = res; if (!SD.week && res.weeks.length) SD.week = res.weeks[0].start; renderStandings();
+  } catch(e){ el.innerHTML = '<div class="panel"><p class="msg err">The standings need the internet. Connect, then open this tab again.</p></div>'; }
+}
+function renderStandings(){
+  const d = SD.data, head = d.role === 'head';
+  const grades = [...new Set(d.overall.map(r => String(r.grade)))].sort((a, b) => gradeOrder(a) - gradeOrder(b));
+  const rows = d.overall.filter(r => !SD.grade || String(r.grade) === SD.grade);
+  const wk = d.weeks.find(w => w.start === SD.week);
+  const wrows = wk ? wk.rows.filter(r => !SD.grade || String(r.grade) === SD.grade) : [];
+  SD.el.innerHTML = `<div class="panel">
+    <h2>Current Standing</h2>
+    <p class="hint">All stars earned so far: practice words, reading assessment tasks, games, and stars you added or deducted. The main page shows only the Top 10. Only you${head ? ' and the advisers' : ' and the School Head'} can see the full list.</p>
+    <div class="toolbar"><label>Grade<select id="sdGrade"><option value="">All grades</option>${grades.map(g => `<option value="${g}"${g === SD.grade ? ' selected' : ''}>${gradeLabel(g)}</option>`).join('')}</select></label>
+      <button type="button" class="btn" id="sdReload">Refresh</button></div>
+    <div class="tablewrap"><table class="stable"><thead><tr><th>Rank</th><th>Learner</th><th>Grade</th><th>Practice</th><th>Tasks</th><th>Games</th><th>Added or Deducted</th><th>Total \u2605</th>${head ? '<th></th>' : ''}</tr></thead>
+      <tbody>${rows.map(r => `<tr><td><b>${r.rank}</b></td><td>${esc(r.name)}</td><td>${gradeLabel(r.grade)}</td><td>${r.practice}</td><td>${r.tasks}</td><td>${r.games}</td><td>${r.bonus > 0 ? '+' : ''}${r.bonus}</td><td class="star">\u2605 ${r.stars}</td>
+        ${head ? `<td><button type="button" class="btn small" data-adj="${esc(r.learnerId)}">Add or Deduct</button></td>` : ''}</tr>
+        ${head && SD.adj === r.learnerId ? `<tr><td colspan="9"><div class="adj">
+          <label>Stars<select id="adjN">${[1,2,3,4,5,10].map(n => `<option>${n}</option>`).join('')}</select></label>
+          <label style="flex:1">Reason (the learner will see it)<input id="adjWhy" maxlength="120" placeholder="Example: Helped a classmate read"></label>
+          <button type="button" class="btn small primary" id="adjAdd">Add Stars</button>
+          <button type="button" class="btn small" id="adjSub">Deduct Stars</button>
+          <button type="button" class="btn small" id="adjCancel">Cancel</button></div><p class="msg" id="adjMsg"></p></td></tr>` : ''}`).join('') || '<tr><td colspan="9">No learners yet.</td></tr>'}</tbody></table></div>
+  </div>
+  <div class="panel">
+    <h2>Weekly Ranking</h2>
+    <p class="hint">Stars earned in each week, so progress is tracked week by week.</p>
+    ${d.weeks.length ? `<div class="toolbar"><label>Week<select id="sdWeek">${d.weeks.map(w => `<option value="${w.start}"${w.start === SD.week ? ' selected' : ''}>${esc(weekLabel(w))}</option>`).join('')}</select></label></div>
+    <div class="tablewrap"><table class="stable"><thead><tr><th>Rank</th><th>Learner</th><th>Grade</th><th>Stars This Week</th></tr></thead>
+      <tbody>${wrows.map(r => `<tr><td><b>${r.rank}</b></td><td>${esc(r.name)}</td><td>${gradeLabel(r.grade)}</td><td class="star">\u2605 ${r.stars}</td></tr>`).join('') || '<tr><td colspan="4">No stars earned this week yet.</td></tr>'}</tbody></table></div>` : '<p class="hint">No stars earned yet.</p>'}
+  </div>`;
+  $('sdGrade').onchange = e => { SD.grade = e.target.value; renderStandings(); };
+  $('sdReload').onclick = () => loadStandings(SD.auth, SD.el);
+  if ($('sdWeek')) $('sdWeek').onchange = e => { SD.week = e.target.value; renderStandings(); };
+  SD.el.querySelectorAll('[data-adj]').forEach(b => b.onclick = () => { SD.adj = SD.adj === b.dataset.adj ? '' : b.dataset.adj; renderStandings(); });
+  if ($('adjAdd')){
+    const send = async sign => {
+      const why = $('adjWhy').value.trim(), n = +$('adjN').value * sign;
+      if (!why){ setMsg($('adjMsg'), 'Type a short reason first.', 'err'); return; }
+      setMsg($('adjMsg'), 'Saving');
+      try {
+        const res = await callApi({ action: 'adjustStars', pin: S.pin, learnerId: SD.adj, amount: n, reason: why });
+        if (!res || !res.ok){ setMsg($('adjMsg'), (res && res.error) || 'Not saved.', 'err'); return; }
+        SD.adj = ''; loadStandings(SD.auth, SD.el);
+      } catch(e){ setMsg($('adjMsg'), 'No internet. Try again when you are online.', 'err'); }
+    };
+    $('adjAdd').onclick = () => send(1);
+    $('adjSub').onclick = () => send(-1);
+    $('adjCancel').onclick = () => { SD.adj = ''; renderStandings(); };
+  }
+}
+
+/* =========================================================
+   MY STAR JOURNEY (learner): growth, not ranking
+   ========================================================= */
+const BADGES = [[0, 'Reading Seed', '\uD83C\uDF31'], [10, 'Reading Sprout', '\uD83C\uDF3F'], [25, 'Reading Tree', '\uD83C\uDF33'], [50, 'Reading Star', '\u2B50'], [100, 'Reading Champion', '\uD83C\uDFC6']];
+function journeyHtml(){
+  const r = myRewards(), base = S.rewards[TV.learner.lrn] || {};
+  const total = Math.max(0, r.total);
+  let i = 0; BADGES.forEach((b, k) => { if (total >= b[0]) i = k; });
+  const b = BADGES[i], nx = BADGES[i + 1];
+  const wk = base.weekStars || 0, last = base.lastWeekStars || 0;
+  const note = wk > last ? `That is ${wk - last} more than last week. You are growing!` : wk > 0 && wk === last ? 'The same as last week. Keep it up!' : wk > 0 ? 'Great work this week. Every star counts!' : 'Every star counts. Practice a word or play a game to earn one!';
+  return `<div class="panel journey">
+    <div class="badge-big">${b[2]}</div>
+    <div><h2>My Star Journey</h2>
+      <p><b>${b[1]}</b>${nx ? `. ${nx[0] - total} more star${nx[0] - total === 1 ? '' : 's'} to become a <b>${nx[1]}</b> ${nx[2]}` : '. You reached the highest badge!'}</p>
+      <p>This week: <span class="star">\u2605 ${wk}</span>. ${note}</p>
+      ${base.top10Week ? '<p class="top10">\uD83C\uDF89 You are one of this week\'s Top 10 readers!</p>' : ''}
+      ${(base.bonusList || []).length ? `<div class="sub">${base.bonusList.map(x => `${x.stars > 0 ? '+' : ''}${x.stars} \u2605 ${esc(x.detail)} (${esc(fmtDay(x.earnedAt))})`).join('<br>')}</div>` : ''}
+    </div></div>`;
+}
+
+/* =========================================================
    PRACTICE REVIEW (School Head and advisers)
    ========================================================= */
 let REV = null;
 async function loadReview(auth, el){
   const keep = REV && REV.el === el ? REV : null;
   REV = { auth, el, data: keep ? keep.data : null, status: keep ? keep.status : 'submitted', grade: keep ? keep.grade : '', view: keep ? keep.view : '' };
-  if (!REV.data) el.innerHTML = '<div class="panel"><p class="hint">Loading the practice recordings.</p></div>';
+  if (!REV.data) el.innerHTML = loaderHtml('Getting the recordings ready.');
   try {
     const res = await callApi(Object.assign({ action: 'reviewList' }, auth));
+    if (res && res.error === 'CHANGE_PIN'){ showChangePin(auth.email, auth.pin, ''); return false; }
     if (!res || !res.ok){ el.innerHTML = `<div class="panel"><p class="msg err">${esc((res && res.error) || 'Could not load the recordings.')}</p></div>`; return false; }
     REV.data = res; renderReview(); return true;
   } catch(e){
@@ -3163,7 +3696,19 @@ function renderReview(){
   const d = REV.data, el = REV.el;
   const isAdviser = d.role === 'adviser';
   if (!REV.view) REV.view = isAdviser ? 'results' : 'practice';
-  const tabs = isAdviser ? `<div class="rtabs"><button type="button" class="ltab" data-rview="results" aria-selected="${REV.view === 'results'}">Reading Assessment Results</button><button type="button" class="ltab" data-rview="practice" aria-selected="${REV.view === 'practice'}">Practice Review</button><button type="button" class="ltab" data-rview="bank" aria-selected="${REV.view === 'bank'}">Word Bank</button></div>` : '';
+  const tabs = isAdviser ? `<div class="rtabs"><button type="button" class="ltab" data-rview="results" aria-selected="${REV.view === 'results'}">Reading Assessment Results</button><button type="button" class="ltab" data-rview="practice" aria-selected="${REV.view === 'practice'}">Practice Review</button><button type="button" class="ltab" data-rview="bank" aria-selected="${REV.view === 'bank'}">Word Bank</button><button type="button" class="ltab" data-rview="rank" aria-selected="${REV.view === 'rank'}">Star Rankings</button><button type="button" class="ltab" data-rview="act" aria-selected="${REV.view === 'act'}">Learner Activity</button></div>` : '';
+  if (isAdviser && REV.view === 'act'){
+    el.innerHTML = `<h1>Hello, ${esc(d.reviewer)}</h1>` + tabs + '<div id="actHost"></div>';
+    el.querySelectorAll('[data-rview]').forEach(b => b.onclick = () => { REV.view = b.dataset.rview; renderReview(); });
+    loadActivity(REV.auth, $('actHost'));
+    return;
+  }
+  if (isAdviser && REV.view === 'rank'){
+    el.innerHTML = `<h1>Hello, ${esc(d.reviewer)}</h1>` + tabs + '<div id="rankHost"></div>';
+    el.querySelectorAll('[data-rview]').forEach(b => b.onclick = () => { REV.view = b.dataset.rview; renderReview(); });
+    loadStandings(REV.auth, $('rankHost'));
+    return;
+  }
   if (isAdviser && REV.view === 'bank'){
     el.innerHTML = `<h1>Hello, ${esc(d.reviewer)}</h1>` + tabs + '<div id="bankHost"></div>';
     el.querySelectorAll('[data-rview]').forEach(b => b.onclick = () => { if (BK && BK.rec) BK.rec.ctl.cancel(); REV.view = b.dataset.rview; renderReview(); });
@@ -3290,16 +3835,123 @@ async function adviserLogin(){
   const m = $('advLoginMsg');
   const email = $('advEmail').value.trim(), pin = $('advPin').value.trim();
   if (!email || !pin){ setMsg(m, 'Enter your email and PIN.', 'err'); return; }
-  setMsg(m, 'Checking');
+  setMsg(m, '');
   REV = null;
+  const h = busy('Checking your sign in. Getting your class ready.', adviserLogin);
+  let first;
+  try { first = await callApi({ action: 'adviserLogin', email, pin }); }
+  catch(e){ h.done(); if (!h.cancelled) setMsg(m, 'No internet. Signing in needs the internet.', 'err'); return; }
+  if (h.cancelled) return;
+  if (!first || !first.ok){ h.done(); setMsg(m, (first && first.error) || 'Sign in failed.', 'err'); return; }
+  if (first.mustChange){ h.done(); showChangePin(email, pin, first.name); return; }
   show('viewAdviser');
   const ok = await loadReview({ email, pin }, $('revAdviser'));
+  h.done(); if (h.cancelled){ show('viewLogin'); return; }
   if (!ok && REV && !REV.data){
     const text = $('revAdviser').textContent.trim();
     show('viewLogin'); setMsg(m, text || 'Sign in failed.', 'err'); return;
   }
   setMsg(m, ''); $('advPin').value = ''; touchAdviser();
 }
+
+/* First sign in: the adviser makes a private 4 number PIN */
+function showChangePin(email, oldPin, name){
+  show('viewAdviser');
+  $('revAdviser').innerHTML = `<div class="panel" style="max-width:520px;margin:20px auto">
+    <h1>Welcome, ${esc(name || 'Adviser')}!</h1>
+    <p>Before you start, please make your own <b>4 number PIN</b>. You will use it every time you sign in. Keep it private.</p>
+    <label>New PIN (4 numbers)<input id="np1" type="password" inputmode="numeric" maxlength="4" autocomplete="off"></label>
+    <label>Type it again<input id="np2" type="password" inputmode="numeric" maxlength="4" autocomplete="off"></label>
+    <button type="button" class="btn primary" id="npSave">Save My PIN</button>
+    <p class="msg" id="npMsg"></p>
+    <p class="hint">If you forget your PIN, ask the School Head to reset it.</p></div>`;
+  $('npSave').onclick = async () => {
+    const a = $('np1').value.trim(), b = $('np2').value.trim(), m = $('npMsg');
+    if (!/^\d{4}$/.test(a)){ setMsg(m, 'Your PIN must be exactly 4 numbers.', 'err'); return; }
+    if (a !== b){ setMsg(m, 'The two PINs are not the same. Please type them again.', 'err'); return; }
+    if (weakPin(a)){ setMsg(m, 'That PIN is too easy to guess, like 1111 or 1234. Try different numbers.', 'err'); return; }
+    const h = busy('Saving your new PIN.');
+    try {
+      const res = await callApi({ action: 'changePin', email, pin: oldPin, newPin: a });
+      h.done();
+      if (!res || !res.ok){ setMsg(m, (res && res.error) || 'Not saved.', 'err'); return; }
+      tell('Your new PIN is saved. Please remember it.');
+      const h2 = busy('Getting your class ready.');
+      await loadReview({ email, pin: a }, $('revAdviser'));
+      h2.done(); touchAdviser();
+    } catch(e){ h.done(); setMsg(m, 'No internet. Try again when you are online.', 'err'); }
+  };
+}
+
+/* =========================================================
+   SIGN IN ACTIVITY (School Head: learners and advisers. Adviser: own learners)
+   ========================================================= */
+let ACT = null;
+function fmtMinutes(n){ n = Math.round(n || 0); if (!n) return 'Less than a minute'; const h = Math.floor(n / 60), m = n % 60; return (h ? h + ' hr ' : '') + (m ? m + ' min' : '').trim(); }
+function agoText(iso){
+  if (!iso) return '';
+  const days = Math.floor((Date.now() - new Date(iso).getTime()) / 86400000);
+  return days <= 0 ? 'Today' : days === 1 ? 'Yesterday' : days + ' days ago';
+}
+async function loadActivity(auth, el){
+  const keep = ACT && ACT.el === el ? ACT : null;
+  ACT = { auth, el, data: keep ? keep.data : null, sort: keep ? keep.sort : 'latest', grade: keep ? keep.grade : '', asort: keep ? keep.asort : 'latest' };
+  if (!ACT.data) el.innerHTML = loaderHtml('Getting the sign in records ready.');
+  try {
+    const res = await callApi(Object.assign({ action: 'activity' }, auth));
+    if (!res || !res.ok){ el.innerHTML = `<div class="panel"><p class="msg err">${esc((res && res.error) || 'Could not load the sign in records.')}</p></div>`; return; }
+    ACT.data = res; renderActivity();
+  } catch(e){ el.innerHTML = '<div class="panel"><p class="msg err">Sign in records need the internet. Connect, then open this tab again.</p></div>'; }
+}
+const ACT_SORTS = [['latest', 'Latest Sign In'], ['oldest', 'Oldest Sign In'], ['longest', 'Longest Time Online'], ['most', 'Most Sign Ins'], ['never', 'Never Signed In First'], ['name', 'Name']];
+function sortActivity(list, how){
+  const t = x => x.lastSignIn ? new Date(x.lastSignIn).getTime() : 0;
+  const by = {
+    latest: (a, b) => t(b) - t(a), oldest: (a, b) => (t(a) || 9e15) - (t(b) || 9e15), longest: (a, b) => (b.minutes || 0) - (a.minutes || 0),
+    most: (a, b) => (b.count || 0) - (a.count || 0), never: (a, b) => (t(a) ? 1 : 0) - (t(b) ? 1 : 0) || a.name.localeCompare(b.name), name: (a, b) => a.name.localeCompare(b.name)
+  }[how] || ((a, b) => 0);
+  return list.slice().sort((a, b) => by(a, b) || a.name.localeCompare(b.name));
+}
+function renderActivity(){
+  const d = ACT.data, head = d.role === 'head';
+  const grades = [...new Set(d.learners.map(l => String(l.grade)))].sort((a, b) => gradeOrder(a) - gradeOrder(b));
+  const learners = sortActivity(d.learners.filter(l => !ACT.grade || String(l.grade) === ACT.grade), ACT.sort);
+  const never = d.learners.filter(l => !l.lastSignIn).length;
+  const advisers = sortActivity(d.advisers || [], ACT.asort);
+  ACT.el.innerHTML = `<div class="panel">
+    <h2>Learner Sign Ins</h2>
+    <p class="sub">${d.learners.length} learner(s). ${never} have not signed in yet. Time online counts only while the learner page is open.</p>
+    <div class="toolbar">
+      <label>Grade<select id="acGrade"><option value="">All grades</option>${grades.map(g => `<option value="${g}"${g === ACT.grade ? ' selected' : ''}>${gradeLabel(g)}</option>`).join('')}</select></label>
+      <label>Sort by<select id="acSort">${ACT_SORTS.map(x => `<option value="${x[0]}"${x[0] === ACT.sort ? ' selected' : ''}>${x[1]}</option>`).join('')}</select></label>
+      <button type="button" class="btn" id="acReload">Refresh</button>
+    </div>
+    <div class="tablewrap"><table class="stable"><thead><tr><th>Learner</th><th>Class</th><th>Latest Sign In</th><th>Last Active</th><th>Times Signed In</th><th>Total Time Online</th></tr></thead>
+      <tbody>${learners.map(l => `<tr><td>${esc(l.name)}</td><td>${esc(classLabel(l.grade, l.section))}</td>
+        <td>${l.lastSignIn ? esc(fmtDateTime(l.lastSignIn)) + `<br><span class="sub">${agoText(l.lastSignIn)}</span>` : '<span class="tag red">Never signed in</span>'}</td>
+        <td>${l.lastSeen ? esc(fmtDateTime(l.lastSeen)) : ''}</td><td>${l.count || 0}</td><td>${l.lastSignIn ? fmtMinutes(l.minutes) : ''}</td></tr>`).join('') || '<tr><td colspan="6">No learners yet.</td></tr>'}</tbody></table></div>
+  </div>
+  ${head ? `<div class="panel">
+    <h2>Adviser Sign Ins</h2>
+    <div class="toolbar"><label>Sort by<select id="acASort">${ACT_SORTS.filter(x => ['latest', 'oldest', 'most', 'never', 'name'].indexOf(x[0]) >= 0).map(x => `<option value="${x[0]}"${x[0] === ACT.asort ? ' selected' : ''}>${x[1]}</option>`).join('')}</select></label></div>
+    <div class="tablewrap"><table class="stable"><thead><tr><th>Adviser</th><th>Email</th><th>Class</th><th>Latest Sign In</th><th>Times Signed In</th><th>PIN</th></tr></thead>
+      <tbody>${advisers.map(a => `<tr><td>${esc(a.name)}</td><td>${esc(a.email)}</td><td>${a.classes.map(c => esc(classLabel(c.grade, c.section || (sectionsOf(c.grade).length === 1 ? sectionsOf(c.grade)[0] : '')))).join('<br>')}</td>
+        <td>${a.lastSignIn ? esc(fmtDateTime(a.lastSignIn)) + `<br><span class="sub">${agoText(a.lastSignIn)}</span>` : '<span class="tag red">Never signed in</span>'}</td><td>${a.count || 0}</td>
+        <td>${a.pinIsDefault ? '<span class="tag">admin (default)</span>' + (a.pinResetAt ? `<br><span class="sub">Reset ${esc(fmtDateTime(a.pinResetAt))}</span>` : '') : `<span class="pinv">${esc(a.pin)}</span><br><span class="sub">${a.pinChangedAt ? 'Changed ' + esc(fmtDateTime(a.pinChangedAt)) : 'Changed'}</span>`}</td></tr>`).join('') || '<tr><td colspan="6">No advisers yet.</td></tr>'}</tbody></table></div>
+    <p class="hint">To reset a forgotten PIN, go to the Learners tab, then Advisers, tap Reset PIN, then Save Advisers.</p>
+  </div>` : ''}`;
+  $('acGrade').onchange = e => { ACT.grade = e.target.value; renderActivity(); };
+  $('acSort').onchange = e => { ACT.sort = e.target.value; renderActivity(); };
+  $('acReload').onclick = () => loadActivity(ACT.auth, ACT.el);
+  if ($('acASort')) $('acASort').onchange = e => { ACT.asort = e.target.value; renderActivity(); };
+}
+
+/* Learner page open: check in every 2 minutes to count time online */
+setInterval(() => {
+  const open = TV && TV.learner && TV.learner.lrn && (!$('viewTeacher').classList.contains('hidden') || !$('viewGame').classList.contains('hidden') || !$('viewReader').classList.contains('hidden'));
+  if (!open || document.hidden || navigator.onLine === false || !serverAvailable()) return;
+  callApi({ action: 'learnerPing', lrn: TV.learner.lrn }).catch(() => {});
+}, 120000);
 
 /* =========================================================
    SIGN IN PAGE DASHBOARD
@@ -3541,10 +4193,12 @@ function bind(){
   $('saveAdvisers').addEventListener('click', saveAdvisers);
   $('addAdviser').addEventListener('click', () => { advDraft.push({ id: uid(), grade: $('lFilter').value || '1', name: '', email: '' }); renderAdvisers(); });
   $('adviserList').addEventListener('input', e => { const t = e.target; if (t.dataset.i == null) return; advDraft[+t.dataset.i][t.dataset.f] = t.value; });
-  $('adviserList').addEventListener('change', e => { const t = e.target; if (t.dataset.i == null) return; advDraft[+t.dataset.i][t.dataset.f] = t.value; });
+  $('adviserList').addEventListener('change', e => { const t = e.target; if (t.dataset.i == null) return; advDraft[+t.dataset.i][t.dataset.f] = t.value; if (t.dataset.f === 'grade'){ advDraft[+t.dataset.i].section = ''; renderAdvisers(); } });
   $('adviserList').addEventListener('click', e => {
-    const g = e.target.closest('[data-gen]');
-    if (g){ advDraft[+g.dataset.gen].pin = randomPin(); renderAdvisers(); setMsg($('advMsg'), 'New PIN made. Tap Save Advisers to keep it.', 'good'); return; }
+    const rp = e.target.closest('[data-resetpin]');
+    if (rp){ const a = advDraft[+rp.dataset.resetpin]; if (!ask(`Reset the PIN of ${a.name || a.email} back to admin? They will make a new PIN the next time they sign in.`)) return;
+      advDraft.forEach(x => { if (x.email && a.email && x.email.toLowerCase() === a.email.toLowerCase()) x.resetPin = true; });
+      renderAdvisers(); setMsg($('advMsg'), 'Tap Save Advisers to finish resetting the PIN.', 'good'); return; }
     const b = e.target.closest('[data-rm]'); if (!b) return;
     if (!ask('Remove this adviser? They will no longer be able to sign in.')) return;
     advDraft.splice(+b.dataset.rm, 1); renderAdvisers(); setMsg($('advMsg'), 'Removed. Tap Save Advisers to finish.', 'good');
@@ -3560,11 +4214,13 @@ function bind(){
   $('nGrade').addEventListener('change', renderAdviserSelect);
   $('learnerList').addEventListener('click', e => {
     const b = e.target.closest('[data-del]'); if (b) deleteLearner(b.dataset.del);
+    const ad = e.target.closest('[data-ladd]'), sb = e.target.closest('[data-lsub]');
+    if (ad || sb){ LADJ = { id: (ad || sb).dataset[ad ? 'ladd' : 'lsub'], sign: ad ? 1 : -1 }; renderLearners(); const f = $('ladjWhy'); if (f) f.focus(); return; }
     const r = e.target.closest('[data-reset]');
     if (r){
       const l = S.learners[r.dataset.reset]; if (!l) return;
       if (!ask(`Reset ${l.first} ${l.last}?\n\nThis removes all their stars, game levels, reading assessment task stars, practice words, and practice recordings. Their reading assessment result stays.`)) return;
-      resetLearners([l.id], { games: true, tasks: true, practice: true }, $('listMsg'));
+      resetLearners([l.id], { games: true, tasks: true, practice: true }, $('listMsg')).then(ok => { if (ok) loadLearnerStars(); });
     }
   });
   $('rsAll').addEventListener('click', async () => {
@@ -3586,6 +4242,8 @@ function bind(){
   $('learnerList').addEventListener('change', e => {
     const sel = e.target.closest('select[data-adv]');
     if (sel){ const l = S.learners[sel.dataset.adv]; l.adviserId = sel.value; l.updatedAt = nowIso(); S.queue.learners[l.id] = true; persist(); setMsg($('listMsg'), 'Adviser saved.', 'good'); flush(); return; }
+    const sec = e.target.closest('select[data-sec]');
+    if (sec){ const l = S.learners[sec.dataset.sec]; l.section = sec.value; l.updatedAt = nowIso(); S.queue.learners[l.id] = true; persist(); setMsg($('listMsg'), 'Section saved.', 'good'); renderLearners(); flush(); return; }
     const inp = e.target.closest('input[data-id]'); if (!inp) return;
     const err = setLrn(inp.dataset.id, inp.value);
     if (err){ setMsg($('listMsg'), err, 'err'); tell(err); inp.value = S.learners[inp.dataset.id].lrn || ''; return; }
@@ -3645,7 +4303,7 @@ function goHome(e){
 }
 
 function init(){
-  $('siteFoot').innerHTML = `<b>${SBRA}</b>, Baluyan Elementary School<br>First created on ${APP_CREATED}. Version ${APP_VERSION}, updated ${APP_UPDATED}.`;
+  $('siteFoot').innerHTML = `<b>${SBRA}</b>, Baluyan Elementary School<br>First created on ${APP_CREATED}. Version ${APP_VERSION}, updated ${APP_UPDATED}.<br>Developer: <b>MARK JUMIL T. PADILLA</b>`;
   $('homeLink').addEventListener('click', goHome);
   $('adminBack').addEventListener('click', () => { if (S.session === 'admin' && S.pin) enterAdmin(); });
   tickClock(); setInterval(tickClock, 1000);
